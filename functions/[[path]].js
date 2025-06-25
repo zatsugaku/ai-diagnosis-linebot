@@ -336,7 +336,7 @@ async function sendReply(userId, messages, env) {
       'Authorization': `Bearer ${env.LINE_CHANNEL_ACCESS_TOKEN}`
     },
     body: JSON.stringify({
-      replyToken: userId,
+      replyToken: replyToken,
       messages: messages
     })
   });

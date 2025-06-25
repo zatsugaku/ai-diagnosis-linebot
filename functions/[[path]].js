@@ -27,18 +27,18 @@ async function handleEvent(event, env) {
     const messageText = event.message.text;
 
     if (messageText === '診断を始める' || messageText === 'start') {
-      await startDiagnosis(userId, env);
+      await startDiagnosis(userId, event.replyToken, env);
     } else {
-      await handleAnswer(userId, messageText, env);
+      await handleAnswer(userId, messageText, event.replyToken, env);
     }
   } else if (event.type === 'postback') {
     const userId = event.source.userId;
     const data = event.postback.data;
-    await handlePostback(userId, data, env);
+    await handlePostback(userId, data, event.replyToken, env);
   }
 }
 
-async function startDiagnosis(userId, env) {
+async function startDiagnosis(userId, replyToken, env) {
   // ユーザー状態を初期化
   await resetUserProgress(userId, env);
   
@@ -78,20 +78,20 @@ async function startDiagnosis(userId, env) {
     }
   };
 
-  await sendReply(userId, [welcomeMessage, quickReply], env);
+  await sendReply(replyToken, [welcomeMessage, quickReply], env);
 }
 
-async function handlePostback(userId, data, env) {
+async function handlePostback(userId, data, replyToken, env) {
   if (data.startsWith('start_q')) {
     const questionNum = parseInt(data.replace('start_q', ''));
-    await sendQuestion(userId, questionNum, env);
+    await sendQuestion(userId, questionNum, replyToken, env);
   } else if (data.startsWith('q') && data.includes('_a')) {
     const parts = data.split('_');
     const questionNum = parseInt(parts[0].replace('q', ''));
     const answerIndex = parseInt(parts[1].replace('a', ''));
-    await processAnswer(userId, questionNum, answerIndex, env);
+    await processAnswer(userId, questionNum, answerIndex, replyToken, env);
   } else if (data === 'later') {
-    await sendReply(event.replyToken, [{
+    await sendReply(replyToken, [{
       type: 'text',
       text: 'いつでもお気軽にお声がけください！\n' +
             '診断をご希望の際は「診断を始める」と送信してくださいね。'
@@ -99,11 +99,11 @@ async function handlePostback(userId, data, env) {
   }
 }
 
-async function sendQuestion(userId, questionNum, env) {
+async function sendQuestion(userId, questionNum, replyToken, env) {
   const questions = getQuestions();
   
   if (questionNum > questions.length) {
-    await calculateAndSendResult(userId, env);
+    await calculateAndSendResult(userId, replyToken, env);
     return;
   }
 
@@ -126,10 +126,10 @@ async function sendQuestion(userId, questionNum, env) {
     }
   };
 
-  await sendReply(event.replyToken, [message], env);
+  await sendReply(replyToken, [message], env);
 }
 
-async function processAnswer(userId, questionNum, answerIndex, env) {
+async function processAnswer(userId, questionNum, answerIndex, replyToken, env) {
   const questions = getQuestions();
   const question = questions[questionNum - 1];
   const selectedOption = question.options[answerIndex];
@@ -139,7 +139,7 @@ async function processAnswer(userId, questionNum, answerIndex, env) {
   
   // ベンチマークメッセージを送信
   if (selectedOption.response) {
-    await sendReply(event.replyToken, [{
+    await sendReply(replyToken, [{
       type: 'text',
       text: selectedOption.response
     }], env);
@@ -150,13 +150,13 @@ async function processAnswer(userId, questionNum, answerIndex, env) {
   
   // 次の質問またはスコア表示
   if (questionNum < 10) {
-    await sendQuestion(userId, questionNum + 1, env);
+    await sendQuestion(userId, questionNum + 1, replyToken, env);
   } else {
-    await calculateAndSendResult(userId, env);
+    await calculateAndSendResult(userId, replyToken, env);
   }
 }
 
-async function calculateAndSendResult(userId, env) {
+async function calculateAndSendResult(userId, replyToken, env) {
   const answers = await getUserAnswers(userId, env);
   const totalScore = answers.reduce((sum, answer) => sum + answer.score, 0);
   
@@ -164,7 +164,7 @@ async function calculateAndSendResult(userId, env) {
   const resultMessage = getResultMessage(totalScore);
   
   // 結果を送信
-  await sendReply(event.replyToken, [{
+  await sendReply(replyToken, [{
     type: 'text',
     text: resultMessage
   }], env);
@@ -205,10 +205,18 @@ async function calculateAndSendResult(userId, env) {
     }
   };
   
-  await sendReply(event.replyToken, [followUpMessage], env);
+  await sendReply(replyToken, [followUpMessage], env);
   
   // Google Sheetsに記録
   await saveToGoogleSheets(userId, answers, totalScore, env);
+}
+
+async function handleAnswer(userId, messageText, replyToken, env) {
+  // テキストでの回答処理（必要に応じて実装）
+  await sendReply(replyToken, [{
+    type: 'text',
+    text: '診断を開始するには「診断を始める」と送信してください。'
+  }], env);
 }
 
 function getResultMessage(score) {
@@ -328,7 +336,7 @@ function getQuestions() {
   ];
 }
 
-async function sendReply(userId, messages, env) {
+async function sendReply(replyToken, messages, env) {
   const response = await fetch('https://api.line.me/v2/bot/message/reply', {
     method: 'POST',
     headers: {

@@ -20,7 +20,6 @@ export async function onRequest(context) {
       return new Response('Internal Server Error', { status: 500 });
     }
   }
-}
 
 async function handleEvent(event, env) {
   if (event.type === 'message' && event.message.type === 'text') {

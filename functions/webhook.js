@@ -1,5 +1,5 @@
-export default {
-  async fetch(request, env) {
+export async function onRequest(context) {
+  const { request, env } = context;
     if (request.method !== 'POST') {
       return new Response('Method not allowed', { status: 405 });
     }
@@ -20,7 +20,7 @@ export default {
       return new Response('Internal Server Error', { status: 500 });
     }
   }
-};
+}
 
 async function handleEvent(event, env) {
   if (event.type === 'message' && event.message.type === 'text') {

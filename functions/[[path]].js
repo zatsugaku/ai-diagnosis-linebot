@@ -91,7 +91,7 @@ async function handlePostback(userId, data, env) {
     const answerIndex = parseInt(parts[1].replace('a', ''));
     await processAnswer(userId, questionNum, answerIndex, env);
   } else if (data === 'later') {
-    await sendReply(userId, [{
+    await sendReply(event.replyToken, [{
       type: 'text',
       text: 'いつでもお気軽にお声がけください！\n' +
             '診断をご希望の際は「診断を始める」と送信してくださいね。'
@@ -126,7 +126,7 @@ async function sendQuestion(userId, questionNum, env) {
     }
   };
 
-  await sendReply(userId, [message], env);
+  await sendReply(event.replyToken, [message], env);
 }
 
 async function processAnswer(userId, questionNum, answerIndex, env) {
@@ -139,7 +139,7 @@ async function processAnswer(userId, questionNum, answerIndex, env) {
   
   // ベンチマークメッセージを送信
   if (selectedOption.response) {
-    await sendReply(userId, [{
+    await sendReply(event.replyToken, [{
       type: 'text',
       text: selectedOption.response
     }], env);
@@ -164,7 +164,7 @@ async function calculateAndSendResult(userId, env) {
   const resultMessage = getResultMessage(totalScore);
   
   // 結果を送信
-  await sendReply(userId, [{
+  await sendReply(event.replyToken, [{
     type: 'text',
     text: resultMessage
   }], env);
@@ -205,7 +205,7 @@ async function calculateAndSendResult(userId, env) {
     }
   };
   
-  await sendReply(userId, [followUpMessage], env);
+  await sendReply(event.replyToken, [followUpMessage], env);
   
   // Google Sheetsに記録
   await saveToGoogleSheets(userId, answers, totalScore, env);

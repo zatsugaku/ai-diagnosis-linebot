@@ -1,0 +1,17 @@
+{
+  "name": "ai-diagnosis-linebot",
+  "version": "1.0.0",
+  "description": "AI活用診断LINEボット（Cloudflare Pages版）",
+  "main": "functions/webhook.js",
+  "scripts": {
+    "build": "echo 'No build step required'",
+    "dev": "wrangler pages dev"
+  },
+  "dependencies": {
+    "@line/bot-sdk": "^7.5.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "type": "module"
+}

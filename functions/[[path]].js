@@ -145,8 +145,7 @@ async function processAnswer(userId, questionNum, answerIndex, replyToken, env) 
     }], env);
     
     // 少し待ってから次の質問
-    await new Promise(resolve => setTimeout(resolve, 2000));
-  }
+      }
   
   // 次の質問またはスコア表示
   if (questionNum < 10) {

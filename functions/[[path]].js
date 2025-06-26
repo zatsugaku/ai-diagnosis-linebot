@@ -135,7 +135,7 @@ async function processAnswer(userId, questionNum, answerIndex, replyToken, env) 
     type: 'text',
     text: `デバッグ: Q${questionNum} 回答${answerIndex} を処理中...`
   }], env);
-  const questions = getQuestions();
+  
   const questions = getQuestions();
   const question = questions[questionNum - 1];
   const selectedOption = question.options[answerIndex];
@@ -149,9 +149,7 @@ async function processAnswer(userId, questionNum, answerIndex, replyToken, env) 
       type: 'text',
       text: selectedOption.response
     }], env);
-    
-    // 少し待ってから次の質問
-      }
+  }
   
   // 次の質問またはスコア表示
   if (questionNum < 10) {

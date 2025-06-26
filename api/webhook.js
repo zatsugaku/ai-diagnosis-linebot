@@ -1,4 +1,11 @@
-export default async function handler(req, res) {
+} else if (data === 'next_q2') {
+        await sendQuestion2(userId);
+      } else if (data === 'next_q3') {
+        await sendQuestion3(userId);
+      } else if (data === 'next_q4') {
+        await sendQuestion4(userId);
+      } else if (data === 'next_q5') {
+        await sendQuestion5(userId);export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -261,19 +268,24 @@ async function handleQ1Answer(userId, answer) {
     text: `${responseMessage}
 
 💡 ベンチマークデータ：
-AI活用企業の87%が「一人当たり売上高」を平均23%向上させています。人数を増やさず、売上を増やす方法があります。`
+AI活用企業の87%が「一人当たり売上高」を平均23%向上させています。人数を増やさず、売上を増やす方法があります。`,
+    quickReply: {
+      items: [
+        {
+          type: 'action',
+          action: {
+            type: 'postback',
+            label: '📊 次の質問へ',
+            data: 'next_q2'
+          }
+        }
+      ]
+    }
   };
 
   await sendPushMessage(userId, [benchmarkMessage]);
   
-  // 即座に次の質問を送信（setTimeoutを削除）
-  try {
-    console.log('質問2を送信中...');
-    await sendQuestion2(userId);
-    console.log('質問2送信完了');
-  } catch (error) {
-    console.error('質問2送信エラー:', error);
-  }
+  // 自動送信を削除（ユーザーが「次の質問へ」ボタンを押すまで待機）
 }
 
 // 質問2: 育成期間
@@ -359,19 +371,22 @@ async function handleQ2Answer(userId, answer) {
     text: `${responseMessage}
 
 💡 人材育成の新常識：
-AI活用による教育支援で、育成期間を平均45%短縮できます。あなたの会社なら年間〇〇万円の効果に相当します。`
+AI活用による教育支援で、育成期間を平均45%短縮できます。あなたの会社なら年間〇〇万円の効果に相当します。`,
+    quickReply: {
+      items: [
+        {
+          type: 'action',
+          action: {
+            type: 'postback',
+            label: '📊 次の質問へ',
+            data: 'next_q3'
+          }
+        }
+      ]
+    }
   };
 
   await sendPushMessage(userId, [benchmarkMessage]);
-  
-  // 即座に次の質問を送信
-  try {
-    console.log('質問3を送信中...');
-    await sendQuestion3(userId);
-    console.log('質問3送信完了');
-  } catch (error) {
-    console.error('質問3送信エラー:', error);
-  }
 }
 
 // 質問3: 優秀社員の残業理由
@@ -457,19 +472,22 @@ async function handleQ3Answer(userId, answer) {
     text: `${responseMessage}
 
 💡 優秀人材の活用度：
-優秀社員の68%が「本来の力を発揮できていない」と感じています。彼らの時間を解放すればイノベーションが生まれます。`
+優秀社員の68%が「本来の力を発揮できていない」と感じています。彼らの時間を解放すればイノベーションが生まれます。`,
+    quickReply: {
+      items: [
+        {
+          type: 'action',
+          action: {
+            type: 'postback',
+            label: '📊 次の質問へ',
+            data: 'next_q4'
+          }
+        }
+      ]
+    }
   };
 
   await sendPushMessage(userId, [benchmarkMessage]);
-  
-  // 即座に質問4を送信
-  try {
-    console.log('質問4を送信中...');
-    await sendQuestion4(userId);
-    console.log('質問4送信完了');
-  } catch (error) {
-    console.error('質問4送信エラー:', error);
-  }
 }
 
 // 質問4: 退職理由

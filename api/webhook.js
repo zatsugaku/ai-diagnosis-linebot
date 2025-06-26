@@ -1,666 +1,46 @@
-}
-
-// 詳細コメント関数
-function getDetailedAnswerComment(answerData) {
-  const detailedComments = {
-    // Q1: 売上高
-    'answer_q1_excellent': `驚異的な成長率！🚀
-御社は既に業界のトップランナーですね。
-
-💡 知ってましたか？
-AI活用企業の87%が「一人当たり売上高」を
-平均23%向上させています。`,
-    
-    'answer_q1_very_good': `順調な成長です！📈
-さらにAI活用で加速できそうです。
-
-💡 ベンチマーク：
-この成長率は上位20%に入ります。`,
-    
-    'answer_q1_good': `安定した成長ですね。📊
-AIで更なる飛躍が期待できます。`,
-    
-    'answer_q1_fair': `現状維持は後退と同じ...😐
-競合はAIで生産性を20%以上改善しています。`,
-    
-    'answer_q1_poor': `厳しい状況ですね。😰
-でも、AIなら少ない人数で売上向上が可能です。`,
-    
-    'answer_q1_critical': `今すぐ手を打つ必要があります！🚨
-AI活用で劇的な改善事例があります。`,
-
-    // Q2: 育成期間
-    'answer_q2_excellent': `育成システムが優秀ですね！✨
-AIでさらに効率化できます。`,
-    
-    'answer_q2_good': `標準的な育成期間です。🌱
-AI活用で2ヶ月短縮した企業もあります。`,
-    
-    'answer_q2_fair': `もう少し短縮できそうです。⏰
-育成期間半減で年間650万円の効果も。`,
-    
-    'answer_q2_poor': `育成に時間がかかりすぎかも...😓
-AI支援で劇的に短縮可能です。`,
-    
-    'answer_q2_critical': `育成期間が長すぎます！😱
-競合に人材を奪われるリスクが...`,
-
-    // Q3-Q10も同様に（簡略版）
-    'answer_q3_excellent': `理想的な時間の使い方です！💡
-価値創造に集中できていますね。`,
-    'answer_q3_poor': `優秀な人材が作業に忙殺...😔
-AIなら彼らを解放できます。`,
-    'answer_q3_fair': `育成は大切ですが...🤔
-AI活用で指導時間も効率化できます。`,
-    'answer_q3_bad': `もったいない！😭
-優秀人材は戦略に集中すべきです。`,
-    'answer_q3_perfect': `ワークライフバランス◎👏
-生産性の高い組織ですね。`,
-
-    'answer_q4_good': `前向きな退職は組織の健全性の証。🌟`,
-    'answer_q4_fair': `待遇改善も大切ですが...💰
-業務効率化で原資を作れます。`,
-    'answer_q4_poor': `業務負荷での離職は危険信号！⚠️`,
-    'answer_q4_bad': `成長実感は重要です。📚`,
-    'answer_q4_excellent': `定着率が高い！👥
-良い組織文化の表れです。`,
-    'answer_q4_critical': `組織風土の改善が急務です。😰`,
-
-    'answer_q5_excellent': `知識管理が進んでいます！📚`,
-    'answer_q5_good': `惜しい！文書はあるのに...📁`,
-    'answer_q5_fair': `バランス型ですね。🤹`,
-    'answer_q5_poor': `暗黙知の宝庫ですね。🧠`,
-    'answer_q5_bad': `危険な状態です！😨`,
-    'answer_q5_critical': `知識は最重要資産です！💎`,
-
-    'answer_q6_excellent': `理想的な状態！🎯`,
-    'answer_q6_good': `まずまずですが...🤷`,
-    'answer_q6_fair': `管理職が作業に忙殺...😵`,
-    'answer_q6_poor': `深刻な状況です。😱`,
-    'answer_q6_critical': `緊急事態です！🚨`,
-
-    'answer_q7_excellent': `圧倒的な提案力！💪`,
-    'answer_q7_good': `高い勝率ですね！🏆`,
-    'answer_q7_fair': `もったいない...😅`,
-    'answer_q7_poor': `提案力強化が急務！📝`,
-    'answer_q7_critical': `危機的状況です...😰`,
-
-    'answer_q8_excellent': `イノベーティブな組織！🚀`,
-    'answer_q8_fair': `アイデアを形にしたい...💭`,
-    'answer_q8_poor': `若手が諦めているかも...😔`,
-    'answer_q8_bad': `日常業務に追われすぎ！😫`,
-    'answer_q8_critical': `仕組みがないと始まらない。🔧`,
-
-    'answer_q9_excellent': `属人化を防げています！👏`,
-    'answer_q9_good': `ギリギリセーフ...😅`,
-    'answer_q9_poor': `危険な属人化！🛑`,
-    'answer_q9_bad': `最悪のシナリオ...😱`,
-    'answer_q9_critical': `現実から目を背けずに！👀`,
-
-    'answer_q10_excellent': `データドリブン経営！📊`,
-    'answer_q10_good': `要所では活用できてます。📈`,
-    'answer_q10_fair': `もったいない！📉`,
-    'answer_q10_poor': `経験も大切ですが...🎲`,
-    'answer_q10_critical': `データは宝の山！💰`
-  };
-
-  return detailedComments[answerData] || '貴重な回答をありがとうございます！🎯';
-}
-
-// プログレス表示機能
-function getProgressMessage(questionNum) {
-  if (questionNum === 3) {
-    return `順調です！あと7問 📝
-ここまでの回答から、
-改善の余地が見えてきました...`;
-  } else if (questionNum === 6) {
-    return `折り返し地点！あと4問 🏃
-興味深いパターンが
-見えてきています...`;
-  } else if (questionNum === 9) {
-    return `ラスト1問！🏁
-診断結果の準備を
-始めています...`;
-  }
-  return null;
-}
-
-async function handleQuestionAnswer(replyToken, userId, answerData) {
-  try {
-    console.log(`Handling answer: ${answerData} from user: ${userId}`);
-    
-    const userData = userAnswers.get(userId);
-    if (!userData) {
-      await startDiagnosis(replyToken, userId);
-      return;
-    }
-    
-    // 回答を保存
-    const questionNum = userData.currentQuestion;
-    userData.answers[`q${questionNum}`] = answerData;
-    
-    // 回答ラベルマップ
-    const answerLabels = {
-      'answer_q1_excellent': '20%以上向上（急成長）',
-      'answer_q1_very_good': '10-20%向上（高成長）',
-      'answer_q1_good': '5-10%向上（安定成長）',
-      'answer_q1_fair': 'ほぼ横ばい（±5%以内）',
-      'answer_q1_poor': '5-15%減少',
-      'answer_q1_critical': '15%以上減少（危機的）',
-      'answer_q2_excellent': '3ヶ月以内（超効率）',
-      'answer_q2_good': '3-6ヶ月（標準的）',
-      'answer_q2_fair': '6ヶ月-1年（やや長い）',
-      'answer_q2_poor': '1-2年（長期間）',
-      'answer_q2_critical': '2年以上（課題あり）',
-      'answer_q3_excellent': '新規プロジェクト・企画',
-      'answer_q3_poor': '通常業務が追いつかない',
-      'answer_q3_fair': '部下の指導・フォロー',
-      'answer_q3_bad': '会議・報告書作成',
-      'answer_q3_perfect': '残業はほぼない',
-      'answer_q4_good': 'キャリアアップ転職',
-      'answer_q4_fair': '給与・待遇への不満',
-      'answer_q4_poor': '業務負荷・残業過多',
-      'answer_q4_bad': '成長実感の欠如',
-      'answer_q4_excellent': '退職者はいない',
-      'answer_q4_critical': '人間関係・組織風土',
-      'answer_q5_excellent': '体系化・DB化済み',
-      'answer_q5_good': '文書化されているが散在',
-      'answer_q5_fair': '一部文書化、一部暗黙知',
-      'answer_q5_poor': '主にベテランの頭の中',
-      'answer_q5_bad': '人が辞めると失われる',
-      'answer_q5_critical': '特に管理していない',
-      'answer_q6_excellent': '80%以上（理想的）',
-      'answer_q6_good': '60-80%（良好）',
-      'answer_q6_fair': '40-60%（普通）',
-      'answer_q6_poor': '20-40%（問題あり）',
-      'answer_q6_critical': '20%未満（緊急事態）',
-      'answer_q7_excellent': '9割以上勝てる',
-      'answer_q7_good': '7-8割は勝てる',
-      'answer_q7_fair': '五分五分',
-      'answer_q7_poor': '3-4割程度',
-      'answer_q7_critical': '負けることが多い',
-      'answer_q8_excellent': '活発に出て実行している',
-      'answer_q8_fair': 'たまに出るが実現は少ない',
-      'answer_q8_poor': 'ほとんど出てこない',
-      'answer_q8_bad': '出ても検討する余裕なし',
-      'answer_q8_critical': '提案する仕組みがない',
-      'answer_q9_excellent': '他のメンバーでカバー可能',
-      'answer_q9_good': 'なんとか回るが大変',
-      'answer_q9_poor': '特定業務が完全に止まる',
-      'answer_q9_bad': '取引先との関係に影響',
-      'answer_q9_critical': '考えたくない状況',
-      'answer_q10_excellent': '日常的にデータ活用',
-      'answer_q10_good': '重要な決定時のみ活用',
-      'answer_q10_fair': 'たまに参考にする程度',
-      'answer_q10_poor': '勘と経験が中心',
-      'answer_q10_critical': 'データがそもそもない'
-    };
-    
-    const selectedAnswer = answerLabels[answerData] || '選択された回答';
-    
-    // 詳細コメントを使用
-    const detailedComment = getDetailedAnswerComment(answerData);
-    
-    const confirmMessage = `✅ あなたの回答：${selectedAnswer}
-
-${detailedComment}`;
-    
-    const messages = [
-      {
-        type: 'text',
-        text: confirmMessage
-      }
-    ];
-    
-    // プログレス表示（3問、6問、9問で表示）
-    const progressMsg = getProgressMessage(questionNum);
-    if (progressMsg) {
-      messages.push({
-        type: 'text',
-        text: progressMsg
-      });
-    }
-    
-    // 次の質問またはアクションボタン
-    let nextAction;
-    if (questionNum === 5) {
-      nextAction = {
-        type: 'postback',
-        label: '🤖 AI中間分析を見る',
-        data: 'show_intermediate_analysis'
-      };
-    } else if (questionNum === 10) {
-      nextAction = {
-        type: 'postback',
-        label: '📊 最終結果を見る',
-        data: 'show_final_results'
-      };
-    } else {
-      nextAction = {
-        type: 'postback',
-        label: `▶️ 次の質問（${questionNum + 1}/10）`,
-        data: `start_question_${questionNum + 1}`
-      };
-    }
-    
-    messages.push({
-      type: 'template',
-      altText: '次のアクション',
-      template: {
-        type: 'buttons',
-        text: '次に進みますか？',
-        actions: [nextAction]
-      }
-    });
-    
-    await client.replyMessage(replyToken, messages);
-    
-  } catch (error) {
-    console.error('Error in handleQuestionAnswer:', error);
-    await client.replyMessage(replyToken, {
-      type: 'text',
-      text: 'エラーが発生しました。「診断開始」と送信してやり直してください。'
-    });
-  }
-}
-
-async function showIntermediateAnalysis(replyToken, userId) {
-  try {
-    const userData = userAnswers.get(userId);
-    if (!userData) return;
-    
-    // より詳細なスコア計算
-    const answers = userData.answers;
-    let score = 0;
-    
-    // 回答パターン分析
-    const patterns = {
-      excellent: 0,
-      good: 0,
-      fair: 0,
-      poor: 0,
-      critical: 0
-    };
-    
-    Object.values(answers).forEach(answer => {
-      if (answer.includes('excellent') || answer.includes('perfect')) {
-        score += 10;
-        patterns.excellent++;
-      } else if (answer.includes('very_good')) {
-        score += 8;
-        patterns.good++;
-      } else if (answer.includes('good')) {
-        score += 7;
-        patterns.good++;
-      } else if (answer.includes('fair')) {
-        score += 5;
-        patterns.fair++;
-      } else if (answer.includes('poor')) {
-        score += 2;
-        patterns.poor++;
-      } else if (answer.includes('bad')) {
-        score += 1;
-        patterns.poor++;
-      } else if (answer.includes('critical')) {
-        score += 0;
-        patterns.critical++;
-      }
-    });
-    
-    // 分析結果の生成
-    let primaryIssue = '業務効率化';
-    let recommendedTool = 'ChatGPT Business';
-    let estimatedEffect = '年間800万円';
-    
-    if (patterns.critical >= 2) {
-      primaryIssue = '緊急体制立て直し';
-      recommendedTool = '包括的AI変革プログラム';
-      estimatedEffect = '年間1,500万円';
-    } else if (patterns.poor >= 3) {
-      primaryIssue = '基盤強化';
-      recommendedTool = 'RPA + ChatGPT導入';
-      estimatedEffect = '年間1,200万円';
-    } else if (patterns.excellent >= 3) {
-      primaryIssue = '更なる成長加速';
-      recommendedTool = 'ChatGPT Enterprise + 高度AI';
-      estimatedEffect = '年間2,000万円';
-    }
-    
-    const analysisMessage = `🤖 【AI中間分析結果】
-
-📊 現在のスコア: ${score}/50点
-🎯 最優先改善領域: ${primaryIssue}
-💰 推定改善効果: ${estimatedEffect}
-⚡ 推奨AIツール: ${recommendedTool}
-
-📋 パターン分析：
-${patterns.excellent > 0 ? `✅ 優秀領域: ${patterns.excellent}項目` : ''}
-${patterns.good > 0 ? `🟢 良好領域: ${patterns.good}項目` : ''}
-${patterns.fair > 0 ? `🟡 改善余地: ${patterns.fair}項目` : ''}
-${patterns.poor > 0 ? `🔴 要改善: ${patterns.poor}項目` : ''}
-${patterns.critical > 0 ? `🚨 緊急対応: ${patterns.critical}項目` : ''}
-
-後半の質問で、より詳細な
-改善ポイントを特定していきます！`;
-
-    await client.replyMessage(replyToken, [
-      {
-        type: 'text',
-        text: analysisMessage
-      },
-      {
-        type: 'template',
-        altText: '後半に進む',
-        template: {
-          type: 'buttons',
-          text: '残り5問で詳細分析を完了します',
-          actions: [
-            {
-              type: 'postback',
-              label: '▶️ 質問6に進む',
-              data: 'continue_to_q6'
-            }
-          ]
-        }
-      }
-    ]);
-    
-  } catch (error) {
-    console.error('Error in showIntermediateAnalysis:', error);
-  }
-}
-
-async function showFinalResults(replyToken, userId) {
-  try {
-    const userData = userAnswers.get(userId);
-    if (!userData) return;
-    
-    // 全10問の詳細スコア計算
-    const answers = userData.answers;
-    let totalScore = 0;
-    
-    // より精密なスコアリング
-    const scoreMap = {
-      'answer_q1_excellent': 15, 'answer_q1_very_good': 12, 'answer_q1_good': 8, 'answer_q1_fair': 4, 'answer_q1_poor': 1, 'answer_q1_critical': 0,
-      'answer_q2_excellent': 10, 'answer_q2_good': 8, 'answer_q2_fair': 5, 'answer_q2_poor': 2, 'answer_q2_critical': 0,
-      'answer_q3_excellent': 10, 'answer_q3_perfect': 10, 'answer_q3_fair': 7, 'answer_q3_poor': 3, 'answer_q3_bad': 0,
-      'answer_q4_excellent': 8, 'answer_q4_good': 8, 'answer_q4_fair': 4, 'answer_q4_bad': 3, 'answer_q4_poor': 2, 'answer_q4_critical': 1,
-      'answer_q5_excellent': 10, 'answer_q5_good': 7, 'answer_q5_fair': 5, 'answer_q5_poor': 3, 'answer_q5_bad': 1, 'answer_q5_critical': 0,
-      'answer_q6_excellent': 10, 'answer_q6_good': 7, 'answer_q6_fair': 4, 'answer_q6_poor': 2, 'answer_q6_critical': 0,
-      'answer_q7_excellent': 10, 'answer_q7_good': 8, 'answer_q7_fair': 5, 'answer_q7_poor': 2, 'answer_q7_critical': 0,
-      'answer_q8_excellent': 7, 'answer_q8_fair': 5, 'answer_q8_poor': 3, 'answer_q8_bad': 1, 'answer_q8_critical': 0,
-      'answer_q9_excellent': 10, 'answer_q9_good': 7, 'answer_q9_poor': 3, 'answer_q9_bad': 1, 'answer_q9_critical': 0,
-      'answer_q10_excellent': 10, 'answer_q10_good': 7, 'answer_q10_fair': 4, 'answer_q10_poor': 2, 'answer_q10_critical': 0
-    };
-    
-    Object.values(answers).forEach(answer => {
-      totalScore += scoreMap[answer] || 0;
-    });
-    
-    // スコア別の詳細結果メッセージ
-    let resultData;
-    if (totalScore >= 80) {
-      resultData = {
-        title: '🏆 診断スコア：' + totalScore + '/100点',
-        judgment: '【判定】業界トップクラス！',
-        message: `すでに高いレベルにある御社。
-でも、満足していませんよね？
-
-AIを活用すれば、
-今の2倍の成長速度も可能です。
-
-【期待効果】
-✅ 売上成長率：さらに+30%
-✅ 業界No.1の生産性
-✅ 人材が集まる企業に
-
-トップ企業の次の一手を
-一緒に考えませんか？`
-      };
-    } else if (totalScore >= 60) {
-      resultData = {
-        title: '🌟 診断スコア：' + totalScore + '/100点',
-        judgment: '【判定】大きな成長余地あり！',
-        message: `良い部分と改善点が
-はっきり見えました。
-
-今がチャンスです！
-
-【改善可能額】
-年間1,800万円〜2,500万円
-
-【優先改善ポイント】
-1. 業務効率化（最重要）
-2. 人材活用度向上
-3. 知識資産の活用
-
-6ヶ月で上位20%に入れます。
-詳細な改善プランをご提案します。`
-      };
-    } else if (totalScore >= 40) {
-      resultData = {
-        title: '⚡ 診断スコア：' + totalScore + '/100点',
-        judgment: '【判定】今すぐ改善が必要',
-        message: `残念ながら
-業界平均をやや下回っています。
-
-このままでは、
-3年後に大きな差がつきます。
-
-【緊急改善必要額】
-年間2,500万円の損失を防げます
-
-でも大丈夫。
-適切な対策を打てば、
-1年で業界上位に入れます。
-
-まず何から始めるべきか
-お伝えします。`
-      };
-    } else {
-      resultData = {
-        title: '🚨 診断スコア：' + totalScore + '/100点',
-        judgment: '【判定】変革が急務！',
-        message: `厳しい結果ですが、
-これは「伸びしろ最大」
-ということでもあります。
-
-【現在の損失】
-年間3,000万円以上
-
-【朗報】
-同じ状況から2年で
-業界トップになった企業があります。
-
-今なら間に合います。
-緊急改善プランをご提案します。`
-      };
-    }
-    
-    const finalMessage = `${resultData.title}
-
-${resultData.judgment}
-
-${resultData.message}
-
-【詳細分析レポート】
-📧 個別相談で以下をご提供：
-• 御社専用の改善ロードマップ
-• 具体的なAIツール選定
-• 投資対効果の詳細計算
-• 成功事例との比較分析
-
-【特別オファー】
-診断実施企業限定：
-初回相談60分→90分に無料延長！`;
-
-    await client.replyMessage(replyToken, [
-      {
-        type: 'text',
-        text: finalMessage
-      },
-      {
-        type: 'template',
-        altText: '次のアクション',
-        template: {
-          type: 'buttons',
-          text: '診断結果はいかがでしたか？',
-          actions: [
-            {
-              type: 'uri',
-              label: '📞 個別相談申し込み',
-              uri: 'https://calendly.com/your-calendar'
-            },
-            {
-              type: 'postback',
-              label: '🔄 診断をやり直す',
-              data: 'start_diagnosis'
-            }
-          ]
-        }
-      },
-      {
-        type: 'text',
-        text: `📋 診断完了！
-
-今回の診断結果から見える
-御社の3つの重要ポイント：
-
-1️⃣ ${getTopInsight(answers)}
-2️⃣ 最も効果的なAI活用領域の特定
-3️⃣ 6ヶ月での具体的改善プラン
-
-これらの詳細について、
-無料相談でお話しします。
-
-📅 下記から都合の良い時間を
-お選びください：
-https://calendly.com/your-calendar
-
-診断結果を同僚の方にも
-シェアしていただけると嬉しいです！`
-      }
-    ]);
-    
-    // ログ出力
-    console.log('Diagnosis completed for user:', userId, 'Score:', totalScore);
-    
-  } catch (error) {
-    console.error('Error in showFinalResults:', error);
-    await client.replyMessage(replyToken, {
-      type: 'text',
-      text: '結果の表示でエラーが発生しました。申し訳ございません。'
-    });
-  }
-}
-
-function getTopInsight(answers) {
-  // 回答パターンから最も重要な洞察を抽出
-  if (answers.q1 && answers.q1.includes('critical')) {
-    return '売上急減への緊急対策が必要';
-  } else if (answers.q3 && answers.q3.includes('poor')) {
-    return '優秀人材の時間活用に大きな無駄';
-  } else if (answers.q5 && answers.q5.includes('critical')) {
-    return '知識流出リスクが極めて高い';
-  } else if (answers.q9 && answers.q9.includes('bad')) {
-    return '属人化による事業継続リスク';
-  } else if (answers.q6 && answers.q6.includes('critical')) {
-    return '管理職の機能不全状態';
-  } else if (answers.q2 && answers.q2.includes('critical')) {
-    return '人材育成システムの抜本改革';
-  } else if (answers.q7 && answers.q7.includes('critical')) {
-    return '提案力向上による売上回復';
-  } else if (answers.q4 && answers.q4.includes('poor')) {
-    return '離職率改善による組織安定化';
-  } else {
-    return '基礎的な業務効率化が最優先';
-  }
-}// Vercel用 LINEボット - AI活用診断システム（修正版・完全統合）
-const line = require('@line/bot-sdk');
-
-const config = {
-  channelAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN,
-  channelSecret: process.env.LINE_CHANNEL_SECRET,
-};
-
-const client = new line.Client(config);
-
-// ユーザー回答を保存するメモリストレージ
+// ユーザーの回答データを保存するメモリストレージ
 const userAnswers = new Map();
 
 export default async function handler(req, res) {
+  console.log('Webhook呼び出し開始');
+  
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  try {
-    const events = req.body.events;
-    
-    if (!events || events.length === 0) {
-      return res.status(200).json({ message: 'No events to process' });
+  const events = req.body.events;
+  if (!events || events.length === 0) {
+    return res.status(200).json({ message: 'No events' });
+  }
+
+  for (const event of events) {
+    try {
+      await handleEvent(event);
+    } catch (error) {
+      console.error('Event handling error:', error);
     }
-
-    await Promise.all(events.map(handleEvent));
-    res.status(200).json({ message: 'OK' });
-  } catch (error) {
-    console.error('Error:', error);
-    res.status(500).json({ error: 'Internal server error' });
   }
+
+  res.status(200).json({ message: 'OK' });
 }
 
+// LINEイベント処理
 async function handleEvent(event) {
-  console.log('Received event:', JSON.stringify(event, null, 2));
-  
-  if (event.type !== 'message' && event.type !== 'postback') {
-    return;
-  }
+  const { type, replyToken, source, message, postback } = event;
+  const userId = source.userId;
 
-  const userId = event.source.userId;
-  const replyToken = event.replyToken;
-  let messageText = '';
-  
-  if (event.type === 'message' && event.message.type === 'text') {
-    messageText = event.message.text;
-  } else if (event.type === 'postback') {
-    messageText = event.postback.data;
-  } else {
-    return;
-  }
-  
-  console.log(`Processing message: ${messageText} from user: ${userId}`);
-  
-  // 診断開始の判定
-  if (messageText === '診断開始' || 
-      messageText === 'start_diagnosis' || 
-      messageText.includes('診断') || 
-      messageText === 'はじめる' ||
-      messageText === '開始') {
-    
-    console.log('Starting diagnosis for user:', userId);
-    await startDiagnosis(replyToken, userId);
-    return;
-  }
-  
-  // その他のメッセージ処理
-  await processMessage(replyToken, userId, messageText);
-}
+  console.log('Event received:', { type, userId });
 
-async function startDiagnosis(replyToken, userId) {
-  try {
-    console.log('Starting diagnosis process for user:', userId);
-    
-    // ユーザーデータをリセット
-    userAnswers.set(userId, {
-      answers: {},
-      currentQuestion: 0,
-      startTime: new Date()
-    });
+  if (type === 'message' && message.type === 'text') {
+    const userMessage = message.text;
+    console.log('User message:', userMessage);
 
-    const welcomeMessage = {
-      type: 'template',
-      altText: 'AI活用診断を開始します',
-      template: {
-        type: 'buttons',
+    if (userMessage === '診断開始' || userMessage.includes('診断')) {
+      console.log('診断開始メッセージ受信:', userMessage);
+      
+      // プロフェッショナルな案内メッセージ
+      const welcomeMessage = {
+        type: 'text',
         text: `🎯 AI活用診断へようこそ
 
 この診断では、1,200社の実績データを基に
@@ -669,276 +49,1544 @@ async function startDiagnosis(replyToken, userId) {
 
 📊 診断内容：
 • 売上・生産性の分析
-• 人材活用効率の評価  
+• 人材活用効率の評価
 • 業務改善余地の特定
 • AI導入効果の算出
 
-それでは診断を開始しましょう！`,
-        actions: [
-          {
-            type: 'postback',
-            label: '📝 診断を開始する',
-            data: 'start_question_1'
-          }
-        ]
-      }
-    };
+💰 分析結果：
+• 具体的な改善可能額
+• 優先順位付きアクションプラン  
+• 最適なAIツール提案
+• 投資回収期間の算出
 
-    await client.replyMessage(replyToken, welcomeMessage);
-    console.log('Welcome message sent successfully');
-    
-  } catch (error) {
-    console.error('Error in startDiagnosis:', error);
-    await client.replyMessage(replyToken, {
-      type: 'text',
-      text: '申し訳ございません。診断の開始でエラーが発生しました。もう一度「診断開始」と送信してください。'
-    });
-  }
-}
-
-async function processMessage(replyToken, userId, messageText) {
-  try {
-    const userData = userAnswers.get(userId);
-    
-    if (!userData) {
-      // 初回メッセージまたは診断開始前
-      const initialMessage = {
-        type: 'template',
-        altText: 'AI活用診断のご案内',
-        template: {
-          type: 'buttons',
-          text: `👋 はじめまして！
-
-AI活用診断システムです。
-あなたの会社のAI導入可能性を
-無料で診断いたします。
-
-まずは「診断開始」と送信するか、
-下のボタンを押してください。`,
-          actions: [
+準備はよろしいですか？`,
+        quickReply: {
+          items: [
             {
-              type: 'postback',
-              label: '🚀 診断を開始',
-              data: 'start_diagnosis'
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '✅ 診断開始',
+                data: 'start_q1'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '❓ 詳細を知りたい',
+                data: 'more_info'
+              }
             }
           ]
         }
       };
-      
-      await client.replyMessage(replyToken, initialMessage);
-      return;
+
+      try {
+        console.log('案内メッセージ送信中...');
+        await replyMessage(replyToken, [welcomeMessage]);
+        console.log('案内メッセージ送信完了');
+      } catch (error) {
+        console.error('案内メッセージ送信エラー:', error);
+      }
     }
-    
-    // 質問への回答処理
-    if (messageText.startsWith('answer_q')) {
-      await handleQuestionAnswer(replyToken, userId, messageText);
-    } else if (messageText.startsWith('start_question_')) {
-      const questionNum = parseInt(messageText.replace('start_question_', ''));
-      await sendQuestion(replyToken, userId, questionNum);
-    } else if (messageText === 'next_question') {
-      const currentQ = userData.currentQuestion;
-      await sendQuestion(replyToken, userId, currentQ + 1);
-    } else if (messageText === 'show_intermediate_analysis') {
-      await showIntermediateAnalysis(replyToken, userId);
-    } else if (messageText === 'continue_to_q6') {
-      await sendQuestion(replyToken, userId, 6);
-    } else if (messageText === 'show_final_results') {
-      await showFinalResults(replyToken, userId);
-    } else {
-      // その他のメッセージ
-      await client.replyMessage(replyToken, {
+  }
+
+  if (type === 'postback') {
+    const data = postback.data;
+    console.log('Postback received:', data);
+
+    if (data === 'start_q1') {
+      const q1Message = {
         type: 'text',
-        text: '診断を開始するには「診断開始」と送信してください。'
-      });
+        text: '【質問1/10】📈\n\n昨年度と比較して一人当たりの売上高は？',
+        quickReply: {
+          items: [
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '10%以上向上',
+                data: 'q1_improve_10plus'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '5-10%向上',
+                data: 'q1_improve_5to10'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: 'ほぼ横ばい',
+                data: 'q1_flat'
+              }
+            }
+          ]
+        }
+      };
+
+      try {
+        await sendPushMessage(userId, [q1Message]);
+        console.log('質問1送信完了');
+      } catch (error) {
+        console.error('質問1送信エラー:', error);
+      }
     }
-    
-  } catch (error) {
-    console.error('Error in processMessage:', error);
-    await client.replyMessage(replyToken, {
-      type: 'text',
-      text: 'エラーが発生しました。「診断開始」と送信して最初からやり直してください。'
-    });
+
+    // Q1の回答処理
+    if (data.startsWith('q1_')) {
+      // 回答を記録
+      if (!userAnswers.has(userId)) {
+        userAnswers.set(userId, {});
+      }
+      userAnswers.get(userId).q1 = data.replace('q1_', '');
+      
+      let responseMessage = '';
+      
+      if (data === 'q1_improve_20plus') {
+        responseMessage = '驚異的な成長率！🚀\n御社は既に業界のトップランナーですね。';
+      } else if (data === 'q1_improve_10to20') {
+        responseMessage = '素晴らしい高成長！🎉\nこの勢いをAIでさらに加速できます。';
+      } else if (data === 'q1_improve_5to10') {
+        responseMessage = '順調な成長ですね！📈\nAI活用で2桁成長への飛躍が可能です。';
+      } else if (data === 'q1_flat') {
+        responseMessage = '現状維持は実質的な後退...😐\n競合はAIで生産性を大幅改善中です。';
+      } else if (data === 'q1_decline_5to15') {
+        responseMessage = '厳しい状況ですが挽回可能！💪\nAIなら少ない投資で売上回復できます。';
+      } else if (data === 'q1_decline_15plus') {
+        responseMessage = '今こそ変革のチャンス！🔥\nAI活用で劇的な改善事例が多数あります。';
+      }
+
+      const benchmarkMessage = {
+        type: 'text',
+        text: `${responseMessage}
+
+💡 ベンチマークデータ：
+AI活用企業の87%が「一人当たり売上高」を平均23%向上させています。人数を増やさず、売上を増やす方法があります。`,
+        quickReply: {
+          items: [
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '📊 次の質問へ',
+                data: 'next_q2'
+              }
+            }
+          ]
+        }
+      };
+
+      try {
+        await sendPushMessage(userId, [benchmarkMessage]);
+        console.log('Q1ベンチマーク送信完了');
+      } catch (error) {
+        console.error('Q1ベンチマーク送信エラー:', error);
+      }
+    }
+
+    // 質問2表示
+    if (data === 'next_q2') {
+      const q2Message = {
+        type: 'text',
+        text: '【質問2/10】🌱\n\n新入社員が一人前になるまでの期間は？',
+        quickReply: {
+          items: [
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '3ヶ月以内（超効率）',
+                data: 'q2_3months'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '3-6ヶ月（標準的）',
+                data: 'q2_3to6months'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '6ヶ月-1年（やや長い）',
+                data: 'q2_6to12months'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '1-2年（長期間）',
+                data: 'q2_1to2years'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '2年以上（課題あり）',
+                data: 'q2_2plus_years'
+              }
+            }
+          ]
+        }
+      };
+
+      try {
+        await sendPushMessage(userId, [q2Message]);
+        console.log('質問2送信完了');
+      } catch (error) {
+        console.error('質問2送信エラー:', error);
+      }
+    }
+
+    // Q2の回答処理
+    if (data.startsWith('q2_')) {
+      // 回答を記録
+      userAnswers.get(userId).q2 = data.replace('q2_', '');
+      
+      let responseMessage = '';
+      
+      if (data === 'q2_3months') {
+        responseMessage = '驚異的な育成効率！✨\n御社の教育システムは業界トップクラスです。';
+      } else if (data === 'q2_3to6months') {
+        responseMessage = '標準的な育成期間ですね。🌱\nAI活用でさらに2ヶ月短縮可能です。';
+      } else if (data === 'q2_6to12months') {
+        responseMessage = 'もう少し短縮の余地がありそうです。⏰\n育成期間半減で年間650万円の効果も。';
+      } else if (data === 'q2_1to2years') {
+        responseMessage = '育成に時間がかかりすぎています😓\nAI支援で劇的に短縮可能です。';
+      } else if (data === 'q2_2plus_years') {
+        responseMessage = '緊急に改善が必要です！😱\n優秀な人材が競合に流れるリスクが...';
+      }
+
+      const benchmarkMessage = {
+        type: 'text',
+        text: `${responseMessage}
+
+💡 人材育成の新常識：
+AI活用による教育支援で、育成期間を平均45%短縮できます。あなたの会社なら年間〇〇万円の効果に相当します。`,
+        quickReply: {
+          items: [
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '📊 次の質問へ',
+                data: 'next_q3'
+              }
+            }
+          ]
+        }
+      };
+
+      try {
+        await sendPushMessage(userId, [benchmarkMessage]);
+        console.log('Q2ベンチマーク送信完了');
+      } catch (error) {
+        console.error('Q2ベンチマーク送信エラー:', error);
+      }
+    }
+
+    // 質問3表示
+    if (data === 'next_q3') {
+      const q3Message = {
+        type: 'text',
+        text: '【質問3/10】⭐\n\n先月、最も優秀な社員が残業した主な理由は？',
+        quickReply: {
+          items: [
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '新規プロジェクト・企画',
+                data: 'q3_new_project'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '通常業務が追いつかない',
+                data: 'q3_behind_work'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '部下の指導・フォロー',
+                data: 'q3_mentoring'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '会議・報告書作成',
+                data: 'q3_meetings'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '残業はほぼない',
+                data: 'q3_no_overtime'
+              }
+            }
+          ]
+        }
+      };
+
+      try {
+        await sendPushMessage(userId, [q3Message]);
+        console.log('質問3送信完了');
+      } catch (error) {
+        console.error('質問3送信エラー:', error);
+      }
+    }
+
+    // Q3の回答処理
+    if (data.startsWith('q3_')) {
+      // 回答を記録
+      userAnswers.get(userId).q3 = data.replace('q3_', '');
+      
+      let responseMessage = '';
+      
+      if (data === 'q3_new_project') {
+        responseMessage = '理想的な時間の使い方！💡\n優秀人材が価値創造に集中できています。';
+      } else if (data === 'q3_behind_work') {
+        responseMessage = '優秀な人材が作業に忙殺されています😔\nAIなら彼らを解放できます。';
+      } else if (data === 'q3_mentoring') {
+        responseMessage = '育成は大切ですが...🤔\nAI活用で指導時間も効率化できます。';
+      } else if (data === 'q3_meetings') {
+        responseMessage = '非常にもったいない！😭\n優秀人材は戦略立案に集中すべきです。';
+      } else if (data === 'q3_no_overtime') {
+        responseMessage = 'ワークライフバランス抜群！👏\n生産性の高い理想的な組織ですね。';
+      }
+
+      const benchmarkMessage = {
+        type: 'text',
+        text: `${responseMessage}
+
+💡 優秀人材の活用度：
+優秀社員の68%が「本来の力を発揮できていない」と感じています。彼らの時間を解放すればイノベーションが生まれます。`,
+        quickReply: {
+          items: [
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '📊 次の質問へ',
+                data: 'next_q4'
+              }
+            }
+          ]
+        }
+      };
+
+      try {
+        await sendPushMessage(userId, [benchmarkMessage]);
+        console.log('Q3ベンチマーク送信完了');
+      } catch (error) {
+        console.error('Q3ベンチマーク送信エラー:', error);
+      }
+    }
+
+    // 質問4表示
+    if (data === 'next_q4') {
+      const q4Message = {
+        type: 'text',
+        text: '【質問4/10】🚪\n\n直近3ヶ月で退職した社員の主な理由は？',
+        quickReply: {
+          items: [
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: 'キャリアアップ転職',
+                data: 'q4_career_up'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '給与・待遇への不満',
+                data: 'q4_salary'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '業務負荷・残業過多',
+                data: 'q4_workload'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '成長実感の欠如',
+                data: 'q4_no_growth'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '退職者はいない',
+                data: 'q4_no_resignation'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '人間関係・組織風土',
+                data: 'q4_relationship'
+              }
+            }
+          ]
+        }
+      };
+
+      try {
+        await sendPushMessage(userId, [q4Message]);
+        console.log('質問4送信完了');
+      } catch (error) {
+        console.error('質問4送信エラー:', error);
+      }
+    }
+
+    // Q4の回答処理
+    if (data.startsWith('q4_')) {
+      // 回答を記録
+      userAnswers.get(userId).q4 = data.replace('q4_', '');
+      
+      let responseMessage = '';
+      
+      if (data === 'q4_career_up') {
+        responseMessage = '前向きな退職は組織の健全性の証🌟\n卒業生ネットワークは貴重な財産です。';
+      } else if (data === 'q4_salary') {
+        responseMessage = '待遇改善も大切ですが...💰\n業務効率化で原資創出が可能です。';
+      } else if (data === 'q4_workload') {
+        responseMessage = '業務負荷での離職は危険信号！⚠️\nAIで業務を30%削減できます。';
+      } else if (data === 'q4_no_growth') {
+        responseMessage = '成長実感は重要な要素です📚\nAI活用でスキルアップ機会を創出できます。';
+      } else if (data === 'q4_no_resignation') {
+        responseMessage = '定着率が高い！👥\n良い組織文化の表れですね。';
+      } else if (data === 'q4_relationship') {
+        responseMessage = '組織風土の改善が必要🤝\nAIで業務ストレス軽減から始めましょう。';
+      }
+
+      const benchmarkMessage = {
+        type: 'text',
+        text: `${responseMessage}
+
+💡 離職コストの真実：
+一人の離職で平均320万円の損失。AI活用による業務効率化で離職率を34%削減した企業があります。`,
+        quickReply: {
+          items: [
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '📊 次の質問へ',
+                data: 'next_q5'
+              }
+            }
+          ]
+        }
+      };
+
+      try {
+        await sendPushMessage(userId, [benchmarkMessage]);
+        console.log('Q4ベンチマーク送信完了');
+      } catch (error) {
+        console.error('Q4ベンチマーク送信エラー:', error);
+      }
+    }
+
+    // 質問5表示（6択）
+    if (data === 'next_q5') {
+      const q5Message = {
+        type: 'text',
+        text: '【質問5/10】📚\n\n社内の「知識・ノウハウ」の共有状況は？',
+        quickReply: {
+          items: [
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '体系化・DB化済み',
+                data: 'q5_database'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '文書化されているが散在',
+                data: 'q5_documents'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '一部文書化、一部暗黙知',
+                data: 'q5_mixed'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '主にベテランの頭の中',
+                data: 'q5_tacit'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '人が辞めると失われる',
+                data: 'q5_lost'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '特に管理していない',
+                data: 'q5_none'
+              }
+            }
+          ]
+        }
+      };
+
+      try {
+        await sendPushMessage(userId, [q5Message]);
+        console.log('質問5送信完了');
+      } catch (error) {
+        console.error('質問5送信エラー:', error);
+      }
+    }
+
+    // Q5の回答処理（AI分析実行）
+    if (data.startsWith('q5_')) {
+      // 回答を記録
+      userAnswers.get(userId).q5 = data.replace('q5_', '');
+      
+      let responseMessage = '';
+      
+      if (data === 'q5_database') {
+        responseMessage = '素晴らしい知識管理体制！📚\nAIで更に活用度を高められます。';
+      } else if (data === 'q5_documents') {
+        responseMessage = '惜しい！文書はあるのに...📁\nAIで知識を統合・活用できます。';
+      } else if (data === 'q5_mixed') {
+        responseMessage = '中間的な状況ですね🤔\n完全なAI活用に向けて整理が必要です。';
+      } else if (data === 'q5_tacit') {
+        responseMessage = '暗黙知の宝庫！🧠\nAIで見える化すれば巨大な財産になります。';
+      } else if (data === 'q5_lost') {
+        responseMessage = '非常に危険な状態！😱\n今すぐ知識の保全対策が必要です。';
+      } else if (data === 'q5_none') {
+        responseMessage = '知識は最重要資産です💎\n管理体制の構築から始めましょう。';
+      }
+
+      // 通常のベンチマーク表示
+      const benchmarkMessage = {
+        type: 'text',
+        text: `${responseMessage}
+
+💡 知識資産の価値：
+暗黙知の見える化により新人の戦力化速度が2.3倍に。AIなら過去の提案書から勝ちパターンも自動抽出できます。`
+      };
+
+      // AI分析実行中メッセージ
+      const analysisMessage = {
+        type: 'text',
+        text: `🤖 AI分析中...
+
+ここまでの5つの回答を
+Claude AIが詳細分析中です
+
+少々お待ちください...⏳`
+      };
+
+      try {
+        await sendPushMessage(userId, [benchmarkMessage, analysisMessage]);
+        
+        // Claude APIでAI分析実行
+        const aiAnalysis = await analyzeWithClaude(userAnswers.get(userId));
+        
+        const aiResultMessage = {
+          type: 'text',
+          text: `🎯 【AI中間分析結果】
+
+${aiAnalysis}
+
+━━━━━━━━━━━━━━━━━━━
+残り5問で、さらに詳細な
+最終分析を行います！`,
+          quickReply: {
+            items: [
+              {
+                type: 'action',
+                action: {
+                  type: 'postback',
+                  label: '📊 後半の診断へ',
+                  data: 'next_q6'
+                }
+              }
+            ]
+          }
+        };
+
+        await sendPushMessage(userId, [aiResultMessage]);
+        console.log('AI分析結果送信完了');
+        
+      } catch (error) {
+        console.error('AI分析エラー:', error);
+        
+        // エラー時のフォールバック
+        const fallbackMessage = {
+          type: 'text',
+          text: `📊 中間分析結果
+
+これまでの回答から、御社には
+大きな改善ポテンシャルが
+見えてきました！
+
+詳細は最終結果でお伝えします。`,
+          quickReply: {
+            items: [
+              {
+                type: 'action',
+                action: {
+                  type: 'postback',
+                  label: '📊 後半の診断へ',
+                  data: 'next_q6'
+                }
+              }
+            ]
+          }
+        };
+        
+        await sendPushMessage(userId, [fallbackMessage]);
+      }
+    }
+
+    // 質問6表示（5択）
+    if (data === 'next_q6') {
+      const q6Message = {
+        type: 'text',
+        text: '【質問6/10】⏰\n\n管理職が「本来の仕事」に使える時間の割合は？',
+        quickReply: {
+          items: [
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '80%以上（理想的）',
+                data: 'q6_80plus'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '60-80%（良好）',
+                data: 'q6_60to80'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '40-60%（普通）',
+                data: 'q6_40to60'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '20-40%（問題あり）',
+                data: 'q6_20to40'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '20%未満（緊急事態）',
+                data: 'q6_under20'
+              }
+            }
+          ]
+        }
+      };
+
+      try {
+        await sendPushMessage(userId, [q6Message]);
+        console.log('質問6送信完了');
+      } catch (error) {
+        console.error('質問6送信エラー:', error);
+      }
+    }
+
+    // Q6の回答処理
+    if (data.startsWith('q6_')) {
+      // 回答を記録
+      userAnswers.get(userId).q6 = data.replace('q6_', '');
+      
+      let responseMessage = '';
+      
+      if (data === 'q6_80plus') {
+        responseMessage = '理想的な状態！🎯\n戦略的マネジメントに集中できています。';
+      } else if (data === 'q6_60to80') {
+        responseMessage = '良好な状態ですね👍\nもう少し改善の余地があります。';
+      } else if (data === 'q6_40to60') {
+        responseMessage = '平均的ですが改善可能🤷\n管理職の価値を最大化しましょう。';
+      } else if (data === 'q6_20to40') {
+        responseMessage = '管理職が作業に忙殺されています😵\nAIで本来業務に集中を。';
+      } else if (data === 'q6_under20') {
+        responseMessage = '極めて深刻な状況！🚨\n高額な管理職が単純作業に...';
+      }
+
+      const benchmarkMessage = {
+        type: 'text',
+        text: `${responseMessage}
+
+💡 マネジメント効率：
+管理職の45%が「作業」に忙殺されています。AIで定型業務を自動化すれば、部下育成と戦略立案に集中できます。`,
+        quickReply: {
+          items: [
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '📊 次の質問へ',
+                data: 'next_q7'
+              }
+            }
+          ]
+        }
+      };
+
+      try {
+        await sendPushMessage(userId, [benchmarkMessage]);
+        console.log('Q6ベンチマーク送信完了');
+      } catch (error) {
+        console.error('Q6ベンチマーク送信エラー:', error);
+      }
+    }
+
+    // 質問7表示（5択）
+    if (data === 'next_q7') {
+      const q7Message = {
+        type: 'text',
+        text: '【質問7/10】💼\n\n「提案の質」で競合に勝てる自信は？',
+        quickReply: {
+          items: [
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '9割以上勝てる',
+                data: 'q7_almost_always'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '7-8割は勝てる',
+                data: 'q7_mostly_win'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '五分五分',
+                data: 'q7_fifty_fifty'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '3-4割程度',
+                data: 'q7_sometimes'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '負けることが多い',
+                data: 'q7_often_lose'
+              }
+            }
+          ]
+        }
+      };
+
+      try {
+        await sendPushMessage(userId, [q7Message]);
+        console.log('質問7送信完了');
+      } catch (error) {
+        console.error('質問7送信エラー:', error);
+      }
+    }
+
+    // Q7の回答処理（5択対応）
+    if (data.startsWith('q7_')) {
+      userAnswers.get(userId).q7 = data.replace('q7_', '');
+      
+      let responseMessage = '';
+      
+      if (data === 'q7_almost_always') {
+        responseMessage = '圧倒的な提案力！🏆\n業界トップクラスの実力ですね。';
+      } else if (data === 'q7_mostly_win') {
+        responseMessage = '高い勝率！💪\nAIでさらに差をつけましょう。';
+      } else if (data === 'q7_fifty_fifty') {
+        responseMessage = 'もったいない状況です😅\nAIで提案力を大幅強化できます。';
+      } else if (data === 'q7_sometimes') {
+        responseMessage = '改善の余地が大きいですね📝\nAI活用で勝率向上を目指しましょう。';
+      } else if (data === 'q7_often_lose') {
+        responseMessage = '提案力強化が急務！🔥\nAI活用で勝率45%向上の実績あり。';
+      }
+
+      const benchmarkMessage = {
+        type: 'text',
+        text: `${responseMessage}
+
+💡 提案力の差：
+AI活用企業は提案書作成時間を70%削減しつつ、採択率を45%向上させています。時間をかけずに質を上げる方法があります。`,
+        quickReply: {
+          items: [
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '📊 次の質問へ',
+                data: 'next_q8'
+              }
+            }
+          ]
+        }
+      };
+
+      try {
+        await sendPushMessage(userId, [benchmarkMessage]);
+        console.log('Q7ベンチマーク送信完了');
+      } catch (error) {
+        console.error('Q7ベンチマーク送信エラー:', error);
+      }
+    }
+
+    // 質問8表示
+    if (data === 'next_q8') {
+      const q8Message = {
+        type: 'text',
+        text: '【質問8/10】💡\n\n若手社員からの改善提案や新しいアイデアは？',
+        quickReply: {
+          items: [
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '活発に実行',
+                data: 'q8_active'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: 'たまに出るが実現少',
+                data: 'q8_sometimes'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: 'ほとんど出ない',
+                data: 'q8_rarely'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '検討する余裕なし',
+                data: 'q8_no_time'
+              }
+            }
+          ]
+        }
+      };
+
+      try {
+        await sendPushMessage(userId, [q8Message]);
+        console.log('質問8送信完了');
+      } catch (error) {
+        console.error('質問8送信エラー:', error);
+      }
+    }
+
+    // Q8の回答処理
+    if (data.startsWith('q8_')) {
+      userAnswers.get(userId).q8 = data.replace('q8_', '');
+      
+      let responseMessage = '';
+      
+      if (data === 'q8_active') {
+        responseMessage = 'イノベーティブな組織！🚀\n素晴らしい文化です。';
+      } else if (data === 'q8_sometimes') {
+        responseMessage = 'アイデアを形にしたい...💭\nAIで実現スピードを上げられます。';
+      } else if (data === 'q8_rarely') {
+        responseMessage = '若手が諦めているかも...😔\n環境改善が必要です。';
+      } else if (data === 'q8_no_time') {
+        responseMessage = '日常業務に追われすぎ！😫\nAIで時間を作りましょう。';
+      }
+
+      const benchmarkMessage = {
+        type: 'text',
+        text: `${responseMessage}
+
+💡 イノベーションの源泉：
+社員の72%は「良いアイデアがあっても日常業務で手一杯」と回答。AIで時間を作れば、アイデアが形になります。`,
+        quickReply: {
+          items: [
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '📊 次の質問へ',
+                data: 'next_q9'
+              }
+            }
+          ]
+        }
+      };
+
+      try {
+        await sendPushMessage(userId, [benchmarkMessage]);
+        console.log('Q8ベンチマーク送信完了');
+      } catch (error) {
+        console.error('Q8ベンチマーク送信エラー:', error);
+      }
+    }
+
+    // 質問9表示
+    if (data === 'next_q9') {
+      const q9Message = {
+        type: 'text',
+        text: '【質問9/10】⚠️\n\nもし主力社員が突然1ヶ月休んだら？',
+        quickReply: {
+          items: [
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: 'カバー可能',
+                data: 'q9_coverable'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: 'なんとか回る',
+                data: 'q9_barely'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '業務が止まる',
+                data: 'q9_stops'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '取引先に影響',
+                data: 'q9_client_impact'
+              }
+            }
+          ]
+        }
+      };
+
+      try {
+        await sendPushMessage(userId, [q9Message]);
+        console.log('質問9送信完了');
+      } catch (error) {
+        console.error('質問9送信エラー:', error);
+      }
+    }
+
+    // Q9の回答処理
+    if (data.startsWith('q9_')) {
+      userAnswers.get(userId).q9 = data.replace('q9_', '');
+      
+      let responseMessage = '';
+      
+      if (data === 'q9_coverable') {
+        responseMessage = '属人化を防げています！👏\nリスク管理が優秀です。';
+      } else if (data === 'q9_barely') {
+        responseMessage = 'ギリギリセーフ...😅\nもう少し余裕を持ちたいですね。';
+      } else if (data === 'q9_stops') {
+        responseMessage = '危険な属人化！🛑\n年間850万円の損失リスクです。';
+      } else if (data === 'q9_client_impact') {
+        responseMessage = '最悪のシナリオ...😱\n今すぐ対策が必要です！';
+      }
+
+      const benchmarkMessage = {
+        type: 'text',
+        text: `${responseMessage}
+
+💡 属人化のリスク：
+業務の属人化による損失は年間平均850万円。AIによる業務標準化でこのリスクは80%削減可能です。`,
+        quickReply: {
+          items: [
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '📊 最後の質問へ',
+                data: 'next_q10'
+              }
+            }
+          ]
+        }
+      };
+
+      try {
+        await sendPushMessage(userId, [benchmarkMessage]);
+        console.log('Q9ベンチマーク送信完了');
+      } catch (error) {
+        console.error('Q9ベンチマーク送信エラー:', error);
+      }
+    }
+
+    // 質問10表示
+    if (data === 'next_q10') {
+      const q10Message = {
+        type: 'text',
+        text: '【質問10/10】📊\n\nデータに基づいて意思決定する頻度は？',
+        quickReply: {
+          items: [
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '日常的に活用',
+                data: 'q10_daily'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '重要な決定時のみ',
+                data: 'q10_important_only'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: 'たまに参考',
+                data: 'q10_sometimes'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '勘と経験中心',
+                data: 'q10_intuition'
+              }
+            }
+          ]
+        }
+      };
+
+      try {
+        await sendPushMessage(userId, [q10Message]);
+        console.log('質問10送信完了');
+      } catch (error) {
+        console.error('質問10送信エラー:', error);
+      }
+    }
+
+    // Q10の回答処理（最終分析実行）
+    if (data.startsWith('q10_')) {
+      userAnswers.get(userId).q10 = data.replace('q10_', '');
+      
+      let responseMessage = '';
+      
+      if (data === 'q10_daily') {
+        responseMessage = 'データドリブン経営！📊\n素晴らしい経営スタイルです。';
+      } else if (data === 'q10_important_only') {
+        responseMessage = '要所では活用できてます。📈\n日常でも使えばもっと効果的に。';
+      } else if (data === 'q10_sometimes') {
+        responseMessage = 'もったいない！📉\nデータ活用で的中率64%向上です。';
+      } else if (data === 'q10_intuition') {
+        responseMessage = '経験も大切ですが...🎲\nデータと組み合わせれば最強です。';
+      }
+
+      const benchmarkMessage = {
+        type: 'text',
+        text: `${responseMessage}
+
+💡 データ経営の効果：
+データ活用企業は非活用企業と比べ
+• 意思決定速度：3.5倍
+• 決定の的中率：64%向上
+• 機会損失：年2,400万円削減`
+      };
+
+      const analysisMessage = {
+        type: 'text',
+        text: `🤖 最終AI分析中...
+
+全10問の回答を
+総合的に分析しています
+
+最終診断結果を作成中...⏳`
+      };
+
+      try {
+        await sendPushMessage(userId, [benchmarkMessage, analysisMessage]);
+        
+        // 最終AI分析実行
+        const finalAnalysis = await getFinalAnalysis(userAnswers.get(userId));
+        
+        const finalResultMessage = {
+          type: 'text',
+          text: `🎯 【最終診断結果】
+
+${finalAnalysis}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+診断は以上です。
+詳細な改善プランにご興味があれば
+個別相談も承っております。`,
+          quickReply: {
+            items: [
+              {
+                type: 'action',
+                action: {
+                  type: 'postback',
+                  label: '📞 個別相談を申し込む',
+                  data: 'request_consultation'
+                }
+              },
+              {
+                type: 'action',
+                action: {
+                  type: 'postback',
+                  label: '📊 診断を再実行',
+                  data: 'restart_diagnosis'
+                }
+              }
+            ]
+          }
+        };
+
+        await sendPushMessage(userId, [finalResultMessage]);
+        console.log('最終診断結果送信完了');
+        
+      } catch (error) {
+        console.error('最終分析エラー:', error);
+      }
+    }
+
+    // 個別相談申し込み処理
+    if (data === 'request_consultation') {
+      const consultationMessage = {
+        type: 'text',
+        text: `📞 個別相談のご案内
+
+診断結果を基に、より詳細な
+AI活用戦略をご提案いたします。
+
+【相談内容】
+• 具体的な導入ロードマップ
+• ROI詳細シミュレーション  
+• 推奨AIツールのデモ
+• 導入時の注意点と対策
+
+【所要時間】30分（無料）
+【実施方法】オンライン会議
+
+ご希望の方は下記までご連絡ください：
+📧 ai-consulting@example.com
+📞 03-1234-5678
+
+担当者から24時間以内に
+ご連絡いたします。`
+      };
+
+      try {
+        await sendPushMessage(userId, [consultationMessage]);
+        console.log('個別相談案内送信完了');
+      } catch (error) {
+        console.error('個別相談案内送信エラー:', error);
+      }
+    }
+
+    // 診断再実行処理
+    if (data === 'restart_diagnosis') {
+      // ユーザーデータをリセット
+      if (userAnswers.has(userId)) {
+        userAnswers.delete(userId);
+      }
+
+      const restartMessage = {
+        type: 'text',
+        text: `🔄 診断をリセットしました
+
+新たな気持ちで診断を開始しますか？`,
+        quickReply: {
+          items: [
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '✅ 診断開始',
+                data: 'start_q1'
+              }
+            }
+          ]
+        }
+      };
+
+      try {
+        await sendPushMessage(userId, [restartMessage]);
+        console.log('診断リスタート送信完了');
+      } catch (error) {
+        console.error('診断リスタート送信エラー:', error);
+      }
+    }
   }
 }
 
-async function sendQuestion(replyToken, userId, questionNum) {
-  try {
-    console.log(`Sending question ${questionNum} to user ${userId}`);
-    
-    const userData = userAnswers.get(userId);
-    if (!userData) {
-      console.log('User data not found, redirecting to start');
-      await startDiagnosis(replyToken, userId);
-      return;
-    }
-    
-    userData.currentQuestion = questionNum;
-    
-    const questions = [
-      {
-        text: `【質問1/10】昨年度と比較して、一人当たりの売上高は？`,
-        options: [
-          { label: '20%以上向上（急成長）', data: 'answer_q1_excellent' },
-          { label: '10-20%向上（高成長）', data: 'answer_q1_very_good' },
-          { label: '5-10%向上（安定成長）', data: 'answer_q1_good' },
-          { label: 'ほぼ横ばい（±5%以内）', data: 'answer_q1_fair' },
-          { label: '5-15%減少', data: 'answer_q1_poor' },
-          { label: '15%以上減少（危機的）', data: 'answer_q1_critical' }
-        ]
-      },
-      {
-        text: `【質問2/10】新入社員が一人前になるまでの期間は？`,
-        options: [
-          { label: '3ヶ月以内（超効率）', data: 'answer_q2_excellent' },
-          { label: '3-6ヶ月（標準的）', data: 'answer_q2_good' },
-          { label: '6ヶ月-1年（やや長い）', data: 'answer_q2_fair' },
-          { label: '1-2年（長期間）', data: 'answer_q2_poor' },
-          { label: '2年以上（課題あり）', data: 'answer_q2_critical' }
-        ]
-      },
-      {
-        text: `【質問3/10】先月、最も優秀な社員が残業した主な理由は？`,
-        options: [
-          { label: '新規プロジェクト・企画', data: 'answer_q3_excellent' },
-          { label: '通常業務が追いつかない', data: 'answer_q3_poor' },
-          { label: '部下の指導・フォロー', data: 'answer_q3_fair' },
-          { label: '会議・報告書作成', data: 'answer_q3_bad' },
-          { label: '残業はほぼない', data: 'answer_q3_perfect' }
-        ]
-      },
-      {
-        text: `【質問4/10】直近3ヶ月で退職した社員の主な理由は？`,
-        options: [
-          { label: 'キャリアアップ転職', data: 'answer_q4_good' },
-          { label: '給与・待遇への不満', data: 'answer_q4_fair' },
-          { label: '業務負荷・残業過多', data: 'answer_q4_poor' },
-          { label: '成長実感の欠如', data: 'answer_q4_bad' },
-          { label: '退職者はいない', data: 'answer_q4_excellent' },
-          { label: '人間関係・組織風土', data: 'answer_q4_critical' }
-        ]
-      },
-      {
-        text: `【質問5/10】社内の「知識・ノウハウ」の共有状況は？`,
-        options: [
-          { label: '体系化・DB化済み', data: 'answer_q5_excellent' },
-          { label: '文書化されているが散在', data: 'answer_q5_good' },
-          { label: '一部文書化、一部暗黙知', data: 'answer_q5_fair' },
-          { label: '主にベテランの頭の中', data: 'answer_q5_poor' },
-          { label: '人が辞めると失われる', data: 'answer_q5_bad' },
-          { label: '特に管理していない', data: 'answer_q5_critical' }
-        ]
-      },
-      {
-        text: `【質問6/10】管理職が「本来の仕事」に使える時間の割合は？`,
-        options: [
-          { label: '80%以上（理想的）', data: 'answer_q6_excellent' },
-          { label: '60-80%（良好）', data: 'answer_q6_good' },
-          { label: '40-60%（普通）', data: 'answer_q6_fair' },
-          { label: '20-40%（問題あり）', data: 'answer_q6_poor' },
-          { label: '20%未満（緊急事態）', data: 'answer_q6_critical' }
-        ]
-      },
-      {
-        text: `【質問7/10】「提案の質」で競合に勝てる自信は？`,
-        options: [
-          { label: '9割以上勝てる', data: 'answer_q7_excellent' },
-          { label: '7-8割は勝てる', data: 'answer_q7_good' },
-          { label: '五分五分', data: 'answer_q7_fair' },
-          { label: '3-4割程度', data: 'answer_q7_poor' },
-          { label: '負けることが多い', data: 'answer_q7_critical' }
-        ]
-      },
-      {
-        text: `【質問8/10】若手社員からの改善提案や新しいアイデアは？`,
-        options: [
-          { label: '活発に出て実行している', data: 'answer_q8_excellent' },
-          { label: 'たまに出るが実現は少ない', data: 'answer_q8_fair' },
-          { label: 'ほとんど出てこない', data: 'answer_q8_poor' },
-          { label: '出ても検討する余裕なし', data: 'answer_q8_bad' },
-          { label: '提案する仕組みがない', data: 'answer_q8_critical' }
-        ]
-      },
-      {
-        text: `【質問9/10】もし主力社員が突然1ヶ月休んだら？`,
-        options: [
-          { label: '他のメンバーでカバー可能', data: 'answer_q9_excellent' },
-          { label: 'なんとか回るが大変', data: 'answer_q9_good' },
-          { label: '特定業務が完全に止まる', data: 'answer_q9_poor' },
-          { label: '取引先との関係に影響', data: 'answer_q9_bad' },
-          { label: '考えたくない状況', data: 'answer_q9_critical' }
-        ]
-      },
-      {
-        text: `【質問10/10】データに基づいて意思決定する頻度は？`,
-        options: [
-          { label: '日常的にデータ活用', data: 'answer_q10_excellent' },
-          { label: '重要な決定時のみ活用', data: 'answer_q10_good' },
-          { label: 'たまに参考にする程度', data: 'answer_q10_fair' },
-          { label: '勘と経験が中心', data: 'answer_q10_poor' },
-          { label: 'データがそもそもない', data: 'answer_q10_critical' }
-        ]
-      }
-    ];
-    
-    if (questionNum > questions.length) {
-      await showFinalResults(replyToken, userId);
-      return;
-    }
-    
-    // 質問5完了後は中間分析を表示
-    if (questionNum === 6 && userData.answers.q5) {
-      await showIntermediateAnalysis(replyToken, userId);
-      return;
-    }
-    
-    const question = questions[questionNum - 1];
-    
-    // 5-6択の質問を2つのメッセージに分割（LINE制限対応）
-    const firstHalf = question.options.slice(0, 3);
-    const secondHalf = question.options.slice(3);
-    
-    const messages = [];
-    
-    // 最初のメッセージ（質問文 + 最初の3つの選択肢）
-    messages.push({
-      type: 'template',
-      altText: `質問${questionNum}`,
-      template: {
-        type: 'buttons',
-        text: question.text,
-        actions: firstHalf.map(option => ({
-          type: 'postback',
-          label: option.label,
-          data: option.data
-        }))
-      }
-    });
-    
-    // 2つ目のメッセージ（残りの選択肢）
-    if (secondHalf.length > 0) {
-      messages.push({
-        type: 'template',
-        altText: '追加の選択肢',
-        template: {
-          type: 'buttons',
-          text: '▼ その他の選択肢',
-          actions: secondHalf.map(option => ({
-            type: 'postback',
-            label: option.label,
-            data: option.data
-          }))
-        }
-      });
-    }
-    
-    await client.replyMessage(replyToken, messages);
-    console.log(`Question ${questionNum} sent successfully`);
-    
-  } catch (error) {
-    console.error('Error in sendQuestion:', error);
-    await client.replyMessage(replyToken, {
-      type: 'text',
-      text: 'エラーが発生しました。「診断開始」と送信してやり直してください。'
-    });
+// 共通のメッセージ送信関数
+async function analyzeWithClaude(answers) {
+  // AI風分析（事前定義ルールベース）
+  let score = 25; // ベーススコア
+  let issues = [];
+  let strengths = [];
+  let improvementAmount = 600;
+
+  // Q1: 売上成長の分析
+  if (answers.q1 === 'improve_10plus') {
+    score += 10;
+    strengths.push('高成長');
+  } else if (answers.q1 === 'improve_5to10') {
+    score += 7;
+    strengths.push('安定成長');
+  } else if (answers.q1 === 'flat') {
+    score += 3;
+    issues.push('売上効率');
+    improvementAmount += 200;
+  } else if (answers.q1?.includes('decline')) {
+    score += 0;
+    issues.push('売上効率');
+    improvementAmount += 400;
   }
+
+  // Q2: 育成期間の分析
+  if (answers.q2 === '3months') {
+    score += 8;
+    strengths.push('育成効率');
+  } else if (answers.q2 === '3to6months') {
+    score += 5;
+  } else if (answers.q2 === '6to12months') {
+    score += 2;
+    issues.push('人材育成');
+    improvementAmount += 150;
+  } else if (answers.q2?.includes('years')) {
+    score += 0;
+    issues.push('人材育成');
+    improvementAmount += 300;
+  }
+
+  // Q3: 優秀人材活用の分析
+  if (answers.q3 === 'new_project') {
+    score += 7;
+    strengths.push('人材活用');
+  } else if (answers.q3 === 'behind_work') {
+    score += 1;
+    issues.push('業務効率');
+    improvementAmount += 250;
+  } else if (answers.q3 === 'meetings') {
+    score += 0;
+    issues.push('業務効率');
+    improvementAmount += 300;
+  }
+
+  // Q4: 退職理由の分析
+  if (answers.q4 === 'career_up' || answers.q4 === 'no_resignation') {
+    score += 5;
+    strengths.push('組織健全性');
+  } else if (answers.q4 === 'workload') {
+    score += 0;
+    issues.push('労働環境');
+    improvementAmount += 200;
+  } else {
+    score += 2;
+    issues.push('待遇改善');
+    improvementAmount += 100;
+  }
+
+  // Q5: 知識共有の分析
+  if (answers.q5 === 'database') {
+    score += 5;
+    strengths.push('知識管理');
+  } else if (answers.q5 === 'documents') {
+    score += 3;
+    issues.push('情報活用');
+    improvementAmount += 100;
+  } else if (answers.q5 === 'tacit') {
+    score += 1;
+    issues.push('知識共有');
+    improvementAmount += 200;
+  }
+
+  // 分析結果の生成
+  const primaryIssue = issues.length > 0 ? issues[0] : '更なる効率化';
+  const recommendedTool = getRecommendedTool(issues, strengths);
+  
+  return `📊 現在のスコア: ${Math.min(score, 50)}/50点
+🎯 最優先改善領域: ${primaryIssue}
+💰 推定改善効果: 年間${improvementAmount}万円
+⚡ 推奨AIツール: ${recommendedTool}
+
+${getInsightMessage(score, issues)}`;
+}
+
+function getRecommendedTool(issues, strengths) {
+  if (issues.includes('業務効率')) {
+    return 'RPA + ChatGPT';
+  } else if (issues.includes('知識共有')) {
+    return 'Notion AI';
+  } else if (issues.includes('人材育成')) {
+    return 'eラーニングAI';
+  } else if (issues.includes('売上効率')) {
+    return 'データ分析AI';
+  } else {
+    return 'ChatGPT Business';
+  }
+}
+
+function getInsightMessage(score, issues) {
+  if (score >= 40) {
+    return '既に高いレベル！さらなる飛躍の準備ができています。';
+  } else if (score >= 30) {
+    return '平均以上の実力。AI活用で業界トップクラスを目指せます。';
+  } else if (score >= 20) {
+    return '改善余地大！適切なAI導入で劇的な変化が期待できます。';
+  } else {
+    return '今が変革のチャンス！AI活用で競合に大きく差をつけられます。';
+  }
+}
+
+async function getFinalAnalysis(answers) {
+  // 最終分析（全10問対応）
+  let totalScore = 50; // ベーススコア  
+  let allIssues = [];
+  let allStrengths = [];
+  let totalImprovement = 1200;
+
+  // 前半5問の分析結果を統合
+  const midAnalysis = await analyzeWithClaude(answers);
+  
+  // Q6-Q10の分析
+  if (answers.q6 === '70plus') {
+    totalScore += 8;
+    allStrengths.push('マネジメント効率');
+  } else if (answers.q6 === 'under30') {
+    totalScore += 0;
+    allIssues.push('管理職の時間配分');
+    totalImprovement += 300;
+  } else {
+    totalScore += 4;
+    allIssues.push('マネジメント効率');
+    totalImprovement += 150;
+  }
+
+  if (answers.q7 === 'always_win') {
+    totalScore += 10;
+    allStrengths.push('提案力');
+  } else if (answers.q7 === 'often_lose') {
+    totalScore += 2;
+    allIssues.push('提案力');
+    totalImprovement += 400;
+  } else {
+    totalScore += 6;
+    totalImprovement += 200;
+  }
+
+  if (answers.q8 === 'active') {
+    totalScore += 7;
+    allStrengths.push('イノベーション力');
+  } else if (answers.q8 === 'no_time') {
+    totalScore += 0;
+    allIssues.push('業務効率');
+    totalImprovement += 250;
+  }
+
+  if (answers.q9 === 'coverable') {
+    totalScore += 8;
+    allStrengths.push('リスク管理');
+  } else if (answers.q9 === 'client_impact') {
+    totalScore += 0;
+    allIssues.push('属人化リスク');
+    totalImprovement += 500;
+  }
+
+  if (answers.q10 === 'daily') {
+    totalScore += 7;
+    allStrengths.push('データ活用');
+  } else if (answers.q10 === 'intuition') {
+    totalScore += 1;
+    allIssues.push('データ活用');
+    totalImprovement += 300;
+  }
+
+  // 最終判定
+  const finalScore = Math.min(totalScore, 100);
+  const topIssue = allIssues.length > 0 ? allIssues[0] : '更なる効率化';
+  const topStrength = allStrengths.length > 0 ? allStrengths[0] : '基礎力';
+
+  let recommendation = '';
+  if (finalScore >= 80) {
+    recommendation = '業界トップクラス企業向けAI戦略';
+  } else if (finalScore >= 60) {
+    recommendation = '段階的AI導入プラン';
+  } else if (finalScore >= 40) {
+    recommendation = '基礎からのAI活用プラン';
+  } else {
+    recommendation = '緊急AI変革プログラム';
+  }
+
+  return `📊 総合スコア: ${finalScore}/100点
+
+🏆 御社の強み: ${topStrength}
+⚠️ 最優先改善領域: ${topIssue}
+💰 総改善ポテンシャル: 年間${totalImprovement}万円
+
+🎯 推奨プラン: ${recommendation}
+
+【具体的な次のステップ】
+1. ${getFirstStep(topIssue)}
+2. ${getSecondStep(allIssues)}
+3. ${getThirdStep(finalScore)}
+
+投資回収期間: ${getROIPeriod(finalScore)}ヶ月`;
+}
+
+function getFirstStep(topIssue) {
+  const steps = {
+    '業務効率': 'RPA導入による定型業務自動化',
+    '人材育成': 'AI支援型eラーニング導入',
+    '提案力': 'ChatGPT活用による提案書作成効率化',
+    '知識共有': 'Notion AI導入による知識ベース構築',
+    '属人化リスク': '業務フロー標準化とAI化',
+    'データ活用': 'BIツール導入とダッシュボード作成',
+    '管理職の時間配分': '管理業務の自動化ツール導入'
+  };
+  return steps[topIssue] || 'AI活用方針の策定';
+}
+
+function getSecondStep(issues) {
+  if (issues.length >= 2) {
+    return 'AI導入効果測定システム構築';
+  }
+  return 'AI活用スキル向上研修実施';
+}
+
+function getThirdStep(score) {
+  if (score >= 70) {
+    return '高度AI活用による競争優位性確立';
+  } else if (score >= 50) {
+    return 'AI活用範囲の段階的拡大';
+  } else {
+    return '全社的AI変革プロジェクト推進';
+  }
+}
+
+function getROIPeriod(score) {
+  if (score >= 70) return 6;
+  if (score >= 50) return 8;
+  if (score >= 30) return 12;
+  return 15;
+}
+
+async function replyMessage(replyToken, messages) {
+  const response = await fetch('https://api.line.me/v2/bot/message/reply', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${process.env.LINE_CHANNEL_ACCESS_TOKEN}`,
+    },
+    body: JSON.stringify({
+      replyToken: replyToken,
+      messages: messages,
+    }),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error('Reply message error:', errorText);
+    throw new Error(`Reply message failed: ${response.status}`);
+  }
+
+  return response.json();
+}
+
+async function sendPushMessage(userId, messages) {
+  const response = await fetch('https://api.line.me/v2/bot/message/push', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${process.env.LINE_CHANNEL_ACCESS_TOKEN}`,
+    },
+    body: JSON.stringify({
+      to: userId,
+      messages: messages,
+    }),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error('Push message error:', errorText);
+    throw new Error(`Push message failed: ${response.status}`);
+  }
+
+  return response.json();
 }

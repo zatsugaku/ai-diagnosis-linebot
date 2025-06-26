@@ -477,11 +477,17 @@ AI活用による教育支援で、育成期間を平均45%短縮できます。
       let responseMessage = '';
       
       if (data === 'q4_career_up') {
-        responseMessage = '前向きな退職は組織の健全性の証。🌟\n卒業生ネットワークは財産です。';
+        responseMessage = '前向きな退職は組織の健全性の証🌟\n卒業生ネットワークは貴重な財産です。';
       } else if (data === 'q4_salary') {
-        responseMessage = '待遇改善も大切ですが...💰\n業務効率化で原資を作れます。';
+        responseMessage = '待遇改善も大切ですが...💰\n業務効率化で原資創出が可能です。';
       } else if (data === 'q4_workload') {
         responseMessage = '業務負荷での離職は危険信号！⚠️\nAIで業務を30%削減できます。';
+      } else if (data === 'q4_no_growth') {
+        responseMessage = '成長実感は重要な要素です📚\nAI活用でスキルアップ機会を創出できます。';
+      } else if (data === 'q4_no_resignation') {
+        responseMessage = '定着率が高い！👥\n良い組織文化の表れですね。';
+      } else if (data === 'q4_relationship') {
+        responseMessage = '組織風土の改善が必要🤝\nAIで業務ストレス軽減から始めましょう。';
       }
 
       const benchmarkMessage = {
@@ -512,7 +518,7 @@ AI活用による教育支援で、育成期間を平均45%短縮できます。
       }
     }
 
-    // 質問5表示
+    // 質問5表示（6択）
     if (data === 'next_q5') {
       const q5Message = {
         type: 'text',
@@ -523,7 +529,7 @@ AI活用による教育支援で、育成期間を平均45%短縮できます。
               type: 'action',
               action: {
                 type: 'postback',
-                label: 'データベース化済み',
+                label: '体系化・DB化済み',
                 data: 'q5_database'
               }
             },
@@ -531,7 +537,7 @@ AI活用による教育支援で、育成期間を平均45%短縮できます。
               type: 'action',
               action: {
                 type: 'postback',
-                label: '文書化だが散在',
+                label: '文書化されているが散在',
                 data: 'q5_documents'
               }
             },
@@ -539,8 +545,32 @@ AI活用による教育支援で、育成期間を平均45%短縮できます。
               type: 'action',
               action: {
                 type: 'postback',
-                label: '主に頭の中',
+                label: '一部文書化、一部暗黙知',
+                data: 'q5_mixed'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '主にベテランの頭の中',
                 data: 'q5_tacit'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '人が辞めると失われる',
+                data: 'q5_lost'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '特に管理していない',
+                data: 'q5_none'
               }
             }
           ]
@@ -563,11 +593,17 @@ AI活用による教育支援で、育成期間を平均45%短縮できます。
       let responseMessage = '';
       
       if (data === 'q5_database') {
-        responseMessage = '知識管理が進んでいます！📚\nAIで更に活用度を高められます。';
+        responseMessage = '素晴らしい知識管理体制！📚\nAIで更に活用度を高められます。';
       } else if (data === 'q5_documents') {
         responseMessage = '惜しい！文書はあるのに...📁\nAIで知識を統合・活用できます。';
+      } else if (data === 'q5_mixed') {
+        responseMessage = '中間的な状況ですね🤔\n完全なAI活用に向けて整理が必要です。';
       } else if (data === 'q5_tacit') {
-        responseMessage = '暗黙知の宝庫ですね。🧠\nAIで見える化すれば財産に。';
+        responseMessage = '暗黙知の宝庫！🧠\nAIで見える化すれば巨大な財産になります。';
+      } else if (data === 'q5_lost') {
+        responseMessage = '非常に危険な状態！😱\n今すぐ知識の保全対策が必要です。';
+      } else if (data === 'q5_none') {
+        responseMessage = '知識は最重要資産です💎\n管理体制の構築から始めましょう。';
       }
 
       // 通常のベンチマーク表示
@@ -653,7 +689,7 @@ ${aiAnalysis}
       }
     }
 
-    // 質問6表示
+    // 質問6表示（5択）
     if (data === 'next_q6') {
       const q6Message = {
         type: 'text',
@@ -664,24 +700,40 @@ ${aiAnalysis}
               type: 'action',
               action: {
                 type: 'postback',
-                label: '70%以上',
-                data: 'q6_70plus'
+                label: '80%以上（理想的）',
+                data: 'q6_80plus'
               }
             },
             {
               type: 'action',
               action: {
                 type: 'postback',
-                label: '50-70%',
-                data: 'q6_50to70'
+                label: '60-80%（良好）',
+                data: 'q6_60to80'
               }
             },
             {
               type: 'action',
               action: {
                 type: 'postback',
-                label: '30%未満',
-                data: 'q6_under30'
+                label: '40-60%（普通）',
+                data: 'q6_40to60'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '20-40%（問題あり）',
+                data: 'q6_20to40'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '20%未満（緊急事態）',
+                data: 'q6_under20'
               }
             }
           ]
@@ -703,12 +755,16 @@ ${aiAnalysis}
       
       let responseMessage = '';
       
-      if (data === 'q6_70plus') {
-        responseMessage = '理想的な状態！🎯\nマネジメントに集中できています。';
-      } else if (data === 'q6_50to70') {
-        responseMessage = 'まずまずですが...🤷\nもう少し戦略に時間を使いたいですね。';
-      } else if (data === 'q6_under30') {
-        responseMessage = '緊急事態です！🚨\n管理職の時給5000円が作業に...';
+      if (data === 'q6_80plus') {
+        responseMessage = '理想的な状態！🎯\n戦略的マネジメントに集中できています。';
+      } else if (data === 'q6_60to80') {
+        responseMessage = '良好な状態ですね👍\nもう少し改善の余地があります。';
+      } else if (data === 'q6_40to60') {
+        responseMessage = '平均的ですが改善可能🤷\n管理職の価値を最大化しましょう。';
+      } else if (data === 'q6_20to40') {
+        responseMessage = '管理職が作業に忙殺されています😵\nAIで本来業務に集中を。';
+      } else if (data === 'q6_under20') {
+        responseMessage = '極めて深刻な状況！🚨\n高額な管理職が単純作業に...';
       }
 
       const benchmarkMessage = {
@@ -739,7 +795,7 @@ ${aiAnalysis}
       }
     }
 
-    // 質問7表示
+    // 質問7表示（5択）
     if (data === 'next_q7') {
       const q7Message = {
         type: 'text',
@@ -750,15 +806,15 @@ ${aiAnalysis}
               type: 'action',
               action: {
                 type: 'postback',
-                label: '常に勝っている',
-                data: 'q7_always_win'
+                label: '9割以上勝てる',
+                data: 'q7_almost_always'
               }
             },
             {
               type: 'action',
               action: {
                 type: 'postback',
-                label: '7割は勝てる',
+                label: '7-8割は勝てる',
                 data: 'q7_mostly_win'
               }
             },
@@ -768,6 +824,14 @@ ${aiAnalysis}
                 type: 'postback',
                 label: '五分五分',
                 data: 'q7_fifty_fifty'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '3-4割程度',
+                data: 'q7_sometimes'
               }
             },
             {
@@ -790,20 +854,22 @@ ${aiAnalysis}
       }
     }
 
-    // Q7の回答処理
+    // Q7の回答処理（5択対応）
     if (data.startsWith('q7_')) {
       userAnswers.get(userId).q7 = data.replace('q7_', '');
       
       let responseMessage = '';
       
-      if (data === 'q7_always_win') {
-        responseMessage = '圧倒的な提案力！💪\nAIでさらに差をつけましょう。';
+      if (data === 'q7_almost_always') {
+        responseMessage = '圧倒的な提案力！🏆\n業界トップクラスの実力ですね。';
       } else if (data === 'q7_mostly_win') {
-        responseMessage = '高い勝率ですね！🏆\nAIで9割勝利も可能です。';
+        responseMessage = '高い勝率！💪\nAIでさらに差をつけましょう。';
       } else if (data === 'q7_fifty_fifty') {
-        responseMessage = 'もったいない...😅\nAIで提案作成70%高速化＆質向上。';
+        responseMessage = 'もったいない状況です😅\nAIで提案力を大幅強化できます。';
+      } else if (data === 'q7_sometimes') {
+        responseMessage = '改善の余地が大きいですね📝\nAI活用で勝率向上を目指しましょう。';
       } else if (data === 'q7_often_lose') {
-        responseMessage = '提案力強化が急務！📝\nAI活用で勝率45%向上の実績あり。';
+        responseMessage = '提案力強化が急務！🔥\nAI活用で勝率45%向上の実績あり。';
       }
 
       const benchmarkMessage = {

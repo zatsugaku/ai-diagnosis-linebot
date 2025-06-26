@@ -191,6 +191,89 @@ AI活用企業の87%が「一人当たり売上高」を平均23%向上させて
         console.error('質問2送信エラー:', error);
       }
     }
+
+    // Q2の回答処理
+    if (data.startsWith('q2_')) {
+      let responseMessage = '';
+      
+      if (data === 'q2_3months') {
+        responseMessage = '育成システムが優秀ですね！✨\nAIでさらに効率化できます。';
+      } else if (data === 'q2_3to6months') {
+        responseMessage = '標準的な育成期間です。🌱\nAI活用で2ヶ月短縮した企業もあります。';
+      } else if (data === 'q2_6to12months') {
+        responseMessage = 'もう少し短縮できそうです。⏰\n育成期間半減で年間650万円の効果も。';
+      }
+
+      const benchmarkMessage = {
+        type: 'text',
+        text: `${responseMessage}
+
+💡 人材育成の新常識：
+AI活用による教育支援で、育成期間を平均45%短縮できます。あなたの会社なら年間〇〇万円の効果に相当します。`,
+        quickReply: {
+          items: [
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '📊 次の質問へ',
+                data: 'next_q3'
+              }
+            }
+          ]
+        }
+      };
+
+      try {
+        await sendPushMessage(userId, [benchmarkMessage]);
+        console.log('Q2ベンチマーク送信完了');
+      } catch (error) {
+        console.error('Q2ベンチマーク送信エラー:', error);
+      }
+    }
+
+    // 質問3表示
+    if (data === 'next_q3') {
+      const q3Message = {
+        type: 'text',
+        text: '【質問3/10】⭐\n\n先月、最も優秀な社員が残業した主な理由は？',
+        quickReply: {
+          items: [
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '新規プロジェクト',
+                data: 'q3_new_project'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '通常業務が追いつかない',
+                data: 'q3_behind_work'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '会議・報告書',
+                data: 'q3_meetings'
+              }
+            }
+          ]
+        }
+      };
+
+      try {
+        await sendPushMessage(userId, [q3Message]);
+        console.log('質問3送信完了');
+      } catch (error) {
+        console.error('質問3送信エラー:', error);
+      }
+    }
   }
 }
 

@@ -266,10 +266,14 @@ AI活用企業の87%が「一人当たり売上高」を平均23%向上させて
 
   await sendPushMessage(userId, [benchmarkMessage]);
   
-  // 2秒後に次の質問
-  setTimeout(async () => {
+  // 即座に次の質問を送信（setTimeoutを削除）
+  try {
+    console.log('質問2を送信中...');
     await sendQuestion2(userId);
-  }, 2000);
+    console.log('質問2送信完了');
+  } catch (error) {
+    console.error('質問2送信エラー:', error);
+  }
 }
 
 // 質問2: 育成期間
@@ -360,13 +364,115 @@ AI活用による教育支援で、育成期間を平均45%短縮できます。
 
   await sendPushMessage(userId, [benchmarkMessage]);
   
-  setTimeout(async () => {
+  // 即座に次の質問を送信
+  try {
+    console.log('質問3を送信中...');
     await sendQuestion3(userId);
-  }, 2000);
+    console.log('質問3送信完了');
+  } catch (error) {
+    console.error('質問3送信エラー:', error);
+  }
+}
+
+// 質問3: 優秀社員の残業理由
+async function sendQuestion3(userId) {
+  const questionMessage = {
+    type: 'text',
+    text: `【質問3/10】⭐
+
+先月、最も優秀な社員が残業した主な理由は？`,
+    quickReply: {
+      items: [
+        {
+          type: 'action',
+          action: {
+            type: 'postback',
+            label: '新規プロジェクト',
+            data: 'q3_new_project'
+          }
+        },
+        {
+          type: 'action',
+          action: {
+            type: 'postback',
+            label: '通常業務が追いつかない',
+            data: 'q3_behind_work'
+          }
+        },
+        {
+          type: 'action',
+          action: {
+            type: 'postback',
+            label: '部下の指導',
+            data: 'q3_mentoring'
+          }
+        },
+        {
+          type: 'action',
+          action: {
+            type: 'postback',
+            label: '会議・報告書',
+            data: 'q3_meetings'
+          }
+        },
+        {
+          type: 'action',
+          action: {
+            type: 'postback',
+            label: '残業はほぼない',
+            data: 'q3_no_overtime'
+          }
+        }
+      ]
+    }
+  };
+
+  await sendPushMessage(userId, [questionMessage]);
+}
+
+// Q3回答処理
+async function handleQ3Answer(userId, answer) {
+  let responseMessage = '';
+  
+  switch(answer) {
+    case 'new_project':
+      responseMessage = '理想的な時間の使い方です！💡\n価値創造に集中できていますね。';
+      break;
+    case 'behind_work':
+      responseMessage = '優秀な人材が作業に忙殺...😔\nAIなら彼らを解放できます。';
+      break;
+    case 'mentoring':
+      responseMessage = '育成は大切ですが...🤔\nAI活用で指導時間も効率化できます。';
+      break;
+    case 'meetings':
+      responseMessage = 'もったいない！😭\n優秀人材は戦略に集中すべきです。';
+      break;
+    case 'no_overtime':
+      responseMessage = 'ワークライフバランス◎👏\n生産性の高い組織ですね。';
+      break;
+  }
+
+  const benchmarkMessage = {
+    type: 'text',
+    text: `${responseMessage}
+
+💡 優秀人材の活用度：
+優秀社員の68%が「本来の力を発揮できていない」と感じています。彼らの時間を解放すればイノベーションが生まれます。`
+  };
+
+  await sendPushMessage(userId, [benchmarkMessage]);
+  
+  // 即座に質問4を送信
+  try {
+    console.log('質問4を送信中...');
+    await sendQuestion4(userId);
+    console.log('質問4送信完了');
+  } catch (error) {
+    console.error('質問4送信エラー:', error);
+  }
 }
 
 // 残りの質問も同様の構造で続く...
-// (質問3-10は同じパターンで実装)
 
 // 共通のメッセージ送信関数
 async function replyMessage(replyToken, messages) {

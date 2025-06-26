@@ -10,38 +10,43 @@ export async function onRequest(context) {
     
     if (body.events && body.events.length > 0) {
       for (const event of body.events) {
-        await handleEvent(event, env);
+        // 即座にOKを返して、処理を非同期で実行
+        handleEventAsync(event, env);
       }
     }
 
     return new Response('OK', { status: 200 });
   } catch (error) {
     console.error('Error:', error);
-    return new Response('Internal Server Error', { status: 500 });
+    return new Response('OK', { status: 200 }); // エラーでもOKを返す
   }
 }
 
-async function handleEvent(event, env) {
-  if (event.type === 'message' && event.message.type === 'text') {
-    const userId = event.source.userId;
-    const messageText = event.message.text;
+async function handleEventAsync(event, env) {
+  try {
+    if (event.type === 'message' && event.message.type === 'text') {
+      const userId = event.source.userId;
+      const messageText = event.message.text;
 
-    if (messageText === '診断を始める' || messageText === 'start') {
-      await startDiagnosis(userId, event.replyToken, env);
-    } else {
-      await sendReply(event.replyToken, [{
-        type: 'text',
-        text: '診断を開始するには「診断を始める」と送信してください。'
-      }], env);
+      if (messageText === '診断を始める' || messageText === 'start') {
+        await startDiagnosis(userId, env);
+      } else {
+        await sendPushMessage(userId, [{
+          type: 'text',
+          text: '診断を開始するには「診断を始める」と送信してください。'
+        }], env);
+      }
+    } else if (event.type === 'postback') {
+      const userId = event.source.userId;
+      const data = event.postback.data;
+      await handlePostback(userId, data, env);
     }
-  } else if (event.type === 'postback') {
-    const userId = event.source.userId;
-    const data = event.postback.data;
-    await handlePostback(userId, data, event.replyToken, env);
+  } catch (error) {
+    console.error('Event handling error:', error);
   }
 }
 
-async function startDiagnosis(userId, replyToken, env) {
+async function startDiagnosis(userId, env) {
   // ユーザー状態を初期化
   await resetUserProgress(userId, env);
   
@@ -56,47 +61,51 @@ async function startDiagnosis(userId, replyToken, env) {
           '準備はよろしいですか？'
   };
 
-  const quickReply = {
-    type: 'text',
-    text: '診断を開始しますか？',
-    quickReply: {
-      items: [
-        {
-          type: 'action',
-          action: {
-            type: 'postback',
-            label: '診断開始',
-            data: 'start_q1'
+  await sendPushMessage(userId, [welcomeMessage], env);
+  
+  // 少し待ってから質問開始ボタンを表示
+  setTimeout(async () => {
+    const quickReply = {
+      type: 'text',
+      text: '診断を開始しますか？',
+      quickReply: {
+        items: [
+          {
+            type: 'action',
+            action: {
+              type: 'postback',
+              label: '診断開始',
+              data: 'start_q1'
+            }
+          },
+          {
+            type: 'action',
+            action: {
+              type: 'postback',
+              label: '後で',
+              data: 'later'
+            }
           }
-        },
-        {
-          type: 'action',
-          action: {
-            type: 'postback',
-            label: '後で',
-            data: 'later'
-          }
-        }
-      ]
-    }
-  };
-
-  await sendReply(replyToken, [welcomeMessage, quickReply], env);
+        ]
+      }
+    };
+    
+    await sendPushMessage(userId, [quickReply], env);
+  }, 1000);
 }
 
-async function handlePostback(userId, data, replyToken, env) {
+async function handlePostback(userId, data, env) {
   if (data.startsWith('start_q')) {
     const questionNum = parseInt(data.replace('start_q', ''));
-    await sendQuestion(userId, questionNum, replyToken, env);
+    await sendQuestion(userId, questionNum, env);
   } else if (data.startsWith('q') && data.includes('_a')) {
     const parts = data.split('_');
     const questionNum = parseInt(parts[0].replace('q', ''));
     const answerIndex = parseInt(parts[1].replace('a', ''));
     
-    // 重要：非同期で処理して、replyTokenは即座に消費
-    await processAnswerAsync(userId, questionNum, answerIndex, replyToken, env);
+    await processAnswer(userId, questionNum, answerIndex, env);
   } else if (data === 'later') {
-    await sendReply(replyToken, [{
+    await sendPushMessage(userId, [{
       type: 'text',
       text: 'いつでもお気軽にお声がけください！\n' +
             '診断をご希望の際は「診断を始める」と送信してくださいね。'
@@ -104,71 +113,11 @@ async function handlePostback(userId, data, replyToken, env) {
   }
 }
 
-async function sendQuestion(userId, questionNum, replyToken, env) {
+async function sendQuestion(userId, questionNum, env) {
   const questions = getQuestions();
   
   if (questionNum > questions.length) {
-    await calculateAndSendResult(userId, replyToken, env);
-    return;
-  }
-
-  const question = questions[questionNum - 1];
-  
-  const quickReplyItems = question.options.map((option, index) => ({
-    type: 'action',
-    action: {
-      type: 'postback',
-      label: option.text,
-      data: `q${questionNum}_a${index}`
-    }
-  }));
-
-  const message = {
-    type: 'text',
-    text: `【質問${questionNum}/10】\n\n${question.text}`,
-    quickReply: {
-      items: quickReplyItems
-    }
-  };
-
-  await sendReply(replyToken, [message], env);
-}
-
-async function processAnswerAsync(userId, questionNum, answerIndex, replyToken, env) {
-  const questions = getQuestions();
-  const question = questions[questionNum - 1];
-  const selectedOption = question.options[answerIndex];
-  
-  // まずベンチマークメッセージで即座にreplyTokenを消費
-  await sendReply(replyToken, [{
-    type: 'text',
-    text: selectedOption.response || '回答を記録しました。'
-  }], env);
-  
-  // 残りの処理を非同期で実行（ctx.waitUntilを使用するのが理想だが、今回はそのまま実行）
-  try {
-    // 回答を保存
-    await saveAnswer(userId, questionNum, answerIndex, selectedOption.score, env);
-    
-    // 少し待ってから次の処理
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // 次の質問またはスコア表示
-    if (questionNum < 10) {
-      await sendNextQuestion(userId, questionNum + 1, env);
-    } else {
-      await calculateAndSendResultPush(userId, env);
-    }
-  } catch (error) {
-    console.error('Background processing error:', error);
-  }
-}
-
-async function sendNextQuestion(userId, questionNum, env) {
-  const questions = getQuestions();
-  
-  if (questionNum > questions.length) {
-    await calculateAndSendResultPush(userId, env);
+    await calculateAndSendResult(userId, env);
     return;
   }
 
@@ -194,51 +143,33 @@ async function sendNextQuestion(userId, questionNum, env) {
   await sendPushMessage(userId, [message], env);
 }
 
-async function calculateAndSendResult(userId, replyToken, env) {
-  const answers = await getUserAnswers(userId, env);
-  const totalScore = answers.reduce((sum, answer) => sum + answer.score, 0);
+async function processAnswer(userId, questionNum, answerIndex, env) {
+  const questions = getQuestions();
+  const question = questions[questionNum - 1];
+  const selectedOption = question.options[answerIndex];
   
-  const resultMessage = getResultMessage(totalScore);
+  // 回答を保存
+  await saveAnswer(userId, questionNum, answerIndex, selectedOption.score, env);
   
-  await sendReply(replyToken, [{
-    type: 'text',
-    text: resultMessage
-  }], env);
-  
-  // 少し待ってからフォローアップ
-  setTimeout(async () => {
-    const followUpMessage = {
+  // ベンチマークメッセージを送信
+  if (selectedOption.response) {
+    await sendPushMessage(userId, [{
       type: 'text',
-      text: 'より詳細な分析レポートや改善提案について\n' +
-            '個別にご相談いただけます。\n\n' +
-            '30分の無料相談はいかがですか？',
-      quickReply: {
-        items: [
-          {
-            type: 'action',
-            action: {
-              type: 'postback',
-              label: '相談を申し込む',
-              data: 'request_consultation'
-            }
-          },
-          {
-            type: 'action',
-            action: {
-              type: 'postback',
-              label: '事例を見る',
-              data: 'view_cases'
-            }
-          }
-        ]
-      }
-    };
-    
-    await sendPushMessage(userId, [followUpMessage], env);
-  }, 2000);
+      text: selectedOption.response
+    }], env);
+  }
+  
+  // 少し待ってから次の処理
+  setTimeout(async () => {
+    if (questionNum < 10) {
+      await sendQuestion(userId, questionNum + 1, env);
+    } else {
+      await calculateAndSendResult(userId, env);
+    }
+  }, 1500);
 }
 
-async function calculateAndSendResultPush(userId, env) {
+async function calculateAndSendResult(userId, env) {
   const answers = await getUserAnswers(userId, env);
   const totalScore = answers.reduce((sum, answer) => sum + answer.score, 0);
   
@@ -397,29 +328,6 @@ function getQuestions() {
       ]
     }
   ];
-}
-
-async function sendReply(replyToken, messages, env) {
-  try {
-    const response = await fetch('https://api.line.me/v2/bot/message/reply', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${env.LINE_CHANNEL_ACCESS_TOKEN}`
-      },
-      body: JSON.stringify({
-        replyToken: replyToken,
-        messages: messages
-      })
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Reply failed:', errorText);
-    }
-  } catch (error) {
-    console.error('Reply error:', error);
-  }
 }
 
 async function sendPushMessage(userId, messages, env) {

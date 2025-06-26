@@ -130,32 +130,73 @@ async function sendQuestion(userId, questionNum, replyToken, env) {
 }
 
 async function processAnswer(userId, questionNum, answerIndex, replyToken, env) {
-  // デバッグメッセージ追加
-  await sendReply(replyToken, [{
-    type: 'text',
-    text: `デバッグ: Q${questionNum} 回答${answerIndex} を処理中...`
-  }], env);
-  
-  const questions = getQuestions();
-  const question = questions[questionNum - 1];
-  const selectedOption = question.options[answerIndex];
-  
-  // 回答を保存
-  await saveAnswer(userId, questionNum, answerIndex, selectedOption.score, env);
-  
-  // ベンチマークメッセージを送信
-  if (selectedOption.response) {
+  try {
+    // デバッグメッセージ追加
     await sendReply(replyToken, [{
       type: 'text',
-      text: selectedOption.response
+      text: `デバッグ: Q${questionNum} 回答${answerIndex} を処理中...`
     }], env);
-  }
-  
-  // 次の質問またはスコア表示
-  if (questionNum < 10) {
-    await sendQuestion(userId, questionNum + 1, replyToken, env);
-  } else {
-    await calculateAndSendResult(userId, replyToken, env);
+    
+    const questions = getQuestions();
+    const question = questions[questionNum - 1];
+    const selectedOption = question.options[answerIndex];
+    
+    // 回答を保存
+    try {
+      await saveAnswer(userId, questionNum, answerIndex, selectedOption.score, env);
+      await sendReply(replyToken, [{
+        type: 'text',
+        text: `保存成功: スコア${selectedOption.score}`
+      }], env);
+    } catch (error) {
+      await sendReply(replyToken, [{
+        type: 'text',
+        text: `保存エラー: ${error.message}`
+      }], env);
+      return;
+    }
+    
+    // ベンチマークメッセージを送信
+    if (selectedOption.response) {
+      try {
+        await sendReply(replyToken, [{
+          type: 'text',
+          text: selectedOption.response
+        }], env);
+      } catch (error) {
+        await sendReply(replyToken, [{
+          type: 'text',
+          text: `ベンチマークメッセージエラー: ${error.message}`
+        }], env);
+      }
+    }
+    
+    // 次の質問またはスコア表示
+    if (questionNum < 10) {
+      try {
+        await sendQuestion(userId, questionNum + 1, replyToken, env);
+      } catch (error) {
+        await sendReply(replyToken, [{
+          type: 'text',
+          text: `次の質問エラー: ${error.message}`
+        }], env);
+      }
+    } else {
+      try {
+        await calculateAndSendResult(userId, replyToken, env);
+      } catch (error) {
+        await sendReply(replyToken, [{
+          type: 'text',
+          text: `結果計算エラー: ${error.message}`
+        }], env);
+      }
+    }
+    
+  } catch (error) {
+    await sendReply(replyToken, [{
+      type: 'text',
+      text: `全体処理エラー: ${error.message}`
+    }], env);
   }
 }
 

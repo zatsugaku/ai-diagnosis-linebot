@@ -131,7 +131,7 @@ async function sendQuestion(userId, questionNum, replyToken, env) {
 
 async function processAnswer(userId, questionNum, answerIndex, replyToken, env) {
   try {
-    // デバッグメッセージ追加
+    // 最初のメッセージのみreplyTokenを使用
     await sendReply(replyToken, [{
       type: 'text',
       text: `デバッグ: Q${questionNum} 回答${answerIndex} を処理中...`
@@ -144,12 +144,13 @@ async function processAnswer(userId, questionNum, answerIndex, replyToken, env) 
     // 回答を保存
     try {
       await saveAnswer(userId, questionNum, answerIndex, selectedOption.score, env);
-      await sendReply(replyToken, [{
+      // 2回目以降はpushメッセージを使用
+      await sendPushMessage(userId, [{
         type: 'text',
         text: `保存成功: スコア${selectedOption.score}`
       }], env);
     } catch (error) {
-      await sendReply(replyToken, [{
+      await sendPushMessage(userId, [{
         type: 'text',
         text: `保存エラー: ${error.message}`
       }], env);
@@ -159,12 +160,12 @@ async function processAnswer(userId, questionNum, answerIndex, replyToken, env) 
     // ベンチマークメッセージを送信
     if (selectedOption.response) {
       try {
-        await sendReply(replyToken, [{
+        await sendPushMessage(userId, [{
           type: 'text',
           text: selectedOption.response
         }], env);
       } catch (error) {
-        await sendReply(replyToken, [{
+        await sendPushMessage(userId, [{
           type: 'text',
           text: `ベンチマークメッセージエラー: ${error.message}`
         }], env);
@@ -174,18 +175,18 @@ async function processAnswer(userId, questionNum, answerIndex, replyToken, env) 
     // 次の質問またはスコア表示
     if (questionNum < 10) {
       try {
-        await sendQuestion(userId, questionNum + 1, replyToken, env);
+        await sendNextQuestion(userId, questionNum + 1, env);
       } catch (error) {
-        await sendReply(replyToken, [{
+        await sendPushMessage(userId, [{
           type: 'text',
           text: `次の質問エラー: ${error.message}`
         }], env);
       }
     } else {
       try {
-        await calculateAndSendResult(userId, replyToken, env);
+        await calculateAndSendResultPush(userId, env);
       } catch (error) {
-        await sendReply(replyToken, [{
+        await sendPushMessage(userId, [{
           type: 'text',
           text: `結果計算エラー: ${error.message}`
         }], env);
@@ -193,11 +194,41 @@ async function processAnswer(userId, questionNum, answerIndex, replyToken, env) 
     }
     
   } catch (error) {
-    await sendReply(replyToken, [{
+    await sendPushMessage(userId, [{
       type: 'text',
       text: `全体処理エラー: ${error.message}`
     }], env);
   }
+}
+
+async function sendNextQuestion(userId, questionNum, env) {
+  const questions = getQuestions();
+  
+  if (questionNum > questions.length) {
+    await calculateAndSendResultPush(userId, env);
+    return;
+  }
+
+  const question = questions[questionNum - 1];
+  
+  const quickReplyItems = question.options.map((option, index) => ({
+    type: 'action',
+    action: {
+      type: 'postback',
+      label: option.text,
+      data: `q${questionNum}_a${index}`
+    }
+  }));
+
+  const message = {
+    type: 'text',
+    text: `【質問${questionNum}/10】\n\n${question.text}`,
+    quickReply: {
+      items: quickReplyItems
+    }
+  };
+
+  await sendPushMessage(userId, [message], env);
 }
 
 async function calculateAndSendResult(userId, replyToken, env) {
@@ -249,7 +280,62 @@ async function calculateAndSendResult(userId, replyToken, env) {
     }
   };
   
-  await sendReply(replyToken, [followUpMessage], env);
+  await sendPushMessage(userId, [followUpMessage], env);
+  
+  // Google Sheetsに記録
+  await saveToGoogleSheets(userId, answers, totalScore, env);
+}
+
+async function calculateAndSendResultPush(userId, env) {
+  const answers = await getUserAnswers(userId, env);
+  const totalScore = answers.reduce((sum, answer) => sum + answer.score, 0);
+  
+  // 結果メッセージを取得
+  const resultMessage = getResultMessage(totalScore);
+  
+  // 結果を送信
+  await sendPushMessage(userId, [{
+    type: 'text',
+    text: resultMessage
+  }], env);
+  
+  // 詳細レポートの案内
+  const followUpMessage = {
+    type: 'text',
+    text: 'より詳細な分析レポートや改善提案について\n' +
+          '個別にご相談いただけます。\n\n' +
+          '30分の無料相談はいかがですか？',
+    quickReply: {
+      items: [
+        {
+          type: 'action',
+          action: {
+            type: 'postback',
+            label: '相談を申し込む',
+            data: 'request_consultation'
+          }
+        },
+        {
+          type: 'action',
+          action: {
+            type: 'postback',
+            label: '事例を見る',
+            data: 'view_cases'
+          }
+        },
+        {
+          type: 'action',
+          action: {
+            type: 'postback',
+            label: '後で検討',
+            data: 'consider_later'
+          }
+        }
+      ]
+    }
+  };
+  
+  await sendPushMessage(userId, [followUpMessage], env);
   
   // Google Sheetsに記録
   await saveToGoogleSheets(userId, answers, totalScore, env);
@@ -395,6 +481,24 @@ async function sendReply(replyToken, messages, env) {
 
   if (!response.ok) {
     console.error('Failed to send reply:', await response.text());
+  }
+}
+
+async function sendPushMessage(userId, messages, env) {
+  const response = await fetch('https://api.line.me/v2/bot/message/push', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${env.LINE_CHANNEL_ACCESS_TOKEN}`
+    },
+    body: JSON.stringify({
+      to: userId,
+      messages: messages
+    })
+  });
+
+  if (!response.ok) {
+    console.error('Failed to send push message:', await response.text());
   }
 }
 

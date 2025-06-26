@@ -472,6 +472,103 @@ async function handleQ3Answer(userId, answer) {
   }
 }
 
+// 質問4: 退職理由
+async function sendQuestion4(userId) {
+  const questionMessage = {
+    type: 'text',
+    text: `【質問4/10】🚪
+
+直近3ヶ月で退職した社員の主な理由は？`,
+    quickReply: {
+      items: [
+        {
+          type: 'action',
+          action: {
+            type: 'postback',
+            label: 'キャリアアップ',
+            data: 'q4_career_up'
+          }
+        },
+        {
+          type: 'action',
+          action: {
+            type: 'postback',
+            label: '給与・待遇',
+            data: 'q4_salary'
+          }
+        },
+        {
+          type: 'action',
+          action: {
+            type: 'postback',
+            label: '業務負荷',
+            data: 'q4_workload'
+          }
+        },
+        {
+          type: 'action',
+          action: {
+            type: 'postback',
+            label: '成長実感の欠如',
+            data: 'q4_no_growth'
+          }
+        },
+        {
+          type: 'action',
+          action: {
+            type: 'postback',
+            label: '退職者はいない',
+            data: 'q4_no_resignation'
+          }
+        }
+      ]
+    }
+  };
+
+  await sendPushMessage(userId, [questionMessage]);
+}
+
+// Q4回答処理
+async function handleQ4Answer(userId, answer) {
+  let responseMessage = '';
+  
+  switch(answer) {
+    case 'career_up':
+      responseMessage = '前向きな退職は組織の健全性の証。🌟\n卒業生ネットワークは財産です。';
+      break;
+    case 'salary':
+      responseMessage = '待遇改善も大切ですが...💰\n業務効率化で原資を作れます。';
+      break;
+    case 'workload':
+      responseMessage = '業務負荷での離職は危険信号！⚠️\nAIで業務を30%削減できます。';
+      break;
+    case 'no_growth':
+      responseMessage = '成長実感は重要です。📚\nAI活用でスキルアップ機会を。';
+      break;
+    case 'no_resignation':
+      responseMessage = '定着率が高い！👥\n良い組織文化の表れです。';
+      break;
+  }
+
+  const benchmarkMessage = {
+    type: 'text',
+    text: `${responseMessage}
+
+💡 離職コストの真実：
+一人の離職で平均320万円の損失。AI活用による業務効率化で離職率を34%削減した企業があります。`
+  };
+
+  await sendPushMessage(userId, [benchmarkMessage]);
+  
+  try {
+    console.log('質問5を送信中...');
+    await sendQuestion5(userId);
+    console.log('質問5送信完了');
+  } catch (error) {
+    console.error('質問5送信エラー:', error);
+  }
+}
+
 // 残りの質問も同様の構造で続く...
 
 // 共通のメッセージ送信関数

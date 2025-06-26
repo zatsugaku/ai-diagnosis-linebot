@@ -108,6 +108,89 @@ async function handleEvent(event) {
         console.error('質問1送信エラー:', error);
       }
     }
+
+    // Q1の回答処理
+    if (data.startsWith('q1_')) {
+      let responseMessage = '';
+      
+      if (data === 'q1_improve_10plus') {
+        responseMessage = '素晴らしい成長率です！🎉\nさらにAIを活用すれば、この成長を加速できます。';
+      } else if (data === 'q1_improve_5to10') {
+        responseMessage = '順調な成長ですね！📈\nAI活用で2桁成長も見えてきます。';
+      } else if (data === 'q1_flat') {
+        responseMessage = '現状維持は後退と同じ...😐\n競合はAIで生産性を20%以上改善しています。';
+      }
+
+      const benchmarkMessage = {
+        type: 'text',
+        text: `${responseMessage}
+
+💡 ベンチマークデータ：
+AI活用企業の87%が「一人当たり売上高」を平均23%向上させています。人数を増やさず、売上を増やす方法があります。`,
+        quickReply: {
+          items: [
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '📊 次の質問へ',
+                data: 'next_q2'
+              }
+            }
+          ]
+        }
+      };
+
+      try {
+        await sendPushMessage(userId, [benchmarkMessage]);
+        console.log('Q1ベンチマーク送信完了');
+      } catch (error) {
+        console.error('Q1ベンチマーク送信エラー:', error);
+      }
+    }
+
+    // 質問2表示
+    if (data === 'next_q2') {
+      const q2Message = {
+        type: 'text',
+        text: '【質問2/10】🌱\n\n新入社員が一人前になるまでの期間は？',
+        quickReply: {
+          items: [
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '3ヶ月以内',
+                data: 'q2_3months'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '3-6ヶ月',
+                data: 'q2_3to6months'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '6ヶ月-1年',
+                data: 'q2_6to12months'
+              }
+            }
+          ]
+        }
+      };
+
+      try {
+        await sendPushMessage(userId, [q2Message]);
+        console.log('質問2送信完了');
+      } catch (error) {
+        console.error('質問2送信エラー:', error);
+      }
+    }
   }
 }
 

@@ -130,6 +130,12 @@ async function sendQuestion(userId, questionNum, replyToken, env) {
 }
 
 async function processAnswer(userId, questionNum, answerIndex, replyToken, env) {
+  // デバッグメッセージ追加
+  await sendReply(replyToken, [{
+    type: 'text',
+    text: `デバッグ: Q${questionNum} 回答${answerIndex} を処理中...`
+  }], env);
+  const questions = getQuestions();
   const questions = getQuestions();
   const question = questions[questionNum - 1];
   const selectedOption = question.options[answerIndex];

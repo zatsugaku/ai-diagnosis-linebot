@@ -556,64 +556,213 @@ ${aiAnalysis}
         await sendPushMessage(userId, [fallbackMessage]);
       }
     }
+
+    // 質問6表示
+    if (data === 'next_q6') {
+      const q6Message = {
+        type: 'text',
+        text: '【質問6/10】⏰\n\n管理職が「本来の仕事」に使える時間の割合は？',
+        quickReply: {
+          items: [
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '70%以上',
+                data: 'q6_70plus'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '50-70%',
+                data: 'q6_50to70'
+              }
+            },
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '30%未満',
+                data: 'q6_under30'
+              }
+            }
+          ]
+        }
+      };
+
+      try {
+        await sendPushMessage(userId, [q6Message]);
+        console.log('質問6送信完了');
+      } catch (error) {
+        console.error('質問6送信エラー:', error);
+      }
+    }
+
+    // Q6の回答処理
+    if (data.startsWith('q6_')) {
+      // 回答を記録
+      userAnswers.get(userId).q6 = data.replace('q6_', '');
+      
+      let responseMessage = '';
+      
+      if (data === 'q6_70plus') {
+        responseMessage = '理想的な状態！🎯\nマネジメントに集中できています。';
+      } else if (data === 'q6_50to70') {
+        responseMessage = 'まずまずですが...🤷\nもう少し戦略に時間を使いたいですね。';
+      } else if (data === 'q6_under30') {
+        responseMessage = '緊急事態です！🚨\n管理職の時給5000円が作業に...';
+      }
+
+      const benchmarkMessage = {
+        type: 'text',
+        text: `${responseMessage}
+
+💡 マネジメント効率：
+管理職の45%が「作業」に忙殺されています。AIで定型業務を自動化すれば、部下育成と戦略立案に集中できます。`,
+        quickReply: {
+          items: [
+            {
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '📊 次の質問へ',
+                data: 'next_q7'
+              }
+            }
+          ]
+        }
+      };
+
+      try {
+        await sendPushMessage(userId, [benchmarkMessage]);
+        console.log('Q6ベンチマーク送信完了');
+      } catch (error) {
+        console.error('Q6ベンチマーク送信エラー:', error);
+      }
+    }
   }
 }
 
 // 共通のメッセージ送信関数
 async function analyzeWithClaude(answers) {
-  const prompt = `あなたは企業AI活用コンサルタントです。以下の5つの質問への回答を分析し、中間診断結果を150字以内で簡潔に提供してください：
+  // AI風分析（事前定義ルールベース）
+  let score = 25; // ベーススコア
+  let issues = [];
+  let strengths = [];
+  let improvementAmount = 600;
 
-【回答データ】
-Q1 売上成長: ${answers.q1 || '未回答'}
-Q2 育成期間: ${answers.q2 || '未回答'}  
-Q3 優秀社員の時間使用: ${answers.q3 || '未回答'}
-Q4 退職理由: ${answers.q4 || '未回答'}
-Q5 知識共有: ${answers.q5 || '未回答'}
+  // Q1: 売上成長の分析
+  if (answers.q1 === 'improve_10plus') {
+    score += 10;
+    strengths.push('高成長');
+  } else if (answers.q1 === 'improve_5to10') {
+    score += 7;
+    strengths.push('安定成長');
+  } else if (answers.q1 === 'flat') {
+    score += 3;
+    issues.push('売上効率');
+    improvementAmount += 200;
+  } else if (answers.q1?.includes('decline')) {
+    score += 0;
+    issues.push('売上効率');
+    improvementAmount += 400;
+  }
 
-【出力形式】
-📊 現在のスコア: ○○/50点
-🎯 最優先改善領域: ○○○
-💰 推定改善効果: 年間○○万円
-⚡ 推奨AIツール: ○○○
+  // Q2: 育成期間の分析
+  if (answers.q2 === '3months') {
+    score += 8;
+    strengths.push('育成効率');
+  } else if (answers.q2 === '3to6months') {
+    score += 5;
+  } else if (answers.q2 === '6to12months') {
+    score += 2;
+    issues.push('人材育成');
+    improvementAmount += 150;
+  } else if (answers.q2?.includes('years')) {
+    score += 0;
+    issues.push('人材育成');
+    improvementAmount += 300;
+  }
 
-簡潔で具体的な数値を含めてください。`;
+  // Q3: 優秀人材活用の分析
+  if (answers.q3 === 'new_project') {
+    score += 7;
+    strengths.push('人材活用');
+  } else if (answers.q3 === 'behind_work') {
+    score += 1;
+    issues.push('業務効率');
+    improvementAmount += 250;
+  } else if (answers.q3 === 'meetings') {
+    score += 0;
+    issues.push('業務効率');
+    improvementAmount += 300;
+  }
 
-  try {
-    // Claude API呼び出し（実際のAPIキーが必要）
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': process.env.CLAUDE_API_KEY, // 環境変数に設定が必要
-        'anthropic-version': '2023-06-01'
-      },
-      body: JSON.stringify({
-        model: 'claude-3-haiku-20240307',
-        max_tokens: 200,
-        messages: [{
-          role: 'user',
-          content: prompt
-        }]
-      })
-    });
+  // Q4: 退職理由の分析
+  if (answers.q4 === 'career_up' || answers.q4 === 'no_resignation') {
+    score += 5;
+    strengths.push('組織健全性');
+  } else if (answers.q4 === 'workload') {
+    score += 0;
+    issues.push('労働環境');
+    improvementAmount += 200;
+  } else {
+    score += 2;
+    issues.push('待遇改善');
+    improvementAmount += 100;
+  }
 
-    if (!response.ok) {
-      throw new Error('Claude API error');
-    }
+  // Q5: 知識共有の分析
+  if (answers.q5 === 'database') {
+    score += 5;
+    strengths.push('知識管理');
+  } else if (answers.q5 === 'documents') {
+    score += 3;
+    issues.push('情報活用');
+    improvementAmount += 100;
+  } else if (answers.q5 === 'tacit') {
+    score += 1;
+    issues.push('知識共有');
+    improvementAmount += 200;
+  }
 
-    const data = await response.json();
-    return data.content[0].text;
-    
-  } catch (error) {
-    console.error('Claude API分析エラー:', error);
-    
-    // フォールバック分析（APIエラー時）
-    return `📊 現在のスコア: 35/50点
-🎯 最優先改善領域: 人材活用効率
-💰 推定改善効果: 年間800万円
-⚡ 推奨AIツール: ChatGPT Business
+  // 分析結果の生成
+  const primaryIssue = issues.length > 0 ? issues[0] : '更なる効率化';
+  const recommendedTool = getRecommendedTool(issues, strengths);
+  
+  return `📊 現在のスコア: ${Math.min(score, 50)}/50点
+🎯 最優先改善領域: ${primaryIssue}
+💰 推定改善効果: 年間${improvementAmount}万円
+⚡ 推奨AIツール: ${recommendedTool}
 
-後半の診断で詳細分析します！`;
+${getInsightMessage(score, issues)}`;
+}
+
+function getRecommendedTool(issues, strengths) {
+  if (issues.includes('業務効率')) {
+    return 'RPA + ChatGPT';
+  } else if (issues.includes('知識共有')) {
+    return 'Notion AI';
+  } else if (issues.includes('人材育成')) {
+    return 'eラーニングAI';
+  } else if (issues.includes('売上効率')) {
+    return 'データ分析AI';
+  } else {
+    return 'ChatGPT Business';
+  }
+}
+
+function getInsightMessage(score, issues) {
+  if (score >= 40) {
+    return '既に高いレベル！さらなる飛躍の準備ができています。';
+  } else if (score >= 30) {
+    return '平均以上の実力。AI活用で業界トップクラスを目指せます。';
+  } else if (score >= 20) {
+    return '改善余地大！適切なAI導入で劇的な変化が期待できます。';
+  } else {
+    return '今が変革のチャンス！AI活用で競合に大きく差をつけられます。';
   }
 }
 

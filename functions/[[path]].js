@@ -1,25 +1,25 @@
 export async function onRequest(context) {
   const { request, env } = context;
-    if (request.method !== 'POST') {
-      return new Response('Method not allowed', { status: 405 });
-    }
-
-    try {
-      const body = await request.json();
-      console.log('Received webhook:', JSON.stringify(body));
-
-      if (body.events && body.events.length > 0) {
-        for (const event of body.events) {
-          await handleEvent(event, env);
-        }
-      }
-
-      return new Response('OK', { status: 200 });
-    } catch (error) {
-      console.error('Error processing webhook:', error);
-      return new Response('Internal Server Error', { status: 500 });
-    }
+  
+  if (request.method !== 'POST') {
+    return new Response('Method not allowed', { status: 405 });
   }
+
+  try {
+    const body = await request.json();
+    
+    if (body.events && body.events.length > 0) {
+      for (const event of body.events) {
+        await handleEvent(event, env);
+      }
+    }
+
+    return new Response('OK', { status: 200 });
+  } catch (error) {
+    console.error('Error:', error);
+    return new Response('Internal Server Error', { status: 500 });
+  }
+}
 
 async function handleEvent(event, env) {
   if (event.type === 'message' && event.message.type === 'text') {
@@ -29,7 +29,10 @@ async function handleEvent(event, env) {
     if (messageText === '診断を始める' || messageText === 'start') {
       await startDiagnosis(userId, event.replyToken, env);
     } else {
-      await handleAnswer(userId, messageText, event.replyToken, env);
+      await sendReply(event.replyToken, [{
+        type: 'text',
+        text: '診断を開始するには「診断を始める」と送信してください。'
+      }], env);
     }
   } else if (event.type === 'postback') {
     const userId = event.source.userId;
@@ -89,7 +92,9 @@ async function handlePostback(userId, data, replyToken, env) {
     const parts = data.split('_');
     const questionNum = parseInt(parts[0].replace('q', ''));
     const answerIndex = parseInt(parts[1].replace('a', ''));
-    await processAnswer(userId, questionNum, answerIndex, replyToken, env);
+    
+    // 重要：非同期で処理して、replyTokenは即座に消費
+    await processAnswerAsync(userId, questionNum, answerIndex, replyToken, env);
   } else if (data === 'later') {
     await sendReply(replyToken, [{
       type: 'text',
@@ -129,75 +134,33 @@ async function sendQuestion(userId, questionNum, replyToken, env) {
   await sendReply(replyToken, [message], env);
 }
 
-async function processAnswer(userId, questionNum, answerIndex, replyToken, env) {
+async function processAnswerAsync(userId, questionNum, answerIndex, replyToken, env) {
+  const questions = getQuestions();
+  const question = questions[questionNum - 1];
+  const selectedOption = question.options[answerIndex];
+  
+  // まずベンチマークメッセージで即座にreplyTokenを消費
+  await sendReply(replyToken, [{
+    type: 'text',
+    text: selectedOption.response || '回答を記録しました。'
+  }], env);
+  
+  // 残りの処理を非同期で実行（ctx.waitUntilを使用するのが理想だが、今回はそのまま実行）
   try {
-    // 最初のメッセージのみreplyTokenを使用
-    await sendReply(replyToken, [{
-      type: 'text',
-      text: `デバッグ: Q${questionNum} 回答${answerIndex} を処理中...`
-    }], env);
-    
-    const questions = getQuestions();
-    const question = questions[questionNum - 1];
-    const selectedOption = question.options[answerIndex];
-    
     // 回答を保存
-    try {
-      await saveAnswer(userId, questionNum, answerIndex, selectedOption.score, env);
-      // 2回目以降はpushメッセージを使用
-      await sendPushMessage(userId, [{
-        type: 'text',
-        text: `保存成功: スコア${selectedOption.score}`
-      }], env);
-    } catch (error) {
-      await sendPushMessage(userId, [{
-        type: 'text',
-        text: `保存エラー: ${error.message}`
-      }], env);
-      return;
-    }
+    await saveAnswer(userId, questionNum, answerIndex, selectedOption.score, env);
     
-    // ベンチマークメッセージを送信
-    if (selectedOption.response) {
-      try {
-        await sendPushMessage(userId, [{
-          type: 'text',
-          text: selectedOption.response
-        }], env);
-      } catch (error) {
-        await sendPushMessage(userId, [{
-          type: 'text',
-          text: `ベンチマークメッセージエラー: ${error.message}`
-        }], env);
-      }
-    }
+    // 少し待ってから次の処理
+    await new Promise(resolve => setTimeout(resolve, 1000));
     
     // 次の質問またはスコア表示
     if (questionNum < 10) {
-      try {
-        await sendNextQuestion(userId, questionNum + 1, env);
-      } catch (error) {
-        await sendPushMessage(userId, [{
-          type: 'text',
-          text: `次の質問エラー: ${error.message}`
-        }], env);
-      }
+      await sendNextQuestion(userId, questionNum + 1, env);
     } else {
-      try {
-        await calculateAndSendResultPush(userId, env);
-      } catch (error) {
-        await sendPushMessage(userId, [{
-          type: 'text',
-          text: `結果計算エラー: ${error.message}`
-        }], env);
-      }
+      await calculateAndSendResultPush(userId, env);
     }
-    
   } catch (error) {
-    await sendPushMessage(userId, [{
-      type: 'text',
-      text: `全体処理エラー: ${error.message}`
-    }], env);
+    console.error('Background processing error:', error);
   }
 }
 
@@ -235,118 +198,88 @@ async function calculateAndSendResult(userId, replyToken, env) {
   const answers = await getUserAnswers(userId, env);
   const totalScore = answers.reduce((sum, answer) => sum + answer.score, 0);
   
-  // 結果メッセージを取得
   const resultMessage = getResultMessage(totalScore);
   
-  // 結果を送信
   await sendReply(replyToken, [{
     type: 'text',
     text: resultMessage
   }], env);
   
-  // 詳細レポートの案内
-  const followUpMessage = {
-    type: 'text',
-    text: 'より詳細な分析レポートや改善提案について\n' +
-          '個別にご相談いただけます。\n\n' +
-          '30分の無料相談はいかがですか？',
-    quickReply: {
-      items: [
-        {
-          type: 'action',
-          action: {
-            type: 'postback',
-            label: '相談を申し込む',
-            data: 'request_consultation'
+  // 少し待ってからフォローアップ
+  setTimeout(async () => {
+    const followUpMessage = {
+      type: 'text',
+      text: 'より詳細な分析レポートや改善提案について\n' +
+            '個別にご相談いただけます。\n\n' +
+            '30分の無料相談はいかがですか？',
+      quickReply: {
+        items: [
+          {
+            type: 'action',
+            action: {
+              type: 'postback',
+              label: '相談を申し込む',
+              data: 'request_consultation'
+            }
+          },
+          {
+            type: 'action',
+            action: {
+              type: 'postback',
+              label: '事例を見る',
+              data: 'view_cases'
+            }
           }
-        },
-        {
-          type: 'action',
-          action: {
-            type: 'postback',
-            label: '事例を見る',
-            data: 'view_cases'
-          }
-        },
-        {
-          type: 'action',
-          action: {
-            type: 'postback',
-            label: '後で検討',
-            data: 'consider_later'
-          }
-        }
-      ]
-    }
-  };
-  
-  await sendPushMessage(userId, [followUpMessage], env);
-  
-  // Google Sheetsに記録
-  await saveToGoogleSheets(userId, answers, totalScore, env);
+        ]
+      }
+    };
+    
+    await sendPushMessage(userId, [followUpMessage], env);
+  }, 2000);
 }
 
 async function calculateAndSendResultPush(userId, env) {
   const answers = await getUserAnswers(userId, env);
   const totalScore = answers.reduce((sum, answer) => sum + answer.score, 0);
   
-  // 結果メッセージを取得
   const resultMessage = getResultMessage(totalScore);
   
-  // 結果を送信
   await sendPushMessage(userId, [{
     type: 'text',
     text: resultMessage
   }], env);
   
-  // 詳細レポートの案内
-  const followUpMessage = {
-    type: 'text',
-    text: 'より詳細な分析レポートや改善提案について\n' +
-          '個別にご相談いただけます。\n\n' +
-          '30分の無料相談はいかがですか？',
-    quickReply: {
-      items: [
-        {
-          type: 'action',
-          action: {
-            type: 'postback',
-            label: '相談を申し込む',
-            data: 'request_consultation'
+  // 少し待ってからフォローアップ
+  setTimeout(async () => {
+    const followUpMessage = {
+      type: 'text',
+      text: 'より詳細な分析レポートや改善提案について\n' +
+            '個別にご相談いただけます。\n\n' +
+            '30分の無料相談はいかがですか？',
+      quickReply: {
+        items: [
+          {
+            type: 'action',
+            action: {
+              type: 'postback',
+              label: '相談を申し込む',
+              data: 'request_consultation'
+            }
+          },
+          {
+            type: 'action',
+            action: {
+              type: 'postback',
+              label: '事例を見る',
+              data: 'view_cases'
+            }
           }
-        },
-        {
-          type: 'action',
-          action: {
-            type: 'postback',
-            label: '事例を見る',
-            data: 'view_cases'
-          }
-        },
-        {
-          type: 'action',
-          action: {
-            type: 'postback',
-            label: '後で検討',
-            data: 'consider_later'
-          }
-        }
-      ]
-    }
-  };
-  
-  await sendPushMessage(userId, [followUpMessage], env);
-  
-  // Google Sheetsに記録
-  await saveToGoogleSheets(userId, answers, totalScore, env);
-}
-
-async function handleAnswer(userId, messageText, replyToken, env) {
-  // テキストでの回答処理（必要に応じて実装）
-  await sendReply(replyToken, [{
-    type: 'text',
-    text: '診断を開始するには「診断を始める」と送信してください。'
-  }], env);
+        ]
+      }
+    };
+    
+    await sendPushMessage(userId, [followUpMessage], env);
+  }, 2000);
 }
 
 function getResultMessage(score) {
@@ -467,44 +400,57 @@ function getQuestions() {
 }
 
 async function sendReply(replyToken, messages, env) {
-  const response = await fetch('https://api.line.me/v2/bot/message/reply', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${env.LINE_CHANNEL_ACCESS_TOKEN}`
-    },
-    body: JSON.stringify({
-      replyToken: replyToken,
-      messages: messages
-    })
-  });
+  try {
+    const response = await fetch('https://api.line.me/v2/bot/message/reply', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${env.LINE_CHANNEL_ACCESS_TOKEN}`
+      },
+      body: JSON.stringify({
+        replyToken: replyToken,
+        messages: messages
+      })
+    });
 
-  if (!response.ok) {
-    console.error('Failed to send reply:', await response.text());
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Reply failed:', errorText);
+    }
+  } catch (error) {
+    console.error('Reply error:', error);
   }
 }
 
 async function sendPushMessage(userId, messages, env) {
-  const response = await fetch('https://api.line.me/v2/bot/message/push', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${env.LINE_CHANNEL_ACCESS_TOKEN}`
-    },
-    body: JSON.stringify({
-      to: userId,
-      messages: messages
-    })
-  });
+  try {
+    const response = await fetch('https://api.line.me/v2/bot/message/push', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${env.LINE_CHANNEL_ACCESS_TOKEN}`
+      },
+      body: JSON.stringify({
+        to: userId,
+        messages: messages
+      })
+    });
 
-  if (!response.ok) {
-    console.error('Failed to send push message:', await response.text());
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Push failed:', errorText);
+    }
+  } catch (error) {
+    console.error('Push error:', error);
   }
 }
 
 async function resetUserProgress(userId, env) {
-  // KVに保存された進捗をリセット
-  await env.USER_PROGRESS.delete(userId);
+  try {
+    await env.USER_PROGRESS.delete(userId);
+  } catch (error) {
+    console.error('Reset error:', error);
+  }
 }
 
 async function saveAnswer(userId, questionNum, answerIndex, score, env) {
@@ -517,7 +463,7 @@ async function saveAnswer(userId, questionNum, answerIndex, score, env) {
       answers = JSON.parse(existingData);
     }
   } catch (error) {
-    console.error('Error reading existing answers:', error);
+    console.error('Read error:', error);
   }
   
   answers.push({
@@ -527,7 +473,11 @@ async function saveAnswer(userId, questionNum, answerIndex, score, env) {
     timestamp: new Date().toISOString()
   });
   
-  await env.USER_PROGRESS.put(key, JSON.stringify(answers));
+  try {
+    await env.USER_PROGRESS.put(key, JSON.stringify(answers));
+  } catch (error) {
+    console.error('Save error:', error);
+  }
 }
 
 async function getUserAnswers(userId, env) {
@@ -536,12 +486,7 @@ async function getUserAnswers(userId, env) {
     const data = await env.USER_PROGRESS.get(key);
     return data ? JSON.parse(data) : [];
   } catch (error) {
-    console.error('Error getting user answers:', error);
+    console.error('Get answers error:', error);
     return [];
   }
-}
-
-async function saveToGoogleSheets(userId, answers, totalScore, env) {
-  // Google Sheets APIへの保存は後で実装
-  console.log('Saving to Google Sheets:', { userId, answers, totalScore });
 }

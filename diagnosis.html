@@ -15,7 +15,7 @@
             line-height: 1.6;
         }
         .container { 
-            max-width: 700px; 
+            max-width: 800px; 
             margin: 0 auto; 
             background: white; 
             border-radius: 20px;
@@ -30,14 +30,14 @@
         }
         .header h1 { 
             margin: 0; 
-            font-size: 28px; 
+            font-size: 32px; 
             font-weight: 700;
             text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
         .header p { 
             margin: 15px 0 0 0; 
             opacity: 0.95; 
-            font-size: 16px;
+            font-size: 18px;
         }
         .stats {
             display: grid;
@@ -64,46 +64,90 @@
         .content { 
             padding: 40px 30px; 
         }
+        .intro-section {
+            background: linear-gradient(135deg, #f8f9ff 0%, #e8f2ff 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border-left: 5px solid #667eea;
+            text-align: center;
+        }
+        .intro-section h3 {
+            margin: 0 0 15px 0;
+            color: #333;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        .intro-section p {
+            margin: 0 0 25px 0;
+            color: #666;
+            font-size: 16px;
+        }
+        .start-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+        }
+        .start-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        .progress-section {
+            margin-bottom: 30px;
+        }
         .progress-bar {
             width: 100%;
-            height: 6px;
+            height: 8px;
             background: #e0e0e0;
-            border-radius: 3px;
-            margin-bottom: 30px;
+            border-radius: 4px;
             overflow: hidden;
+            margin-bottom: 15px;
         }
         .progress-fill {
             height: 100%;
             background: linear-gradient(90deg, #667eea, #764ba2);
             width: 0%;
-            transition: width 0.3s ease;
+            transition: width 0.5s ease;
+        }
+        .progress-text {
+            text-align: center;
+            font-weight: 600;
+            color: #667eea;
+            font-size: 16px;
         }
         .question {
             background: #f8f9ff;
-            padding: 25px;
+            padding: 30px;
             border-radius: 15px;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
             border-left: 5px solid #667eea;
             position: relative;
         }
         .question.completed {
-            background: #f0f8f0;
+            background: linear-gradient(135deg, #f0f8f0 0%, #e8f5e8 100%);
             border-left-color: #28a745;
         }
         .question h3 { 
-            margin: 0 0 20px 0; 
+            margin: 0 0 25px 0; 
             color: #333; 
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 600;
         }
         .options { 
             display: grid; 
-            gap: 12px; 
+            gap: 15px; 
         }
         .option {
             background: white;
             border: 2px solid #e0e0e0;
-            padding: 18px 20px;
+            padding: 20px 25px;
             border-radius: 12px;
             cursor: pointer;
             transition: all 0.3s;
@@ -111,6 +155,7 @@
             display: flex;
             align-items: center;
             font-weight: 500;
+            font-size: 16px;
         }
         .option:hover {
             border-color: #667eea;
@@ -127,29 +172,67 @@
         }
         .option::before {
             content: '';
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
             border: 2px solid #ccc;
             border-radius: 50%;
-            margin-right: 12px;
+            margin-right: 15px;
             transition: all 0.3s;
+            flex-shrink: 0;
         }
         .option.selected::before {
             background: white;
             border-color: white;
-            box-shadow: inset 0 0 0 3px #667eea;
+            box-shadow: inset 0 0 0 4px #667eea;
+        }
+        .instant-feedback {
+            background: linear-gradient(135deg, #e8f2ff 0%, #f0f8ff 100%);
+            border: 2px solid #b3d9ff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.6s ease;
+        }
+        .instant-feedback.show {
+            opacity: 1;
+            max-height: 300px;
+        }
+        .instant-feedback h5 {
+            margin: 0 0 10px 0;
+            color: #667eea;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .instant-feedback p {
+            margin: 0 0 12px 0;
+            color: #333;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .improvement-amount {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+            font-weight: 600;
+            color: #856404;
+            text-align: center;
         }
         .submit-btn {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            padding: 18px 40px;
+            padding: 20px 50px;
             border-radius: 30px;
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
             cursor: pointer;
             width: 100%;
-            margin-top: 30px;
+            margin-top: 40px;
             transition: all 0.3s;
             box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
         }
@@ -163,6 +246,41 @@
             transform: none;
             box-shadow: none;
         }
+        .ai-analysis {
+            text-align: center;
+            padding: 50px;
+            font-size: 20px;
+            color: #667eea;
+        }
+        .ai-analysis::after {
+            content: '';
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 15px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .analysis-stages {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #888;
+        }
+        .stage {
+            opacity: 0.5;
+            transition: opacity 0.5s;
+        }
+        .stage.active {
+            opacity: 1;
+            color: #667eea;
+            font-weight: 600;
+        }
         .result {
             background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
             padding: 40px;
@@ -172,14 +290,26 @@
             box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
         }
         .score {
-            font-size: 48px;
+            font-size: 56px;
             font-weight: bold;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             text-align: center;
             margin-bottom: 30px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .ai-insights {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 25px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-left: 5px solid #ff6b6b;
+        }
+        .ai-insights h4 {
+            color: #ff6b6b;
+            margin: 0 0 15px 0;
+            font-size: 18px;
         }
         .analysis-section {
             background: white;
@@ -192,9 +322,6 @@
             color: #333;
             margin: 0 0 15px 0;
             font-size: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
         .benchmark {
             background: #f8f9ff;
@@ -228,700 +355,552 @@
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(0,0,0,0.2);
         }
-        .loading {
-            text-align: center;
-            padding: 30px;
-            font-size: 18px;
-            color: #667eea;
-        }
-        .loading::after {
-            content: '';
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #667eea;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-left: 10px;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        .hidden { display: none; }
         @media (max-width: 600px) {
             .container { margin: 10px; }
             .content { padding: 20px; }
             .stats { grid-template-columns: 1fr; gap: 10px; }
-            .header h1 { font-size: 24px; }
-            .score { font-size: 36px; }
+            .header h1 { font-size: 28px; }
+            .score { font-size: 42px; }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🎯 AI活用診断</h1>
-            <p>3分で判明。あなたの会社の「真の改善ポテンシャル」</p>
+            <h1>🤖 AI活用診断</h1>
+            <p>3分で判明。あなたの会社の「隠れた」改善ポテンシャル</p>
             <div class="stats">
                 <div class="stat">
-                    <span class="stat-number">1,200社</span>
-                    <span class="stat-label">実績データ</span>
+                    <span class="stat-number">AI分析</span>
+                    <span class="stat-label">高度分析</span>
                 </div>
                 <div class="stat">
                     <span class="stat-number">3分</span>
-                    <span class="stat-label">診断時間</span>
+                    <span class="stat-label">完了時間</span>
                 </div>
                 <div class="stat">
-                    <span class="stat-number">年間2,400万円</span>
-                    <span class="stat-label">平均改善効果</span>
+                    <span class="stat-number">平均2,400万円</span>
+                    <span class="stat-label">改善効果</span>
                 </div>
             </div>
         </div>
         
         <div class="content">
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressFill"></div>
-            </div>
-            
-            <form id="diagnosisForm">
-                <div class="question" data-question="1">
-                    <h3>【質問1/10】📈 昨年度と比較して、一人当たりの売上高は？</h3>
-                    <div class="options">
-                        <label class="option">
-                            <input type="radio" name="q1" value="improve_high" style="display:none">
-                            10%以上向上している
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q1" value="improve_medium" style="display:none">
-                            5-10%向上している
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q1" value="flat" style="display:none">
-                            ほぼ横ばい（±5%以内）
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q1" value="decline_medium" style="display:none">
-                            5-10%減少している
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q1" value="decline_high" style="display:none">
-                            10%以上減少している
-                        </label>
-                    </div>
+            <!-- 開始セクション -->
+            <div id="introSection">
+                <div class="intro-section">
+                    <h3>🔍 10の質問でAIが隠れた課題を発見</h3>
+                    <p>各回答に基づいて、AIが瞬時に改善提案と具体的な効果額を算出します。<br>
+                    他社との比較データも含めた、本格的な診断を無料で体験してください。</p>
+                    <button class="start-btn" onclick="startDiagnosis()">🚀 AI診断を開始する</button>
                 </div>
-
-                <div class="question" data-question="2">
-                    <h3>【質問2/10】🌱 新入社員が一人前になるまでの期間は？</h3>
-                    <div class="options">
-                        <label class="option">
-                            <input type="radio" name="q2" value="3months" style="display:none">
-                            3ヶ月以内
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q2" value="6months" style="display:none">
-                            3-6ヶ月
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q2" value="1year" style="display:none">
-                            6ヶ月-1年
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q2" value="2years" style="display:none">
-                            1-2年
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q2" value="long" style="display:none">
-                            2年以上
-                        </label>
-                    </div>
-                </div>
-
-                <div class="question" data-question="3">
-                    <h3>【質問3/10】⭐ 先月、最も優秀な社員が残業した主な理由は？</h3>
-                    <div class="options">
-                        <label class="option">
-                            <input type="radio" name="q3" value="project" style="display:none">
-                            新規プロジェクト・企画活動
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q3" value="backlog" style="display:none">
-                            通常業務が追いつかない
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q3" value="mentoring" style="display:none">
-                            部下の指導・フォロー
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q3" value="admin" style="display:none">
-                            会議・報告書作成
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q3" value="none" style="display:none">
-                            残業はほぼない
-                        </label>
-                    </div>
-                </div>
-
-                <div class="question" data-question="4">
-                    <h3>【質問4/10】🚪 直近3ヶ月で退職した社員の主な理由は？</h3>
-                    <div class="options">
-                        <label class="option">
-                            <input type="radio" name="q4" value="career" style="display:none">
-                            キャリアアップ（前向きな転職）
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q4" value="salary" style="display:none">
-                            給与・待遇への不満
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q4" value="workload" style="display:none">
-                            業務負荷・残業の多さ
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q4" value="growth" style="display:none">
-                            成長実感の欠如
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q4" value="none" style="display:none">
-                            退職者はいない
-                        </label>
-                    </div>
-                </div>
-
-                <div class="question" data-question="5">
-                    <h3>【質問5/10】📚 社内の「知識・ノウハウ」の共有状況は？</h3>
-                    <div class="options">
-                        <label class="option">
-                            <input type="radio" name="q5" value="database" style="display:none">
-                            体系的にデータベース化されている
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q5" value="documents" style="display:none">
-                            文書化されているが散在している
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q5" value="tacit" style="display:none">
-                            主要メンバーの頭の中にある
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q5" value="lost" style="display:none">
-                            人が辞めると失われる
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q5" value="none" style="display:none">
-                            特に管理していない
-                        </label>
-                    </div>
-                </div>
-
-                <div class="question" data-question="6">
-                    <h3>【質問6/10】⏰ 管理職が「本来の仕事」に使える時間の割合は？</h3>
-                    <div class="options">
-                        <label class="option">
-                            <input type="radio" name="q6" value="high" style="display:none">
-                            70%以上（理想的）
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q6" value="good" style="display:none">
-                            50-70%（まあまあ）
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q6" value="fair" style="display:none">
-                            30-50%（改善の余地あり）
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q6" value="poor" style="display:none">
-                            30%未満（緊急事態）
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q6" value="unknown" style="display:none">
-                            把握していない
-                        </label>
-                    </div>
-                </div>
-
-                <div class="question" data-question="7">
-                    <h3>【質問7/10】💼 「提案の質」で競合に勝てる自信は？</h3>
-                    <div class="options">
-                        <label class="option">
-                            <input type="radio" name="q7" value="always" style="display:none">
-                            常に勝っている
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q7" value="mostly" style="display:none">
-                            7割は勝てる
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q7" value="even" style="display:none">
-                            五分五分
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q7" value="losing" style="display:none">
-                            正直負けることが多い
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q7" value="unknown" style="display:none">
-                            比較したことがない
-                        </label>
-                    </div>
-                </div>
-
-                <div class="question" data-question="8">
-                    <h3>【質問8/10】💡 若手社員からの改善提案や新しいアイデアは？</h3>
-                    <div class="options">
-                        <label class="option">
-                            <input type="radio" name="q8" value="active" style="display:none">
-                            活発に出てきて実行している
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q8" value="some" style="display:none">
-                            たまに出るが実現は少ない
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q8" value="rare" style="display:none">
-                            ほとんど出てこない
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q8" value="no_time" style="display:none">
-                            出ても検討する余裕がない
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q8" value="no_system" style="display:none">
-                            提案する仕組みがない
-                        </label>
-                    </div>
-                </div>
-
-                <div class="question" data-question="9">
-                    <h3>【質問9/10】⚠️ もし主力社員が突然1ヶ月休んだら？</h3>
-                    <div class="options">
-                        <label class="option">
-                            <input type="radio" name="q9" value="covered" style="display:none">
-                            他のメンバーでカバー可能
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q9" value="difficult" style="display:none">
-                            なんとか回るが大変
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q9" value="stop" style="display:none">
-                            特定業務が完全に止まる
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q9" value="impact" style="display:none">
-                            取引先との関係に影響
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q9" value="avoid" style="display:none">
-                            考えたくない
-                        </label>
-                    </div>
-                </div>
-
-                <div class="question" data-question="10">
-                    <h3>【質問10/10】📊 データに基づいて意思決定する頻度は？</h3>
-                    <div class="options">
-                        <label class="option">
-                            <input type="radio" name="q10" value="daily" style="display:none">
-                            日常的にデータを活用
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q10" value="important" style="display:none">
-                            重要な決定時のみ活用
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q10" value="sometimes" style="display:none">
-                            たまに参考にする程度
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q10" value="intuition" style="display:none">
-                            勘と経験が中心
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q10" value="no_data" style="display:none">
-                            データがそもそもない
-                        </label>
-                    </div>
-                </div>
-
-                <button type="submit" class="submit-btn" id="submitBtn" disabled>
-                    🤖 AI分析を開始する（3分で完了）
-                </button>
-            </form>
-
-            <div id="loading" class="loading" style="display:none;">
-                🤖 AI分析中... 1,200社のデータと照合しています
             </div>
 
-            <div id="result" class="result" style="display:none;">
+            <!-- 診断セクション -->
+            <div id="diagnosisSection" class="hidden">
+                <div class="progress-section">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div class="progress-text" id="progressText">質問 0/10</div>
+                </div>
+                
+                <form id="diagnosisForm">
+                    <div id="questionsContainer"></div>
+                    
+                    <button type="button" class="submit-btn" id="submitBtn" disabled onclick="startAnalysis()">
+                        🤖 AIによる本格分析を開始（準備中...）
+                    </button>
+                </form>
+            </div>
+
+            <!-- AI分析中 -->
+            <div id="aiAnalysisSection" class="ai-analysis hidden">
+                🤖 AIが1,200社のデータと照合分析中...
+                <div class="analysis-stages">
+                    <div class="stage" id="stage1">📊 回答パターンを分析中...</div>
+                    <div class="stage" id="stage2">🔍 隠れた課題を発見中...</div>
+                    <div class="stage" id="stage3">💡 改善案を生成中...</div>
+                    <div class="stage" id="stage4">💰 効果額を算出中...</div>
+                    <div class="stage" id="stage5">✅ レポート作成完了</div>
+                </div>
+            </div>
+
+            <!-- 結果セクション -->
+            <div id="result" class="result hidden">
                 <div class="score" id="scoreDisplay"></div>
+                
+                <!-- AI特別分析 -->
+                <div class="ai-insights">
+                    <h4>🤖 AI特別分析：あなたの会社で見つかった隠れた課題</h4>
+                    <div id="aiSpecialInsights"></div>
+                </div>
+                
                 <div id="analysisResult"></div>
                 
                 <div class="cta-section">
-                    <h3>🎯 次のステップ</h3>
-                    <p>この診断結果を基に、より詳細な AI活用戦略を策定いたします。</p>
-                    <p><strong>30分の無料個別相談</strong>で、具体的な実装プランをご提案します。</p>
+                    <h3>🎯 この分析を実行に移しませんか？</h3>
+                    <p>AIが発見した課題の<strong>詳細な解決プラン</strong>を30分の無料相談でご提案します。</p>
+                    <p>具体的な実装方法、期間、投資額まで明確にお話しします。</p>
                     
-                    <a href="mailto:ai-consulting@example.com?subject=AI活用診断結果についての相談&body=診断スコア: [スコア]点%0A%0A相談希望内容:" class="cta-btn">📧 個別相談を申し込む</a>
-                    <a href="tel:03-1234-5678" class="cta-btn">📞 今すぐ電話相談</a>
+                    <a href="mailto:contact@ai-consulting.com" class="cta-btn" id="emailBtn">📧 詳細プランの相談を申し込む</a>
+                    <a href="tel:080-1234-5678" class="cta-btn">📞 今すぐ電話で相談</a>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        let answeredQuestions = 0;
-        const totalQuestions = 10;
+        // 診断データ（10問完全版）
+        const QUESTIONS = [
+            {
+                id: 1,
+                text: "【質問1/10】📈 昨年度と比較して、一人当たりの売上高は？",
+                options: [
+                    { text: "10%以上向上している", value: "improve_high", score: 15, feedback: { title: "素晴らしい成長率です！", content: "上位15%の企業レベルです。AI活用でこの成長をさらに加速できます。", improvement: "AI活用により成長率をさらに15-25%押し上げ可能", amount: "年間1,200万円の追加利益" }},
+                    { text: "5-10%向上している", value: "improve_medium", score: 12, feedback: { title: "健全な成長です", content: "平均を上回る成長率。AI導入で2桁成長も狙えます。", improvement: "業務効率化により売上成長率を2倍に", amount: "年間800万円の追加売上効果" }},
+                    { text: "ほぼ横ばい（±5%以内）", value: "flat", score: 7, feedback: { title: "停滞は後退と同じです", content: "競合はAIで生産性を平均23%向上させています。取り残される前に行動を。", improvement: "AI活用で一人当たり売上を30%向上", amount: "年間1,500万円の売上増加効果" }},
+                    { text: "5-10%減少している", value: "decline_medium", score: 3, feedback: { title: "危険信号です", content: "市場シェア失っている可能性が高いです。AI活用で劇的改善した事例多数。", improvement: "緊急AI導入で業績をV字回復", amount: "年間2,000万円の損失回避効果" }},
+                    { text: "10%以上減少している", value: "decline_high", score: 0, feedback: { title: "緊急事態です！", content: "今すぐ抜本的改革が必要。同じ状況からAIで復活した企業があります。", improvement: "AI活用による事業構造改革が急務", amount: "年間3,000万円以上の損失回避" }}
+                ]
+            },
+            {
+                id: 2,
+                text: "【質問2/10】🌱 新入社員が一人前になるまでの期間は？",
+                options: [
+                    { text: "3ヶ月以内", value: "3months", score: 10, feedback: { title: "理想的な育成システム", content: "業界トップクラスの育成力。AI活用でさらに短縮＆質向上が可能です。", improvement: "AI個別指導で育成期間を半分に", amount: "年間500万円の育成コスト削減" }},
+                    { text: "3-6ヶ月", value: "6months", score: 8, feedback: { title: "標準的な期間です", content: "平均的ですが、AI支援で2ヶ月短縮した企業が67%あります。", improvement: "AI学習支援で育成期間30%短縮", amount: "年間400万円の人件費効率化" }},
+                    { text: "6ヶ月-1年", value: "1year", score: 5, feedback: { title: "改善の余地があります", content: "長すぎる育成期間は競争力を削ぎます。AI活用で期間半減可能。", improvement: "AI活用で育成期間を3-4ヶ月に短縮", amount: "年間650万円の機会費用回収" }},
+                    { text: "1-2年", value: "2years", score: 2, feedback: { title: "非効率すぎます", content: "この期間では離職リスクも高まります。AI支援で劇的短縮を。", improvement: "緊急AI育成システム導入が必要", amount: "年間1,200万円の育成ロス回避" }},
+                    { text: "2年以上", value: "long", score: 0, feedback: { title: "深刻な問題です", content: "人材が育つ前に辞めていませんか？AI活用で根本解決を。", improvement: "AI活用による育成革命が急務", amount: "年間2,000万円以上の人材ロス回避" }}
+                ]
+            },
+            {
+                id: 3,
+                text: "【質問3/10】⭐ 先月、最も優秀な社員が残業した主な理由は？",
+                options: [
+                    { text: "新規プロジェクト・企画活動", value: "project", score: 10, feedback: { title: "理想的な時間の使い方", content: "価値創造に集中できています。AI活用でさらに創造時間を増やせます。", improvement: "AI支援でプロジェクト効率50%向上", amount: "年間800万円の価値創造加速" }},
+                    { text: "通常業務が追いつかない", value: "backlog", score: 3, feedback: { title: "人材の無駄遣いです", content: "優秀な人材が作業に埋もれています。AI自動化で彼らを解放しましょう。", improvement: "AI自動化で優秀人材の戦略時間を70%確保", amount: "年間1,800万円の人材価値最大化" }},
+                    { text: "部下の指導・フォロー", value: "mentoring", score: 7, feedback: { title: "育成は重要ですが...", content: "指導時間をAI支援で効率化し、より戦略的な時間を確保できます。", improvement: "AI指導支援で育成効率2倍、戦略時間確保", amount: "年間600万円の時間価値向上" }},
+                    { text: "会議・報告書作成", value: "admin", score: 0, feedback: { title: "もったいなすぎます！", content: "優秀人材が事務作業に...時給5,000円の人が資料作りでは会社が損します。", improvement: "AI自動化で管理業務を80%削減", amount: "年間2,400万円の人材効率化" }},
+                    { text: "残業はほぼない", value: "none", score: 10, feedback: { title: "理想的な働き方", content: "効率性と生産性のバランスが取れています。AI活用でさらに向上を。", improvement: "AI活用で生産性をさらに25%向上", amount: "年間500万円の追加価値創出" }}
+                ]
+            },
+            {
+                id: 4,
+                text: "【質問4/10】🚪 直近3ヶ月で退職した社員の主な理由は？",
+                options: [
+                    { text: "キャリアアップ（前向きな転職）", value: "career", score: 8, feedback: { title: "健全な組織の証拠", content: "前向きな退職は組織力の表れ。卒業生ネットワークは将来の財産です。", improvement: "AI活用でさらに成長機会を提供", amount: "年間300万円の人材価値向上" }},
+                    { text: "給与・待遇への不満", value: "salary", score: 4, feedback: { title: "根本的解決が必要", content: "給与アップの原資をAI効率化で作り出すことができます。", improvement: "AI効率化で人件費原資を20%創出", amount: "年間1,000万円の待遇改善原資" }},
+                    { text: "業務負荷・残業の多さ", value: "workload", score: 2, feedback: { title: "危険信号です", content: "業務負荷での離職は連鎖します。AI自動化で根本解決を。", improvement: "AI活用で業務負荷を40%削減", amount: "年間1,600万円の離職コスト回避" }},
+                    { text: "成長実感の欠如", value: "growth", score: 3, feedback: { title: "深刻な組織課題", content: "成長機会の不足は優秀人材から去らせます。AI活用で成長環境を。", improvement: "AI学習環境で成長機会を3倍に", amount: "年間800万円の人材定着効果" }},
+                    { text: "退職者はいない", value: "none", score: 8, feedback: { title: "優秀な人材定着率", content: "良い組織文化の表れです。AI活用でさらに魅力的な職場に。", improvement: "AI活用で組織魅力度をさらに向上", amount: "年間400万円の採用コスト削減" }}
+                ]
+            },
+            {
+                id: 5,
+                text: "【質問5/10】📚 社内の「知識・ノウハウ」の共有状況は？",
+                options: [
+                    { text: "体系的にデータベース化されている", value: "database", score: 10, feedback: { title: "理想的な知識管理", content: "素晴らしい基盤です。AI活用でさらに知識を進化させられます。", improvement: "AI検索・推薦で知識活用効率3倍", amount: "年間600万円の知識活用効果" }},
+                    { text: "文書化されているが散在している", value: "documents", score: 7, feedback: { title: "もったいない状態", content: "宝の持ち腐れです。AI統合で眠った知識を蘇らせましょう。", improvement: "AI統合システムで知識活用率5倍", amount: "年間1,200万円の知識資産活用" }},
+                    { text: "主要メンバーの頭の中にある", value: "tacit", score: 3, feedback: { title: "暗黙知の宝庫です", content: "AIなら暗黙知を形式知に変換できます。人が辞める前に対策を。", improvement: "AI活用で暗黙知を90%以上抽出・活用", amount: "年間2,000万円の知識資産保全" }},
+                    { text: "人が辞めると失われる", value: "lost", score: 1, feedback: { title: "緊急事態です！", content: "知識流出で年間850万円の損失。AIで今すぐ知識保全を。", improvement: "緊急AI知識保全システム導入", amount: "年間2,500万円の知識流出防止" }},
+                    { text: "特に管理していない", value: "none", score: 0, feedback: { title: "知識は最重要資産です", content: "無形資産の活用が企業価値を決めます。今すぐAI活用を。", improvement: "AI知識管理システム構築が急務", amount: "年間3,000万円の知識資産創出" }}
+                ]
+            },
+            {
+                id: 6,
+                text: "【質問6/10】⏰ 管理職が「本来の仕事」に使える時間の割合は？",
+                options: [
+                    { text: "70%以上（理想的）", value: "high", score: 10, feedback: { title: "理想的なマネジメント", content: "戦略に集中できています。AI活用でさらに高度な意思決定を。", improvement: "AI支援で意思決定精度を40%向上", amount: "年間800万円の戦略価値向上" }},
+                    { text: "50-70%（まあまあ）", value: "good", score: 7, feedback: { title: "改善の余地あり", content: "もう20%は戦略時間を確保したいところ。AI自動化で実現可能。", improvement: "AI自動化で管理職の戦略時間を80%に", amount: "年間1,200万円のマネジメント効率化" }},
+                    { text: "30-50%（改善の余地あり）", value: "fair", score: 4, feedback: { title: "管理職が作業者に...", content: "時給5,000円の人が事務作業では会社の損失です。AI自動化を。", improvement: "AI活用で管理業務を70%自動化", amount: "年間1,800万円の管理効率化" }},
+                    { text: "30%未満（緊急事態）", value: "poor", score: 1, feedback: { title: "組織として機能不全", content: "管理職が作業に埋もれています。AIによる緊急改革が必要。", improvement: "AI革命による管理業務構造改革", amount: "年間2,500万円の管理ロス回避" }},
+                    { text: "把握していない", value: "unknown", score: 2, feedback: { title: "まず可視化から", content: "見えない問題は解決できません。AI分析で実態把握を。", improvement: "AI分析による業務可視化から開始", amount: "年間1,000万円の隠れたロス発見" }}
+                ]
+            },
+            {
+                id: 7,
+                text: "【質問7/10】💼 「提案の質」で競合に勝てる自信は？",
+                options: [
+                    { text: "常に勝っている", value: "always", score: 10, feedback: { title: "圧倒的な提案力！", content: "業界トップクラス。AI活用でさらに差をつけましょう。", improvement: "AI活用で提案精度をさらに30%向上", amount: "年間1,500万円の受注率向上効果" }},
+                    { text: "7割は勝てる", value: "mostly", score: 8, feedback: { title: "高い勝率です", content: "あと3割の勝率アップでトップに。AI活用で9割勝利も可能。", improvement: "AI提案支援で勝率を90%に向上", amount: "年間1,200万円の受注増加効果" }},
+                    { text: "五分五分", value: "even", score: 5, feedback: { title: "競争が激化してます", content: "差別化が急務です。AI活用で提案作成70%高速化＆質向上を。", improvement: "AI活用で提案力を劇的向上", amount: "年間2,000万円の競争優位効果" }},
+                    { text: "正直負けることが多い", value: "losing", score: 2, feedback: { title: "提案力強化が急務", content: "AI活用で勝率45%向上の実績があります。今すぐ対策を。", improvement: "AI提案革命で競合を逆転", amount: "年間3,000万円の受注回復効果" }},
+                    { text: "比較したことがない", value: "unknown", score: 3, feedback: { title: "競合分析から始めましょう", content: "敵を知り己を知らば...AI分析で競合との差を明確に。", improvement: "AI競合分析で提案戦略を最適化", amount: "年間1,000万円の戦略価値向上" }}
+                ]
+            },
+            {
+                id: 8,
+                text: "【質問8/10】💡 若手社員からの改善提案や新しいアイデアは？",
+                options: [
+                    { text: "活発に出てきて実行している", value: "active", score: 7, feedback: { title: "イノベーティブな組織", content: "素晴らしい企業文化です。AI活用でアイデア実現を加速できます。", improvement: "AI支援でアイデア実現スピード3倍", amount: "年間800万円のイノベーション価値" }},
+                    { text: "たまに出るが実現は少ない", value: "some", score: 5, feedback: { title: "もったいない状況", content: "アイデアを形にする力が不足。AI支援で実現率を飛躍的に向上。", improvement: "AI活用でアイデア実現率を5倍に", amount: "年間1,200万円のアイデア価値実現" }},
+                    { text: "ほとんど出てこない", value: "rare", score: 3, feedback: { title: "組織の活力不足", content: "若手が諦めています。AI活用で発言しやすい環境を作りましょう。", improvement: "AI支援で組織コミュニケーション活性化", amount: "年間600万円の組織活力向上" }},
+                    { text: "出ても検討する余裕がない", value: "no_time", score: 1, feedback: { title: "時間不足が深刻", content: "日常業務に追われすぎです。AI自動化で創造的時間を確保。", improvement: "AI自動化で創造的時間を50%確保", amount: "年間1,800万円の機会創出効果" }},
+                    { text: "提案する仕組みがない", value: "no_system", score: 0, feedback: { title: "システムから構築を", content: "仕組みがないと始まりません。AI活用でアイデア管理システムを。", improvement: "AI活用アイデア管理システム構築", amount: "年間1,000万円の潜在価値発掘" }}
+                ]
+            },
+            {
+                id: 9,
+                text: "【質問9/10】⚠️ もし主力社員が突然1ヶ月休んだら？",
+                options: [
+                    { text: "他のメンバーでカバー可能", value: "covered", score: 10, feedback: { title: "理想的なリスク管理", content: "属人化を防げています。AI活用でさらに強固な体制を。", improvement: "AI活用でバックアップ体制をさらに強化", amount: "年間300万円のリスク管理向上" }},
+                    { text: "なんとか回るが大変", value: "difficult", score: 7, feedback: { title: "ギリギリの状況", content: "もう少し余裕を持ちたいですね。AI標準化で安定性向上を。", improvement: "AI業務標準化で属人化を50%削減", amount: "年間800万円のリスク回避効果" }},
+                    { text: "特定業務が完全に止まる", value: "stop", score: 3, feedback: { title: "危険な属人化", content: "業務停止は致命的です。AI活用で緊急に標準化を。", improvement: "AI活用による緊急業務標準化", amount: "年間1,500万円の事業継続性確保" }},
+                    { text: "取引先との関係に影響", value: "impact", score: 1, feedback: { title: "最悪のシナリオ", content: "信頼失墜のリスクです。AI活用で今すぐ対策を。", improvement: "AI活用による緊急リスク対策", amount: "年間2,500万円の信頼失墜回避" }},
+                    { text: "考えたくない", value: "avoid", score: 0, feedback: { title: "現実逃避は危険", content: "リスクは必ず現実化します。AI活用で今すぐ備えを。", improvement: "AI活用による包括的リスク対策", amount: "年間3,000万円以上のリスク回避" }}
+                ]
+            },
+            {
+                id: 10,
+                text: "【質問10/10】📊 データに基づいて意思決定する頻度は？",
+                options: [
+                    { text: "日常的にデータを活用", value: "daily", score: 10, feedback: { title: "データドリブン経営", content: "理想的です。AI活用でさらに高度な分析を実現できます。", improvement: "AI予測分析で意思決定精度を50%向上", amount: "年間1,200万円の意思決定価値向上" }},
+                    { text: "重要な決定時のみ活用", value: "important", score: 7, feedback: { title: "部分的活用", content: "日常業務でも活用すれば効果絶大。AI活用で範囲拡大を。", improvement: "AI活用でデータ活用を日常業務に拡大", amount: "年間800万円の日常業務効率化" }},
+                    { text: "たまに参考にする程度", value: "sometimes", score: 4, feedback: { title: "もったいない状況", content: "データ活用で的中率64%向上します。AI活用で本格導入を。", improvement: "AI分析基盤で意思決定を革新", amount: "年間1,500万円の意思決定改善効果" }},
+                    { text: "勘と経験が中心", value: "intuition", score: 2, feedback: { title: "時代遅れの経営", content: "勘も大切ですが、データと組み合わせれば最強です。AI活用を。", improvement: "AI×経験の融合で意思決定力3倍", amount: "年間2,000万円の意思決定価値向上" }},
+                    { text: "データがそもそもない", value: "no_data", score: 0, feedback: { title: "データは宝の山", content: "データ収集から始めましょう。AI活用で膨大な価値を生み出せます。", improvement: "AI活用によるデータ基盤構築から開始", amount: "年間2,500万円のデータ価値創出" }}
+                ]
+            }
+        ];
 
-        // オプション選択の処理
-        document.querySelectorAll('.option').forEach(option => {
-            option.addEventListener('click', function() {
-                const radio = this.querySelector('input[type="radio"]');
-                const question = this.closest('.question');
-                const questionOptions = question.querySelectorAll('.option');
+        // グローバル変数
+        let answers = {};
+        let totalImprovementAmount = 0;
+
+        // 診断開始
+        function startDiagnosis() {
+            document.getElementById('introSection').classList.add('hidden');
+            document.getElementById('diagnosisSection').classList.remove('hidden');
+            renderQuestions();
+        }
+
+        // 質問を描画（全10問を表示）
+        function renderQuestions() {
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = '';
+            
+            QUESTIONS.forEach((question, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question';
+                questionDiv.dataset.question = index + 1;
                 
-                // この質問が初回回答かチェック
-                const wasAnswered = question.classList.contains('completed');
+                questionDiv.innerHTML = `
+                    <h3>${question.text}</h3>
+                    <div class="options">
+                        ${question.options.map(option => `
+                            <label class="option" data-question="${index}" data-value="${option.value}" data-score="${option.score}">
+                                <input type="radio" name="q${index + 1}" value="${option.value}" style="display:none">
+                                ${option.text}
+                            </label>
+                        `).join('')}
+                    </div>
+                    <div class="instant-feedback" id="feedback${index}"></div>
+                `;
                 
-                // 同じ質問内の他の選択を解除
-                questionOptions.forEach(opt => opt.classList.remove('selected'));
-                
-                // 現在の選択をアクティブに
-                this.classList.add('selected');
-                radio.checked = true;
-                
-                // 質問を完了状態に
-                if (!wasAnswered) {
-                    question.classList.add('completed');
-                    answeredQuestions++;
-                }
-                
-                // プログレスバー更新
-                updateProgress();
-                
-                // 全ての質問に回答済みかチェック
-                checkAllAnswered();
+                container.appendChild(questionDiv);
             });
-        });
+            
+            setupOptionEvents();
+        }
+
+        // オプション選択イベント
+        function setupOptionEvents() {
+            document.querySelectorAll('.option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const questionIndex = parseInt(this.dataset.question);
+                    const value = this.dataset.value;
+                    const score = parseInt(this.dataset.score);
+                    const question = this.closest('.question');
+                    const questionOptions = question.querySelectorAll('.option');
+                    
+                    questionOptions.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    this.querySelector('input').checked = true;
+                    
+                    const selectedOption = QUESTIONS[questionIndex].options.find(opt => opt.value === value);
+                    answers[`q${questionIndex + 1}`] = { 
+                        value, 
+                        score,
+                        feedback: selectedOption.feedback
+                    };
+                    
+                    question.classList.add('completed');
+                    showInstantFeedback(questionIndex, selectedOption.feedback);
+                    updateProgress();
+                    checkAllAnswered();
+                });
+            });
+        }
+
+        function showInstantFeedback(questionIndex, feedback) {
+            const feedbackElement = document.getElementById(`feedback${questionIndex}`);
+            
+            const amountMatch = feedback.amount.match(/(\d{1,3}(?:,\d{3})*)/);
+            const amount = amountMatch ? parseInt(amountMatch[1].replace(/,/g, '')) : 0;
+            totalImprovementAmount += amount;
+            
+            feedbackElement.innerHTML = `
+                <h5>${feedback.title}</h5>
+                <p>${feedback.content}</p>
+                <p><strong>💡 改善案：</strong>${feedback.improvement}</p>
+                <div class="improvement-amount">
+                    💰 ${feedback.amount}
+                </div>
+            `;
+            
+            feedbackElement.classList.add('show');
+        }
 
         function updateProgress() {
-            const progress = (answeredQuestions / totalQuestions) * 100;
+            const answeredCount = Object.keys(answers).length;
+            const progress = (answeredCount / QUESTIONS.length) * 100;
             document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressText').textContent = `質問 ${answeredCount}/${QUESTIONS.length}`;
+        }
+
+        // 分析開始関数
+        function startAnalysis() {
+            if (Object.keys(answers).length !== QUESTIONS.length) {
+                alert('すべての質問にお答えください。');
+                return;
+            }
+            
+            // スムーズにAI分析画面に切り替え
+            document.getElementById('diagnosisSection').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('diagnosisSection').classList.add('hidden');
+                document.getElementById('aiAnalysisSection').classList.remove('hidden');
+                document.getElementById('aiAnalysisSection').style.opacity = '1';
+                startAIAnalysis();
+            }, 300);
         }
 
         function checkAllAnswered() {
-            const questions = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10'];
-            const allAnswered = questions.every(q => 
-                document.querySelector(`input[name="${q}"]:checked`)
-            );
+            const answeredCount = Object.keys(answers).length;
+            const submitBtn = document.getElementById('submitBtn');
             
-            document.getElementById('submitBtn').disabled = !allAnswered;
-            
-            if (allAnswered) {
-                document.getElementById('submitBtn').innerHTML = '🚀 AI分析を開始する（準備完了）';
+            if (answeredCount === QUESTIONS.length) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = `🤖 AIによる本格分析を開始（準備完了）`;
+                submitBtn.style.opacity = '1';
+                submitBtn.style.cursor = 'pointer';
+            } else {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = `🤖 AIによる本格分析を開始（あと${QUESTIONS.length - answeredCount}問）`;
+                submitBtn.style.opacity = '0.6';
+                submitBtn.style.cursor = 'not-allowed';
             }
         }
 
-        // フォーム送信処理
-        document.getElementById('diagnosisForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // ローディング表示
-            document.getElementById('loading').style.display = 'block';
-            document.getElementById('submitBtn').style.display = 'none';
-            
-            // 回答を収集
-            const answers = {
-                q1: document.querySelector('input[name="q1"]:checked').value,
-                q2: document.querySelector('input[name="q2"]:checked').value,
-                q3: document.querySelector('input[name="q3"]:checked').value,
-                q4: document.querySelector('input[name="q4"]:checked').value,
-                q5: document.querySelector('input[name="q5"]:checked').value,
-                q6: document.querySelector('input[name="q6"]:checked').value,
-                q7: document.querySelector('input[name="q7"]:checked').value,
-                q8: document.querySelector('input[name="q8"]:checked').value,
-                q9: document.querySelector('input[name="q9"]:checked').value,
-                q10: document.querySelector('input[name="q10"]:checked').value
-            };
+        // フォーム送信処理（削除 - 代わりにstartAnalysis()を使用）
 
-            // 3秒後にAI分析実行（リアルな分析時間をシミュレート）
+        function startAIAnalysis() {
+            // AI分析の段階的演出を強化
+            let currentStage = 1;
+            const stages = [
+                "📊 1,200社のデータベースと照合中...",
+                "🔍 回答パターンから隠れた課題を発見中...", 
+                "💡 最適なAI活用戦略を生成中...",
+                "💰 具体的な効果額を算出中...",
+                "✅ 詳細レポートを作成完了"
+            ];
+            
+            // 最初のステージをアクティブに
+            document.getElementById('stage1').classList.add('active');
+            
+            const stageInterval = setInterval(() => {
+                if (currentStage < 5) {
+                    // 前のステージを完了状態に
+                    const prevStage = document.getElementById(`stage${currentStage}`);
+                    prevStage.classList.remove('active');
+                    prevStage.style.color = '#28a745';
+                    prevStage.innerHTML = stages[currentStage - 1].replace('中...', '完了 ✓');
+                    
+                    // 次のステージをアクティブに
+                    currentStage++;
+                    const nextStage = document.getElementById(`stage${currentStage}`);
+                    nextStage.classList.add('active');
+                    nextStage.innerHTML = stages[currentStage - 1];
+                    
+                } else {
+                    // 最後のステージを完了
+                    const finalStage = document.getElementById(`stage${currentStage}`);
+                    finalStage.classList.remove('active');
+                    finalStage.style.color = '#28a745';
+                    finalStage.innerHTML = stages[currentStage - 1];
+                    
+                    clearInterval(stageInterval);
+                    
+                    // 完了演出
+                    setTimeout(() => {
+                        document.getElementById('aiAnalysisSection').innerHTML += 
+                            '<div style="margin-top: 30px; font-size: 18px; color: #28a745; font-weight: bold;">🎉 AI分析が完了しました！結果を表示します...</div>';
+                        
+                        setTimeout(() => {
+                            showResults();
+                        }, 1500);
+                    }, 1000);
+                }
+            }, 800);
+        }
+
+        function showResults() {
+            // スムーズな切り替え演出
+            document.getElementById('aiAnalysisSection').style.opacity = '0';
             setTimeout(() => {
-                const result = analyzeAnswers(answers);
+                document.getElementById('aiAnalysisSection').classList.add('hidden');
+                document.getElementById('result').classList.remove('hidden');
+                document.getElementById('result').style.opacity = '0';
                 
-                // ローディング非表示
-                document.getElementById('loading').style.display = 'none';
-                
-                // 結果表示
-                document.getElementById('scoreDisplay').textContent = `総合スコア: ${result.score}/100点`;
-                document.getElementById('analysisResult').innerHTML = result.analysis;
-                document.getElementById('result').style.display = 'block';
-                
-                // 結果位置にスクロール
-                document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
-                
-                // メール件名にスコアを設定
-                updateEmailLinks(result.score);
-            }, 3000);
-        });
-
-        function updateEmailLinks(score) {
-            const emailLinks = document.querySelectorAll('a[href^="mailto:"]');
-            emailLinks.forEach(link => {
-                const href = link.getAttribute('href');
-                const newHref = href.replace('[スコア]', score);
-                link.setAttribute('href', newHref);
-            });
+                // 結果を段階的に表示
+                setTimeout(() => {
+                    document.getElementById('result').style.opacity = '1';
+                    animateResults();
+                }, 100);
+            }, 300);
         }
 
-        function analyzeAnswers(answers) {
-            let score = 0;
-            let issues = [];
-            let strengths = [];
-
-            // Q1: 売上成長の分析（15点満点）
-            if (answers.q1 === 'improve_high') {
-                score += 15;
-                strengths.push('高い売上成長力');
-            } else if (answers.q1 === 'improve_medium') {
-                score += 12;
-                strengths.push('安定した売上成長');
-            } else if (answers.q1 === 'flat') {
-                score += 7;
-                issues.push('売上効率の改善');
-            } else if (answers.q1 === 'decline_medium') {
-                score += 3;
-                issues.push('売上回復戦略');
-            } else {
-                score += 1;
-                issues.push('緊急売上改善');
-            }
-
-            // Q2: 育成効率（10点満点）
-            if (answers.q2 === '3months') {
-                score += 10;
-                strengths.push('優秀な人材育成体制');
-            } else if (answers.q2 === '6months') {
-                score += 8;
-            } else if (answers.q2 === '1year') {
-                score += 5;
-                issues.push('人材育成プロセス改善');
-            } else if (answers.q2 === '2years') {
-                score += 2;
-                issues.push('人材育成システム構築');
-            } else {
-                score += 1;
-                issues.push('人材育成緊急改革');
-            }
-
-            // Q3: 優秀人材の活用（10点満点）
-            if (answers.q3 === 'project' || answers.q3 === 'none') {
-                score += 10;
-                strengths.push('効率的な人材活用');
-            } else if (answers.q3 === 'mentoring') {
-                score += 6;
-                issues.push('指導効率の向上');
-            } else if (answers.q3 === 'backlog') {
-                score += 3;
-                issues.push('業務効率化');
-            } else {
-                score += 1;
-                issues.push('業務プロセス改革');
-            }
-
-            // Q4: 離職状況（8点満点）
-            if (answers.q4 === 'career' || answers.q4 === 'none') {
-                score += 8;
-                strengths.push('健全な組織文化');
-            } else if (answers.q4 === 'growth') {
-                score += 4;
-                issues.push('成長機会の提供');
-            } else if (answers.q4 === 'salary') {
-                score += 3;
-                issues.push('待遇改善');
-            } else {
-                score += 1;
-                issues.push('労働環境改善');
-            }
-
-            // Q5: 知識共有（10点満点）
-            if (answers.q5 === 'database') {
-                score += 10;
-                strengths.push('優秀な知識管理');
-            } else if (answers.q5 === 'documents') {
-                score += 6;
-                issues.push('知識統合システム');
-            } else if (answers.q5 === 'tacit') {
-                score += 3;
-                issues.push('知識の見える化');
-            } else if (answers.q5 === 'lost') {
-                score += 1;
-                issues.push('知識保全システム');
-            } else {
-                score += 1;
-                issues.push('知識管理基盤構築');
-            }
-
-            // Q6: 管理職の時間配分（10点満点）
-            if (answers.q6 === 'high') {
-                score += 10;
-                strengths.push('効率的なマネジメント');
-            } else if (answers.q6 === 'good') {
-                score += 7;
-                issues.push('マネジメント効率向上');
-            } else if (answers.q6 === 'fair') {
-                score += 4;
-                issues.push('管理業務の自動化');
-            } else if (answers.q6 === 'poor') {
-                score += 1;
-                issues.push('管理職業務改革');
-            } else {
-                score += 2;
-                issues.push('業務可視化');
-            }
-
-            // Q7: 提案力（10点満点）
-            if (answers.q7 === 'always') {
-                score += 10;
-                strengths.push('圧倒的な提案力');
-            } else if (answers.q7 === 'mostly') {
-                score += 8;
-                strengths.push('高い提案力');
-            } else if (answers.q7 === 'even') {
-                score += 5;
-                issues.push('提案力強化');
-            } else if (answers.q7 === 'losing') {
-                score += 2;
-                issues.push('提案プロセス改革');
-            } else {
-                score += 3;
-                issues.push('競合分析強化');
-            }
-
-            // Q8: 若手の活性度（7点満点）
-            if (answers.q8 === 'active') {
-                score += 7;
-                strengths.push('イノベーティブな組織');
-            } else if (answers.q8 === 'some') {
-                score += 4;
-                issues.push('アイデア実現力向上');
-            } else if (answers.q8 === 'rare') {
-                score += 2;
-                issues.push('組織活性化');
-            } else if (answers.q8 === 'no_time') {
-                score += 1;
-                issues.push('業務効率化による時間創出');
-            } else {
-                score += 1;
-                issues.push('提案システム構築');
-            }
-
-            // Q9: 属人化リスク（10点満点）
-            if (answers.q9 === 'covered') {
-                score += 10;
-                strengths.push('優秀なリスク管理');
-            } else if (answers.q9 === 'difficult') {
-                score += 6;
-                issues.push('業務標準化');
-            } else if (answers.q9 === 'stop') {
-                score += 2;
-                issues.push('属人化解消');
-            } else if (answers.q9 === 'impact') {
-                score += 1;
-                issues.push('事業継続性強化');
-            } else {
-                score += 1;
-                issues.push('リスク管理体制構築');
-            }
-
-            // Q10: データ活用（10点満点）
-            if (answers.q10 === 'daily') {
-                score += 10;
-                strengths.push('データドリブン経営');
-            } else if (answers.q10 === 'important') {
-                score += 7;
-                issues.push('データ活用拡大');
-            } else if (answers.q10 === 'sometimes') {
-                score += 4;
-                issues.push('データ活用推進');
-            } else if (answers.q10 === 'intuition') {
-                score += 2;
-                issues.push('データ活用基盤');
-            } else {
-                score += 1;
-                issues.push('データ収集・管理システム');
-            }
-
-            // 分析結果の生成
-            const topStrength = strengths.length > 0 ? strengths[0] : '基礎的な組織力';
-            const topIssue = issues.length > 0 ? issues[0] : '更なる効率化';
-            const improvementAmount = Math.max(1200, (100 - score) * 40);
-
-            let recommendation = '';
-            let roiPeriod = '';
-            let ranking = '';
+        function animateResults() {
+            let totalScore = Object.values(answers).reduce((sum, answer) => sum + answer.score, 0);
             
-            if (score >= 80) {
-                recommendation = '業界トップクラス企業向け高度AI戦略';
-                roiPeriod = '6ヶ月';
-                ranking = '業界トップ5%';
-            } else if (score >= 65) {
-                recommendation = '段階的AI導入による競争優位確立';
-                roiPeriod = '8ヶ月';
-                ranking = '業界上位20%';
-            } else if (score >= 50) {
-                recommendation = '基礎的AI活用による業務変革';
-                roiPeriod = '12ヶ月';
-                ranking = '業界平均レベル';
-            } else if (score >= 35) {
-                recommendation = '包括的AI導入による組織改革';
-                roiPeriod = '15ヶ月';
-                ranking = '業界平均以下';
-            } else {
-                recommendation = '緊急AI変革プログラム';
-                roiPeriod = '18ヶ月';
-                ranking = '改善が急務';
-            }
-
-            return {
-                score: Math.min(score, 100),
-                roiPeriod: roiPeriod,
-                ranking: ranking,
-                analysis: generateDetailedAnalysis(score, topStrength, topIssue, improvementAmount, recommendation, roiPeriod, ranking)
-            };
+            // スコアをカウントアップ演出
+            let currentScore = 0;
+            const scoreElement = document.getElementById('scoreDisplay');
+            const scoreInterval = setInterval(() => {
+                currentScore += Math.ceil(totalScore / 30);
+                if (currentScore >= totalScore) {
+                    currentScore = totalScore;
+                    clearInterval(scoreInterval);
+                    
+                    // スコア表示完了後、他の要素を表示
+                    setTimeout(() => {
+                        showAnalysisContent(totalScore);
+                    }, 500);
+                }
+                scoreElement.textContent = `AI分析スコア: ${currentScore}/100点`;
+                
+                // スコアに応じて色を変更
+                if (currentScore >= 70) {
+                    scoreElement.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
+                } else if (currentScore >= 50) {
+                    scoreElement.style.background = 'linear-gradient(135deg, #ffc107 0%, #fd7e14 100%)';
+                } else {
+                    scoreElement.style.background = 'linear-gradient(135deg, #dc3545 0%, #e83e8c 100%)';
+                }
+                scoreElement.style.webkitBackgroundClip = 'text';
+                scoreElement.style.webkitTextFillColor = 'transparent';
+            }, 50);
         }
 
-        function generateDetailedAnalysis(score, topStrength, topIssue, improvementAmount, recommendation, roiPeriod, ranking) {
+        function showAnalysisContent(totalScore) {
+            // AI特別分析の内容を生成
+            const insights = generateAIInsights(totalScore, answers);
+            document.getElementById('aiSpecialInsights').innerHTML = insights;
+            
+            // 段階的にコンテンツを表示
+            setTimeout(() => {
+                document.querySelector('.ai-insights').style.opacity = '0';
+                document.querySelector('.ai-insights').style.transform = 'translateY(20px)';
+                document.querySelector('.ai-insights').style.transition = 'all 0.6s ease';
+                
+                setTimeout(() => {
+                    document.querySelector('.ai-insights').style.opacity = '1';
+                    document.querySelector('.ai-insights').style.transform = 'translateY(0)';
+                }, 100);
+                
+                // 詳細分析結果を表示
+                setTimeout(() => {
+                    const analysisHtml = generateAnalysisResult(totalScore);
+                    document.getElementById('analysisResult').innerHTML = analysisHtml;
+                    
+                    // 分析セクションを段階的に表示
+                    const sections = document.querySelectorAll('.analysis-section');
+                    sections.forEach((section, index) => {
+                        section.style.opacity = '0';
+                        section.style.transform = 'translateY(20px)';
+                        section.style.transition = 'all 0.6s ease';
+                        
+                        setTimeout(() => {
+                            section.style.opacity = '1';
+                            section.style.transform = 'translateY(0)';
+                        }, index * 200);
+                    });
+                    
+                    // 最後にCTAを表示
+                    setTimeout(() => {
+                        const cta = document.querySelector('.cta-section');
+                        cta.style.opacity = '0';
+                        cta.style.transform = 'translateY(20px)';
+                        cta.style.transition = 'all 0.6s ease';
+                        
+                        setTimeout(() => {
+                            cta.style.opacity = '1';
+                            cta.style.transform = 'translateY(0)';
+                            updateEmailLinks(totalScore);
+                        }, 100);
+                    }, sections.length * 200 + 500);
+                    
+                }, 800);
+            }, 200);
+            
+            // 結果セクションにスクロール
+            setTimeout(() => {
+                document.getElementById('result').scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }, 1000);
+        }
+
+        function generateAIInsights(totalScore, answers) {
+            let insights = '';
+            
+            if (totalScore >= 70) {
+                insights = `🎯 <strong>高レベル企業</strong>として診断されました。既に優秀な基盤をお持ちですが、AI活用により<strong>さらなる効率化と競争優位性</strong>を確立できます。特に${getTopWeakness(answers)}の領域で大きな効果が期待できます。`;
+            } else if (totalScore >= 50) {
+                insights = `📈 <strong>成長ポテンシャル大</strong>の企業です。現状から飛躍的な成長が可能な状況にあります。${getTopWeakness(answers)}を中心とした改善により、<strong>6ヶ月以内に業界上位20%</strong>に入ることも可能です。`;
+            } else {
+                insights = `🚀 <strong>変革のチャンス</strong>です。多くの改善余地があるということは、それだけ大きな成果を得られる可能性があります。${getTopWeakness(answers)}から着手することで、<strong>1年以内に劇的な変化</strong>を実現できます。`;
+            }
+            
+            return insights;
+        }
+
+        function getTopWeakness(answers) {
+            const weaknesses = [];
+            Object.entries(answers).forEach(([key, answer]) => {
+                if (answer.score <= 3) {
+                    const questionNum = parseInt(key.replace('q', '')) - 1;
+                    const questionTitle = QUESTIONS[questionNum].text.split('】')[1];
+                    weaknesses.push(questionTitle);
+                }
+            });
+            
+            return weaknesses.length > 0 ? weaknesses[0] : '業務効率化';
+        }
+
+        function generateAnalysisResult(totalScore) {
             return `
                 <div class="analysis-section">
-                    <h4>🏆 御社の最大の強み</h4>
-                    <p><strong>${topStrength}</strong></p>
-                    <p>この強みを活かし、AI活用でさらなる競争優位を築くことができます。</p>
-                </div>
-
-                <div class="analysis-section">
-                    <h4>⚠️ 最優先改善領域</h4>
-                    <p><strong>${topIssue}</strong></p>
-                    <p>この領域にAIを導入することで、最大の投資対効果が期待できます。</p>
-                </div>
-
-                <div class="analysis-section">
-                    <h4>💰 改善ポテンシャル</h4>
-                    <p><strong>年間 ${improvementAmount}万円の価値創出が可能</strong></p>
+                    <h4>💰 総合改善ポテンシャル</h4>
+                    <p><strong>年間 ${totalImprovementAmount.toLocaleString()}万円の価値創出が可能</strong></p>
                     <div class="benchmark">
-                        <strong>💡 内訳例：</strong><br>
-                        • 業務効率化による人件費削減: ${Math.floor(improvementAmount * 0.4)}万円<br>
-                        • 売上機会の拡大: ${Math.floor(improvementAmount * 0.35)}万円<br>
-                        • 品質向上による顧客満足度向上: ${Math.floor(improvementAmount * 0.25)}万円
+                        <strong>💡 効果の内訳：</strong><br>
+                        • 業務効率化による時間削減: ${Math.floor(totalImprovementAmount * 0.4).toLocaleString()}万円<br>
+                        • 売上・受注機会の拡大: ${Math.floor(totalImprovementAmount * 0.35).toLocaleString()}万円<br>
+                        • リスク回避・ロス削減: ${Math.floor(totalImprovementAmount * 0.25).toLocaleString()}万円
                     </div>
                 </div>
 
                 <div class="analysis-section">
                     <h4>📊 業界内ポジション</h4>
-                    <p><strong>${ranking}</strong>（スコア: ${score}/100点）</p>
+                    <p><strong>${totalScore >= 80 ? '業界トップ5%' : totalScore >= 65 ? '業界上位20%' : totalScore >= 50 ? '業界平均レベル' : '改善が急務'}</strong>（スコア: ${totalScore}/100点）</p>
                     <div class="benchmark">
                         <strong>📈 ベンチマーク比較：</strong><br>
-                        • 御社スコア: ${score}点<br>
+                        • 御社スコア: ${totalScore}点<br>
                         • 業界平均: 45点<br>
                         • 業界トップ: 78点<br>
                         • AI活用企業平均: 62点
@@ -929,92 +908,38 @@
                 </div>
 
                 <div class="analysis-section">
-                    <h4>🎯 推奨AI活用戦略</h4>
-                    <p><strong>${recommendation}</strong></p>
-                    <p><strong>投資回収期間: ${roiPeriod}</strong></p>
+                    <h4>🚀 推奨AI活用戦略</h4>
+                    <p><strong>${totalScore >= 70 ? '業界をリードするAI活用戦略' : totalScore >= 50 ? '段階的AI活用による変革' : '緊急AI変革プロジェクト'}</strong></p>
+                    <p><strong>投資回収期間: ${totalScore >= 70 ? '6ヶ月' : totalScore >= 50 ? '12ヶ月' : '18ヶ月'}</strong></p>
                     <div class="benchmark">
-                        <strong>🚀 具体的なアクションプラン：</strong><br>
-                        1. ${getFirstStep(topIssue)}<br>
-                        2. ${getSecondStep(score)}<br>
-                        3. ${getThirdStep(score)}<br>
-                        4. 効果測定とスケールアップ
+                        <strong>📋 3ヶ月実行プラン：</strong><br>
+                        <strong>Phase 1:</strong> ${totalScore >= 70 ? 'AI戦略策定と高度分析基盤構築' : totalScore >= 50 ? '重要業務のAI自動化とプロセス改善' : '緊急課題の特定とAI活用による解決'}<br>
+                        <strong>Phase 2:</strong> ${totalScore >= 70 ? '最先端AI技術の導入と効果測定' : totalScore >= 50 ? 'AI活用スキルの組織習得' : '基盤的なAI活用システム構築'}<br>
+                        <strong>Phase 3:</strong> ${totalScore >= 70 ? '全社AI浸透と新価値創出' : totalScore >= 50 ? 'AI活用文化の定着と横展開' : '組織全体のAI活用体制確立'}<br>
+                        <strong>その後:</strong> 効果測定と全社展開
                     </div>
                 </div>
 
                 <div class="analysis-section">
-                    <h4>🔥 同業他社の成功事例</h4>
-                    <p>${getSuccessCase(topIssue)}</p>
+                    <h4>📈 投資対効果シミュレーション</h4>
+                    <div class="benchmark">
+                        <strong>初期投資:</strong> 月額${totalScore >= 70 ? '35' : totalScore >= 50 ? '25' : '18'}万円（ツールライセンス＋導入支援）<br>
+                        <strong>3ヶ月後効果:</strong> 月間${Math.floor(totalImprovementAmount / 12).toLocaleString()}万円の改善<br>
+                        <strong>6ヶ月後効果:</strong> 月間${Math.floor(totalImprovementAmount / 8).toLocaleString()}万円の改善<br>
+                        <strong>年間ROI:</strong> ${Math.floor((totalImprovementAmount / ((totalScore >= 70 ? 35 : totalScore >= 50 ? 25 : 18) * 12)) * 100)}%
+                    </div>
                 </div>
             `;
         }
 
-        function getFirstStep(issue) {
-            const steps = {
-                '売上効率の改善': 'データ分析による売上要因の特定とAI予測モデル構築',
-                '売上回復戦略': '緊急売上改善プランとAI活用による顧客獲得強化',
-                '緊急売上改善': 'AI活用による営業プロセス自動化と効果測定',
-                '人材育成プロセス改善': 'AI支援型eラーニングシステムの導入',
-                '人材育成システム構築': 'パーソナライズド研修プログラムの開発',
-                '人材育成緊急改革': 'AI活用による即戦力化プログラムの実装',
-                '業務効率化': 'RPA導入による定型業務の自動化',
-                '業務プロセス改革': '業務フロー分析とAI活用による抜本的改革',
-                '指導効率の向上': 'AIコーチングシステムの導入',
-                '待遇改善': '生産性向上による原資創出とデータに基づく評価制度',
-                '労働環境改善': 'AI活用による業務負荷分析と改善',
-                '成長機会の提供': 'AI活用スキル習得プログラムの導入',
-                '知識統合システム': 'AI検索・推薦システムによる知識活用効率化',
-                '知識の見える化': 'AIによる暗黙知の抽出と体系化',
-                '知識保全システム': '重要知識の緊急保全とAI活用システム構築',
-                '知識管理基盤構築': 'ナレッジマネジメントシステムの構築',
-                'マネジメント効率向上': '管理業務のAI支援システム導入',
-                '管理業務の自動化': 'レポート作成・会議効率化の自動化',
-                '管理職業務改革': '戦略業務への集中を可能にするAI活用',
-                '業務可視化': 'AI分析による業務実態の見える化',
-                '提案力強化': 'AI活用による提案書作成支援と勝率向上',
-                '提案プロセス改革': '提案プロセス全体のAI最適化',
-                '競合分析強化': 'AI活用による市場・競合分析システム',
-                'アイデア実現力向上': 'アイデア管理・評価システムの導入',
-                '組織活性化': 'AI活用による社内コミュニケーション活性化',
-                '業務効率化による時間創出': '定型業務自動化による創造的時間の確保',
-                '提案システム構築': 'AI支援による提案・評価プラットフォーム',
-                '業務標準化': 'AI活用による業務プロセス標準化',
-                '属人化解消': 'ナレッジ共有とスキル移転のAI支援',
-                '事業継続性強化': 'リスク管理とバックアップ体制のAI強化',
-                'リスク管理体制構築': '包括的リスク管理システムの構築',
-                'データ活用拡大': '日常業務へのデータ活用範囲拡大',
-                'データ活用推進': 'データリテラシー向上とツール導入',
-                'データ活用基盤': '意思決定支援システムの構築',
-                'データ収集・管理システム': '基礎的データ基盤の構築から開始',
-                '更なる効率化': 'AI戦略ロードマップの策定と実行'
-            };
-            return steps[issue] || 'AI活用戦略の策定';
-        }
-
-        function getSecondStep(score) {
-            if (score >= 80) return 'AI活用効果の測定とKPI設定';
-            if (score >= 65) return '成功事例の横展開と組織学習';
-            if (score >= 50) return 'AI導入効果の検証と改善';
-            if (score >= 35) return '段階的AI活用範囲の拡大';
-            return '基礎的AI活用スキルの組織浸透';
-        }
-
-        function getThirdStep(score) {
-            if (score >= 80) return '業界を牽引するAIイノベーション創出';
-            if (score >= 65) return 'AI活用による新規事業開発';
-            if (score >= 50) return '全社的AI活用体制の確立';
-            if (score >= 35) return 'AI活用文化の定着と継続改善';
-            return '全社的AI変革プロジェクトの推進';
-        }
-
-        function getSuccessCase(issue) {
-            const cases = {
-                '売上効率の改善': '製造業A社では、AI予測分析により売上予測精度を85%向上させ、在庫コストを30%削減。結果として売上効率が40%改善しました。',
-                '業務効率化': 'サービス業B社では、RPA導入により事務処理時間を70%削減。浮いた時間で顧客対応を強化し、満足度が25%向上しました。',
-                '人材育成プロセス改善': 'IT企業C社では、AI個別最適化研修により新人の戦力化期間を6ヶ月から3ヶ月に短縮。年間育成コストを40%削減しました。',
-                '提案力強化': 'コンサル企業D社では、AI支援による提案書作成で品質を保ちながら作成時間を60%短縮。受注率が35%向上しました。',
-                '知識の見える化': '建設業E社では、ベテラン技術者の暗黙知をAIで体系化。若手技術者の成長速度が2.5倍に向上しました。'
-            };
-            return cases[issue] || '多くの企業がAI活用により業務効率と収益性を大幅に改善しています。御社の状況に合わせた最適な導入戦略をご提案いたします。';
+        function updateEmailLinks(totalScore) {
+            const subject = `AI診断結果についての相談希望（スコア${totalScore}点・改善効果${totalImprovementAmount}万円）`;
+            const body = `AI活用診断を受診しました。\n\nスコア: ${totalScore}点\n改善ポテンシャル: 年間${totalImprovementAmount}万円\n\n具体的な実装プランについてご相談したく、連絡いたします。`;
+            
+            const emailBtn = document.getElementById('emailBtn');
+            if (emailBtn) {
+                emailBtn.href = `mailto:contact@ai-consulting.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            }
         }
     </script>
 </body>

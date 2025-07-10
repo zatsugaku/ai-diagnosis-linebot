@@ -1,1 +1,582 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>利益流出診断システム</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .question-text {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: #2c3e50;
+        }
+        
+        .options {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .option {
+            padding: 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+        
+        .option:hover {
+            border-color: #667eea;
+            background: #e8f1ff;
+            transform: translateY(-2px);
+        }
+        
+        .option.selected {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+        
+        .feedback-area {
+            margin-top: 20px;
+            padding: 20px;
+            background: #e8f5e8;
+            border-radius: 10px;
+            border-left: 5px solid #28a745;
+            display: none;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #e9ecef;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #28a745, #20c997);
+            transition: width 0.5s ease;
+            width: 10%;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .cumulative-display {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: none;
+        }
+        
+        .analysis-card {
+            text-align: center;
+        }
+        
+        .analysis-steps {
+            margin: 30px 0;
+        }
+        
+        .analysis-step {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            margin: 10px 0;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #dee2e6;
+        }
+        
+        .analysis-step.completed {
+            background: #d4edda;
+            border-left-color: #28a745;
+        }
+        
+        .analysis-step.active {
+            background: #fff3cd;
+            border-left-color: #ffc107;
+        }
+        
+        .step-text {
+            font-weight: 500;
+        }
+        
+        .step-status {
+            font-size: 1.2rem;
+        }
+        
+        .results-card {
+            display: none;
+        }
+        
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            border: 1px solid #f5c6cb;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .title {
+                font-size: 2rem;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .cumulative-display {
+                position: relative;
+                top: auto;
+                right: auto;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">💸 隠れた利益流出診断</h1>
+            <p class="subtitle">あなたの会社が毎月「密かに失っている」利益はいくら？</p>
+        </div>
+        
+        <div class="cumulative-display" id="cumulative-display">
+            <div style="font-size: 0.9rem;">累計改善効果</div>
+            <div style="font-size: 1.3rem;" id="cumulative-amount">年間0万円</div>
+        </div>
+        
+        <div class="card" id="question-card">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            
+            <div class="question-text" id="question-text">
+                質問を読み込み中...
+            </div>
+            
+            <div class="options" id="question-options">
+                <!-- オプションは動的に生成 -->
+            </div>
+            
+            <div class="feedback-area" id="feedback">
+                <div style="font-weight: bold; color: #155724; margin-bottom: 8px;" id="feedback-title"></div>
+                <div style="color: #155724; margin-bottom: 10px;" id="feedback-content"></div>
+                <div style="color: #d63384; font-weight: bold; font-size: 1.1rem;" id="feedback-amount"></div>
+            </div>
+            
+            <div class="navigation">
+                <button class="btn" onclick="nextQuestion()" id="next-btn" style="display: none;">次の質問へ →</button>
+                <button class="btn" onclick="startAnalysis()" id="analysis-btn" style="display: none;">🤖 AI分析を開始</button>
+            </div>
+        </div>
+        
+        <div class="card analysis-card" id="analysis-section" style="display: none;">
+            <h2 style="text-align: center; margin-bottom: 30px;">🤖 AI分析中...</h2>
+            
+            <div class="analysis-steps">
+                <div class="analysis-step">
+                    <span class="step-text">🔍 1,200社のデータベースと照合中...</span>
+                    <span class="step-status">⏳</span>
+                </div>
+                <div class="analysis-step">
+                    <span class="step-text">📊 課題と改善ポイントを発見中...</span>
+                    <span class="step-status">⏳</span>
+                </div>
+                <div class="analysis-step">
+                    <span class="step-text">🎯 戦略シナリオを生成中...</span>
+                    <span class="step-status">⏳</span>
+                </div>
+                <div class="analysis-step">
+                    <span class="step-text">💰 投資効果を算出中...</span>
+                    <span class="step-status">⏳</span>
+                </div>
+                <div class="analysis-step">
+                    <span class="step-text">📋 詳細レポートを完成中...</span>
+                    <span class="step-status">⏳</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card results-card" id="results-section">
+            <h2 style="text-align: center; margin-bottom: 30px;">📊 診断結果</h2>
+            <div style="text-align: center;">
+                <div style="font-size: 3rem; font-weight: bold;" id="total-score">0点</div>
+                <div style="font-size: 1.5rem; margin: 20px 0;" id="total-improvement">年間改善効果: 0万円</div>
+                
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                    <div style="font-size: 1.2rem; font-weight: bold; color: #2c3e50; margin-bottom: 15px;" id="analysis-level">業界内ポジション</div>
+                    <div style="margin-bottom: 15px;" id="analysis-message">分析メッセージ</div>
+                    <div style="color: #667eea; font-weight: bold;" id="analysis-recommendation">推奨アクション</div>
+                </div>
+                
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                    <h3>🚀 無料相談のご案内</h3>
+                    <p>この診断結果を基に、詳細な改善プランを作成いたします。</p>
+                    <p style="margin-top: 15px;">
+                        <a href="mailto:profit@business-rescue.com?subject=利益流出診断の相談" 
+                           style="background: #667eea; color: white; padding: 15px 30px; border-radius: 10px; text-decoration: none; display: inline-block; margin: 10px;">
+                           📧 メールで相談する
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <!-- 設問データの読み込み -->
+    <script src="js/questions-config.js"></script>
+    
+    <script>
+        // メインシステムロジック
+        class DiagnosisSystem {
+            constructor() {
+                this.currentQuestion = 0;
+                this.totalScore = 0;
+                this.totalImprovement = 0;
+                this.answers = [];
+                this.startTime = null;
+                
+                this.init();
+            }
+            
+            init() {
+                try {
+                    // 設問データの存在確認
+                    if (typeof QUESTION_DATA === 'undefined') {
+                        throw new Error('設問データが読み込まれていません');
+                    }
+                    
+                    this.startTime = new Date();
+                    this.loadQuestion(0);
+                    this.updateProgress();
+                    
+                    console.log('診断システムを初期化しました');
+                } catch (error) {
+                    console.error('初期化エラー:', error);
+                    this.showError('設問データの読み込みに失敗しました。ページを再読み込みしてください。');
+                }
+            }
+            
+            loadQuestion(questionIndex) {
+                try {
+                    const question = QUESTION_DATA[questionIndex];
+                    
+                    document.getElementById('question-text').textContent = question.text;
+                    
+                    const container = document.getElementById('question-options');
+                    container.innerHTML = '';
+                    
+                    question.options.forEach((option, optionIndex) => {
+                        const optionElement = document.createElement('div');
+                        optionElement.className = 'option';
+                        optionElement.textContent = option;
+                        optionElement.onclick = () => this.selectOption(questionIndex, optionIndex);
+                        container.appendChild(optionElement);
+                    });
+                    
+                    this.hideElements(['feedback', 'next-btn', 'analysis-btn']);
+                    
+                } catch (error) {
+                    console.error('質問読み込みエラー:', error);
+                    this.showError('質問の読み込みに失敗しました。');
+                }
+            }
+
+            selectOption(questionIndex, optionIndex) {
+                try {
+                    const question = QUESTION_DATA[questionIndex];
+                    const score = question.scores[optionIndex];
+                    const amount = question.amounts[optionIndex];
+                    const feedback = question.feedbacks[optionIndex];
+                    
+                    // 回答保存
+                    this.answers[questionIndex] = { 
+                        score, 
+                        amount, 
+                        optionIndex,
+                        timestamp: new Date()
+                    };
+                    
+                    // UI更新
+                    this.updateSelectedOption(optionIndex);
+                    this.showFeedback(feedback, amount);
+                    this.updateTotals();
+                    this.showNavigationButton();
+                    
+                } catch (error) {
+                    console.error('選択処理エラー:', error);
+                    this.showError('選択の処理に失敗しました。');
+                }
+            }
+            
+            updateSelectedOption(selectedIndex) {
+                const options = document.querySelectorAll('#question-options .option');
+                options.forEach((option, index) => {
+                    option.classList.toggle('selected', index === selectedIndex);
+                });
+            }
+            
+            showFeedback(feedback, amount) {
+                document.getElementById('feedback-title').textContent = feedback.title;
+                document.getElementById('feedback-content').textContent = feedback.content;
+                document.getElementById('feedback-amount').textContent = `年間${amount}万円の改善効果`;
+                document.getElementById('feedback').style.display = 'block';
+            }
+            
+            updateTotals() {
+                this.totalScore = 0;
+                this.totalImprovement = 0;
+                
+                for (let i = 0; i < this.answers.length; i++) {
+                    if (this.answers[i]) {
+                        this.totalScore += this.answers[i].score;
+                        this.totalImprovement += this.answers[i].amount;
+                    }
+                }
+                
+                document.getElementById('cumulative-amount').textContent = `年間${this.totalImprovement}万円`;
+                document.getElementById('cumulative-display').style.display = 'block';
+            }
+            
+            showNavigationButton() {
+                if (this.currentQuestion < QUESTION_DATA.length - 1) {
+                    document.getElementById('next-btn').style.display = 'block';
+                } else {
+                    document.getElementById('analysis-btn').style.display = 'block';
+                }
+            }
+            
+            nextQuestion() {
+                this.hideElements(['next-btn', 'feedback']);
+                
+                if (this.currentQuestion < QUESTION_DATA.length - 1) {
+                    this.currentQuestion++;
+                    this.loadQuestion(this.currentQuestion);
+                    this.updateProgress();
+                }
+            }
+            
+            updateProgress() {
+                const progress = ((this.currentQuestion + 1) / QUESTION_DATA.length) * 100;
+                document.getElementById('progress-fill').style.width = `${progress}%`;
+            }
+            
+            startAnalysis() {
+                document.getElementById('question-card').style.display = 'none';
+                document.getElementById('analysis-section').style.display = 'block';
+                this.runAnalysisAnimation();
+            }
+            
+            runAnalysisAnimation() {
+                const steps = [1000, 1500, 2000, 1500, 1000];
+                let currentStep = 0;
+                const stepElements = document.querySelectorAll('.analysis-step');
+                
+                const runStep = () => {
+                    if (currentStep > 0) {
+                        stepElements[currentStep - 1].classList.remove('active');
+                        stepElements[currentStep - 1].classList.add('completed');
+                        stepElements[currentStep - 1].querySelector('.step-status').textContent = '✅';
+                    }
+                    
+                    if (currentStep < steps.length) {
+                        stepElements[currentStep].classList.add('active');
+                        stepElements[currentStep].querySelector('.step-status').textContent = '⏳';
+                        
+                        setTimeout(() => {
+                            currentStep++;
+                            runStep();
+                        }, steps[currentStep]);
+                    } else {
+                        stepElements[currentStep - 1].classList.remove('active');
+                        stepElements[currentStep - 1].classList.add('completed');
+                        stepElements[currentStep - 1].querySelector('.step-status').textContent = '✅';
+                        
+                        setTimeout(() => this.showResults(), 1000);
+                    }
+                };
+                
+                runStep();
+            }
+            
+            showResults() {
+                document.getElementById('analysis-section').style.display = 'none';
+                document.getElementById('results-section').style.display = 'block';
+                
+                // スコア判定
+                const scoreLevel = this.determineScoreLevel(this.totalScore);
+                const resultData = RESULT_MESSAGES[scoreLevel];
+                const scoreRange = SCORE_RANGES[scoreLevel];
+                
+                // UI更新
+                document.getElementById('total-score').textContent = `${this.totalScore}点`;
+                document.getElementById('total-score').style.color = scoreRange.color;
+                document.getElementById('total-improvement').textContent = `年間改善効果: ${this.totalImprovement}万円`;
+                document.getElementById('analysis-level').textContent = scoreRange.level;
+                document.getElementById('analysis-message').textContent = resultData.message;
+                document.getElementById('analysis-recommendation').textContent = `推奨アクション: ${resultData.recommendation}`;
+                
+                this.saveDiagnosisData();
+            }
+            
+            determineScoreLevel(score) {
+                for (const [level, range] of Object.entries(SCORE_RANGES)) {
+                    if (score >= range.min && score <= range.max) {
+                        return level;
+                    }
+                }
+                return 'poor';
+            }
+            
+            saveDiagnosisData() {
+                try {
+                    const diagnosisData = {
+                        id: `diagnosis_${Date.now()}`,
+                        timestamp: new Date().toISOString(),
+                        totalScore: this.totalScore,
+                        totalImprovement: this.totalImprovement,
+                        answers: this.answers
+                    };
+                    
+                    console.log('診断完了:', diagnosisData);
+                } catch (error) {
+                    console.error('データ保存エラー:', error);
+                }
+            }
+            
+            hideElements(elementIds) {
+                elementIds.forEach(id => {
+                    document.getElementById(id).style.display = 'none';
+                });
+            }
+            
+            showError(message) {
+                const existingError = document.querySelector('.error-message');
+                if (existingError) {
+                    existingError.remove();
+                }
+                
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error-message';
+                errorDiv.textContent = message;
+                
+                document.querySelector('.container').insertBefore(
+                    errorDiv, 
+                    document.querySelector('.card')
+                );
+            }
+        }
+
+        // グローバル変数
+        let diagnosisSystem;
+
+        // 初期化
+        document.addEventListener('DOMContentLoaded', function() {
+            diagnosisSystem = new DiagnosisSystem();
+        });
+
+        // グローバル関数（HTMLから呼び出し用）
+        function selectOption(questionIndex, optionIndex) {
+            if (diagnosisSystem) {
+                diagnosisSystem.selectOption(questionIndex, optionIndex);
+            }
+        }
+
+        function nextQuestion() {
+            if (diagnosisSystem) {
+                diagnosisSystem.nextQuestion();
+            }
+        }
+
+        function startAnalysis() {
+            if (diagnosisSystem) {
+                diagnosisSystem.startAnalysis();
+            }
+        }
+    </script>
+</body>
+</html>

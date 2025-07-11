@@ -112,9 +112,9 @@ ${identifyKeyIssues(analysisData)}
   <div class="key-issues">
     <h4>🎯 最重要課題TOP3</h4>
     <ol>
-      <li><strong>課題名</strong>: 具体的な問題と影響</li>
-      <li><strong>課題名</strong>: 具体的な問題と影響</li>
-      <li><strong>課題名</strong>: 具体的な問題と影響</li>
+      <li><strong>課題名</strong>: 具体的な問題と影響1</li>
+      <li><strong>課題名</strong>: 具体的な問題と影響2</li>
+      <li><strong>課題名</strong>: 具体的な問題と影響3</li>
     </ol>
   </div>
   

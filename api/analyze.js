@@ -1,11 +1,12 @@
-// Vercel Serverless Function for ChatGPT API Integration
+// Vercel Serverless Function for ChatGPT API Integration (CORS修正版)
 export default async function handler(req, res) {
   console.log('API呼び出し受信:', req.method);
 
-  // CORS設定
+  // 強化されたCORS設定
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Max-Age', '86400');
 
   // OPTIONSリクエストの処理
   if (req.method === 'OPTIONS') {
@@ -20,7 +21,8 @@ export default async function handler(req, res) {
     return res.status(200).json({ 
       success: true, 
       message: 'API エンドポイント正常動作',
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      cors: 'enabled'
     });
   }
 
@@ -65,8 +67,8 @@ export default async function handler(req, res) {
       });
     }
 
-    // ChatGPT API分析生成
-    const analysis = await generateAIAnalysis(answers, totalScore, totalImprovement, apiKey);
+    // ChatGPT API分析生成（タイムアウト対応版）
+    const analysis = await generateAIAnalysisWithTimeout(answers, totalScore, totalImprovement, apiKey);
     
     console.log('AI分析生成成功');
     return res.status(200).json({
@@ -83,19 +85,21 @@ export default async function handler(req, res) {
   }
 }
 
-async function generateAIAnalysis(answers, totalScore, totalImprovement, apiKey) {
+// タイムアウト対応版のAI分析関数
+async function generateAIAnalysisWithTimeout(answers, totalScore, totalImprovement, apiKey) {
   console.log('ChatGPT API呼び出し開始');
   
   const systemPrompt = `あなたは経験豊富な経営コンサルタント・AI活用専門家です。
 企業の診断結果から、具体的で実行可能な改善提案を行います。
-必ず以下の形式で回答し、HTML形式で出力してください：
+
+以下のHTML形式で分析結果を出力してください：
 
 <div class="ai-analysis">
   <h3>🤖 AI専門分析レポート</h3>
   
   <div class="current-status">
     <h4>📊 現状分析</h4>
-    <p>（貴社の現状を200文字程度で分析）</p>
+    <p>（貴社の現状を150文字程度で分析）</p>
   </div>
   
   <div class="key-issues">
@@ -119,24 +123,23 @@ async function generateAIAnalysis(answers, totalScore, totalImprovement, apiKey)
   <div class="expected-results">
     <h4>📈 期待される効果</h4>
     <ul>
-      <li>年間コスト削減: <strong>○○万円</strong></li>
-      <li>売上向上効果: <strong>○○万円</strong></li>
-      <li>生産性向上: <strong>○○%</strong></li>
+      <li>年間コスト削減: <strong>${Math.floor(totalImprovement * 0.6)}万円</strong></li>
+      <li>売上向上効果: <strong>${Math.floor(totalImprovement * 0.4)}万円</strong></li>
+      <li>生産性向上: <strong>${Math.min(50, Math.floor(totalImprovement / 10))}%</strong></li>
     </ul>
   </div>
   
   <div class="next-steps">
     <h4>🚀 推奨される次のステップ</h4>
     <ol>
-      <li>具体的なアクションプラン</li>
-      <li>具体的なアクションプラン</li>
-      <li>具体的なアクションプラン</li>
+      <li>AI活用戦略の策定と優先順位の決定</li>
+      <li>パイロットプロジェクトの選定と実行</li>
+      <li>効果測定と本格展開の計画作成</li>
     </ol>
   </div>
 </div>
 
-必ず実行可能で具体的な提案をし、数値は現実的な範囲で提示してください。
-文字数: 800-1200字
+文字数: 600-800字
 トーン: 専門的だが親しみやすく、具体的で実行可能`;
 
   const userPrompt = createAnalysisPrompt(answers, totalScore, totalImprovement);
@@ -144,7 +147,8 @@ async function generateAIAnalysis(answers, totalScore, totalImprovement, apiKey)
   try {
     console.log('OpenAI API リクエスト送信');
     
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    // タイムアウト制御（Vercelの制限内）
+    const fetchPromise = fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${apiKey}`,
@@ -156,11 +160,17 @@ async function generateAIAnalysis(answers, totalScore, totalImprovement, apiKey)
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt }
         ],
-        max_tokens: 2000,
+        max_tokens: 1500,
         temperature: 0.7,
       }),
     });
 
+    // 25秒でタイムアウト（Vercelの30秒制限内）
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error('OpenAI API timeout after 25 seconds')), 25000);
+    });
+
+    const response = await Promise.race([fetchPromise, timeoutPromise]);
     console.log('OpenAI API レスポンス:', response.status);
 
     if (!response.ok) {
@@ -186,8 +196,6 @@ async function generateAIAnalysis(answers, totalScore, totalImprovement, apiKey)
 }
 
 function createAnalysisPrompt(answers, totalScore, totalImprovement) {
-  const analysisData = analyzeAnswers(answers);
-  
   return `
 【企業診断AI分析依頼】
 
@@ -199,57 +207,9 @@ function createAnalysisPrompt(answers, totalScore, totalImprovement) {
 ## 各質問の回答詳細
 ${formatAnswersForAnalysis(answers)}
 
-## 特に注目すべき課題
-${identifyKeyIssues(analysisData)}
-
 上記データを基に、この企業に最適なAI活用戦略と具体的な改善提案を提供してください。
 特に実行可能性と投資対効果を重視した提案をお願いします。
 `;
-}
-
-function analyzeAnswers(answers) {
-  const issues = [];
-  
-  answers.forEach((answer, index) => {
-    if (answer.score <= 2) {
-      issues.push({
-        questionIndex: index,
-        severity: 'high',
-        score: answer.score,
-        amount: answer.amount
-      });
-    } else if (answer.score <= 5) {
-      issues.push({
-        questionIndex: index,
-        severity: 'medium', 
-        score: answer.score,
-        amount: answer.amount
-      });
-    }
-  });
-  
-  return { issues };
-}
-
-function identifyKeyIssues(analysisData) {
-  const questionTopics = [
-    '一人当たり売上高の成長',
-    '人材育成効率',
-    '優秀人材の活用度',
-    '離職状況と原因',
-    '知識・ノウハウ共有',
-    '管理職の時間配分',
-    '競合との提案力',
-    '社員のイノベーション',
-    '組織の冗長性',
-    'データ活用の頻度'
-  ];
-  
-  const highIssues = analysisData.issues
-    .filter(issue => issue.severity === 'high')
-    .map(issue => `- ${questionTopics[issue.questionIndex]}: スコア${issue.score}点（改善効果${issue.amount}万円）`);
-    
-  return highIssues.length > 0 ? highIssues.join('\n') : '- 重大な課題は検出されませんでした';
 }
 
 function formatAnswersForAnalysis(answers) {

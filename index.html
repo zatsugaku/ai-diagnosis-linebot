@@ -194,6 +194,33 @@
             margin: 20px 0;
             border: 1px solid #f5c6cb;
         }
+
+        .ai-analysis-card {
+            margin-top: 30px;
+            border: 2px solid #667eea;
+            background: linear-gradient(135deg, #f8faff 0%, #e8f1ff 100%);
+            border-radius: 15px;
+            padding: 30px;
+            display: none;
+        }
+        
+        .ai-analysis h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+        
+        .ai-analysis h4 {
+            color: #2c3e50;
+            margin: 20px 0 10px 0;
+        }
+        
+        .ai-analysis ul, .ai-analysis ol {
+            margin: 10px 0 10px 20px;
+        }
+        
+        .ai-analysis li {
+            margin: 5px 0;
+        }
         
         @media (max-width: 768px) {
             .container {
@@ -281,6 +308,12 @@
             </div>
         </div>
         
+        <div class="card ai-analysis-card" id="ai-analysis-section">
+            <div id="ai-analysis-content">
+                <!-- AI分析結果がここに表示される -->
+            </div>
+        </div>
+        
         <div class="card results-card" id="results-section">
             <h2 style="text-align: center; margin-bottom: 30px;">📊 診断結果</h2>
             <div style="text-align: center;">
@@ -307,8 +340,46 @@
         </div>
     </div>
 
-    <!-- 設問データの読み込み -->
-    <script src="js/questions-config.js"></script>
+    <!-- 設問データの読み込み - パス修正と読み込み確認追加 -->
+    <script>
+        // 外部ファイル読み込み確認関数
+        function checkDataLoaded() {
+            if (typeof QUESTION_DATA === 'undefined') {
+                console.error('QUESTION_DATA が読み込まれていません');
+                console.log('外部ファイルの読み込みに失敗している可能性があります');
+                
+                // フォールバック: 基本的な診断を提供
+                showFallbackMessage();
+                return false;
+            }
+            console.log('QUESTION_DATA 読み込み成功:', QUESTION_DATA.length + '問');
+            return true;
+        }
+
+        function showFallbackMessage() {
+            document.getElementById('question-text').innerHTML = `
+                <div style="color: #dc3545; margin-bottom: 20px;">
+                    <h3>⚠️ データ読み込みエラー</h3>
+                    <p>申し訳ございません。設問データの読み込みに失敗しました。</p>
+                    <p>しばらく経ってから再度アクセスしてください。</p>
+                </div>
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px;">
+                    <h4>お急ぎの場合は直接ご連絡ください：</h4>
+                    <p style="margin-top: 10px;">
+                        <a href="mailto:profit@business-rescue.com?subject=診断システムエラー報告" 
+                           style="background: #667eea; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none;">
+                           📧 直接相談する
+                        </a>
+                    </p>
+                </div>
+            `;
+        }
+    </script>
+    
+    <!-- 外部設問ファイル読み込み - パス確認 -->
+    <script src="./js/questions-config.js" 
+            onload="console.log('questions-config.js 読み込み完了')" 
+            onerror="console.error('questions-config.js 読み込み失敗'); showFallbackMessage();"></script>
     
     <script>
         // メインシステムロジック
@@ -320,16 +391,16 @@
                 this.answers = [];
                 this.startTime = null;
                 
-                this.init();
+                // データ読み込み確認してから初期化
+                setTimeout(() => {
+                    if (checkDataLoaded()) {
+                        this.init();
+                    }
+                }, 100); // 外部ファイル読み込み待ち
             }
             
             init() {
                 try {
-                    // 設問データの存在確認
-                    if (typeof QUESTION_DATA === 'undefined') {
-                        throw new Error('設問データが読み込まれていません');
-                    }
-                    
                     this.startTime = new Date();
                     this.loadQuestion(0);
                     this.updateProgress();
@@ -337,7 +408,7 @@
                     console.log('診断システムを初期化しました');
                 } catch (error) {
                     console.error('初期化エラー:', error);
-                    this.showError('設問データの読み込みに失敗しました。ページを再読み込みしてください。');
+                    this.showError('システムの初期化に失敗しました。ページを再読み込みしてください。');
                 }
             }
             
@@ -445,10 +516,19 @@
                 document.getElementById('progress-fill').style.width = `${progress}%`;
             }
             
-            startAnalysis() {
+            async startAnalysis() {
                 document.getElementById('question-card').style.display = 'none';
                 document.getElementById('analysis-section').style.display = 'block';
+                
+                // AI分析アニメーション開始
                 this.runAnalysisAnimation();
+                
+                // AI分析API呼び出し（並行処理）
+                try {
+                    await this.callAIAnalysis();
+                } catch (error) {
+                    console.error('AI分析エラー:', error);
+                }
             }
             
             runAnalysisAnimation() {
@@ -482,6 +562,97 @@
                 
                 runStep();
             }
+
+            async callAIAnalysis() {
+                try {
+                    console.log('AI分析API呼び出し開始');
+                    console.log('送信データ:', {
+                        answers: this.answers,
+                        totalScore: this.totalScore,
+                        totalImprovement: this.totalImprovement
+                    });
+                    
+                    const response = await fetch('/api/analyze', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            answers: this.answers,
+                            totalScore: this.totalScore,
+                            totalImprovement: this.totalImprovement
+                        })
+                    });
+
+                    console.log('API応答受信:', response.status);
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        console.log('API応答データ:', data);
+                        
+                        if (data.success && data.analysis) {
+                            document.getElementById('ai-analysis-content').innerHTML = data.analysis;
+                            document.getElementById('ai-analysis-section').style.display = 'block';
+                            console.log('AI分析成功 - 結果表示完了');
+                        } else {
+                            console.log('API応答の形式エラー:', data);
+                            this.showFallbackAnalysis();
+                        }
+                    } else {
+                        console.log('API応答エラー:', response.status);
+                        const errorText = await response.text();
+                        console.log('エラー詳細:', errorText);
+                        this.showFallbackAnalysis();
+                    }
+                } catch (error) {
+                    console.error('AI分析API呼び出しエラー:', error);
+                    this.showFallbackAnalysis();
+                }
+            }
+
+            showFallbackAnalysis() {
+                console.log('フォールバック分析を表示');
+                const fallbackHTML = `
+                    <div class="ai-analysis">
+                        <h3>🤖 診断分析レポート</h3>
+                        
+                        <div class="current-status">
+                            <h4>📊 現状分析</h4>
+                            <p>診断スコア${this.totalScore}点、年間改善効果${this.totalImprovement}万円の結果となりました。</p>
+                        </div>
+                        
+                        <div class="improvement-plan">
+                            <h4>💡 改善提案</h4>
+                            <ul>
+                                <li><strong>短期改善</strong>: 最も効果の高い業務の効率化</li>
+                                <li><strong>中期改善</strong>: システム化・自動化の推進</li>
+                                <li><strong>長期改善</strong>: 組織全体の最適化</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="expected-results">
+                            <h4>📈 期待される効果</h4>
+                            <ul>
+                                <li>年間コスト削減: <strong>${Math.floor(this.totalImprovement * 0.6)}万円</strong></li>
+                                <li>売上向上効果: <strong>${Math.floor(this.totalImprovement * 0.4)}万円</strong></li>
+                                <li>生産性向上: <strong>${Math.min(50, Math.floor(this.totalImprovement / 10))}%</strong></li>
+                            </ul>
+                        </div>
+                        
+                        <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; margin-top: 20px;">
+                            <h4 style="color: #155724;">💼 専門コンサルタントによる詳細分析</h4>
+                            <p style="color: #155724; margin: 10px 0;">この診断結果を基に、より詳細な改善プランを作成いたします。</p>
+                            <a href="mailto:profit@business-rescue.com?subject=利益流出診断の相談&body=診断スコア: ${this.totalScore}点%0A改善効果: ${this.totalImprovement}万円%0A%0A相談希望内容:%0A" 
+                               style="background: #28a745; color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none; display: inline-block;">
+                               📧 無料個別相談を申し込む
+                            </a>
+                        </div>
+                    </div>
+                `;
+                
+                document.getElementById('ai-analysis-content').innerHTML = fallbackHTML;
+                document.getElementById('ai-analysis-section').style.display = 'block';
+            }
             
             showResults() {
                 document.getElementById('analysis-section').style.display = 'none';
@@ -494,7 +665,7 @@
                 
                 // UI更新
                 document.getElementById('total-score').textContent = `${this.totalScore}点`;
-                document.getElementById('total-score').style.color = scoreRange.color;
+                document.getElementById('total-score').style.color = scoreRange.color || '#667eea';
                 document.getElementById('total-improvement').textContent = `年間改善効果: ${this.totalImprovement}万円`;
                 document.getElementById('analysis-level').textContent = scoreRange.level;
                 document.getElementById('analysis-message').textContent = resultData.message;
@@ -509,7 +680,7 @@
                         return level;
                     }
                 }
-                return 'poor';
+                return 'urgent';
             }
             
             saveDiagnosisData() {
@@ -530,7 +701,10 @@
             
             hideElements(elementIds) {
                 elementIds.forEach(id => {
-                    document.getElementById(id).style.display = 'none';
+                    const element = document.getElementById(id);
+                    if (element) {
+                        element.style.display = 'none';
+                    }
                 });
             }
             
@@ -554,8 +728,9 @@
         // グローバル変数
         let diagnosisSystem;
 
-        // 初期化
+        // 初期化（DOMContentLoaded後）
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM読み込み完了');
             diagnosisSystem = new DiagnosisSystem();
         });
 

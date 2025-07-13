@@ -1,4 +1,6 @@
 // AI活用診断システム - 設問データ（修正版）
+console.log('questions-config.js 読み込み開始');
+
 const QUESTION_DATA = [
     {
         text: "【質問1/10】社長が1週間不在でも、会社は問題なく回りますか？",
@@ -195,11 +197,11 @@ const QUESTION_DATA = [
 
 // 修正されたスコア判定基準
 const SCORE_RANGES = {
-    excellent: { min: 80, max: 100, level: "🏆 業界トップ5%" },
-    good: { min: 65, max: 79, level: "⭐ 業界上位20%" },
-    average: { min: 50, max: 64, level: "📊 業界平均レベル" },
-    needsImprovement: { min: 35, max: 49, level: "⚡ 大きな改善余地あり" },
-    urgent: { min: 0, max: 34, level: "🚨 緊急改善必要" }
+    excellent: { min: 80, max: 100, level: "🏆 業界トップ5%", color: "#28a745" },
+    good: { min: 65, max: 79, level: "⭐ 業界上位20%", color: "#20c997" },
+    average: { min: 50, max: 64, level: "📊 業界平均レベル", color: "#ffc107" },
+    needsImprovement: { min: 35, max: 49, level: "⚡ 大きな改善余地あり", color: "#fd7e14" },
+    urgent: { min: 0, max: 34, level: "🚨 緊急改善必要", color: "#dc3545" }
 };
 
 // 修正されたスコア別メッセージ
@@ -239,3 +241,7 @@ function getScoreCategory(score) {
     if (score >= 35) return 'needsImprovement';
     return 'urgent';
 }
+
+console.log('QUESTION_DATA 読み込み完了:', QUESTION_DATA.length + '問');
+console.log('SCORE_RANGES 読み込み完了');
+console.log('RESULT_MESSAGES 読み込み完了');

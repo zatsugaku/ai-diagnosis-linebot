@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WEB制作・コーディング効率診断</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .question-text {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: #2c3e50;
+        }
+        
+        .options {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .option {
+            padding: 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+        
+        .option:hover {
+            border-color: #667eea;
+            background: #e8f1ff;
+            transform: translateY(-2px);
+        }
+        
+        .option.selected {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+        
+        .feedback-area {
+            margin-top: 20px;
+            padding: 20px;
+            background: #e8f5e8;
+            border-radius: 10px;
+            border-left: 5px solid #28a745;
+            display: none;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #e9ecef;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #28a745, #20c997);
+            transition: width 0.5s ease;
+            width: 10%;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .cumulative-display {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: none;
+        }
+        
+        .analysis-card {
+            text-align: center;
+        }
+        
+        .analysis-steps {
+            margin: 30px 0;
+        }
+        
+        .analysis-step {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            margin: 10px 0;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #dee2e6;
+        }
+        
+        .analysis-step.completed {
+            background: #d4edda;
+            border-left-color: #28a745;
+        }
+        
+        .analysis-step.active {
+            background: #fff3cd;
+            border-left-color: #ffc107;
+        }
+        
+        .step-text {
+            font-weight: 500;
+        }
+        
+        .step-status {
+            font-size: 1.2rem;
+        }
+        
+        .results-card {
+            display: none;
+        }
+        
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            border: 1px solid #f5c6cb;
+        }
+
+        .ai-analysis-card {
+            margin-top: 30px;
+            border: 2px solid #667eea;
+            background: linear-gradient(135deg, #f8faff 0%, #e8f1ff 100%);
+            border-radius: 15px;
+            padding: 30px;
+            display: none;
+        }
+        
+        .ai-analysis h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+        
+        .ai-analysis h4 {
+            color: #2c3e50;
+            margin: 20px 0 10px 0;
+        }
+        
+        .ai-analysis ul, .ai-analysis ol {
+            margin: 10px 0 10px 20px;
+        }
+        
+        .ai-analysis li {
+            margin: 5px 0;
+        }
+        
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .back-to-top:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
+        
+        .industry-info {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            color: white;
+        }
+        
+        .industry-info h3 {
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .industry-info p {
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .title {
+                font-size: 2rem;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .cumulative-display {
+                position: relative;
+                top: auto;
+                right: auto;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">💻 WEB制作・コーディング効率診断</h1>
+            <p class="subtitle">AI活用でコーディング効率を劇的に向上させる方法を発見</p>
+            
+            <div class="industry-info">
+                <h3>🎯 診断対象</h3>
+                <p>WEB制作会社、フリーランス、広告代理店、システム開発会社のコーディング担当者向け。AI活用により制作時間を短縮し、品質向上を実現する具体的方法を診断します。</p>
+            </div>
+        </div>
+        
+        <div class="cumulative-display" id="cumulative-display">
+            <div style="font-size: 0.9rem;">累計効率化効果</div>
+            <div style="font-size: 1.3rem;" id="cumulative-amount">年間0万円</div>
+        </div>
+        
+        <div class="card" id="question-card">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            
+            <div class="question-text" id="question-text">
+                質問を読み込み中...
+            </div>
+            
+            <div class="options" id="question-options">
+                <!-- オプションは動的に生成 -->
+            </div>
+            
+            <div class="feedback-area" id="feedback">
+                <div style="font-weight: bold; color: #155724; margin-bottom: 8px;" id="feedback-title"></div>
+                <div style="color: #155724; margin-bottom: 10px;" id="feedback-content"></div>
+                <div style="color: #d63384; font-weight: bold; font-size: 1.1rem;" id="feedback-amount"></div>
+            </div>
+            
+            <div class="navigation">
+                <button class="btn" onclick="nextQuestion()" id="next-btn" style="display: none;">次の質問へ →</button>
+                <button class="btn" onclick="startAnalysis()" id="analysis-btn" style="display: none;">🤖 AI分析を開始</button>
+            </div>
+        </div>
+        
+        <div class="card analysis-card" id="analysis-section" style="display: none;">
+            <h2 style="text-align: center; margin-bottom: 30px;">🤖 AI分析中...</h2>
+            
+            <div class="analysis-steps">
+                <div class="analysis-step">
+                    <span class="step-text">🔍 300社のWEB制作データと照合中...</span>
+                    <span class="step-status">⏳</span>
+                </div>
+                <div class="analysis-step">
+                    <span class="step-text">📊 コーディング効率のボトルネックを発見中...</span>
+                    <span class="step-status">⏳</span>
+                </div>
+                <div class="analysis-step">
+                    <span class="step-text">🎯 AI活用による改善シナリオを生成中...</span>
+                    <span class="step-status">⏳</span>
+                </div>
+                <div class="analysis-step">
+                    <span class="step-text">💰 効率化効果を算出中...</span>
+                    <span class="step-status">⏳</span>
+                </div>
+                <div class="analysis-step">
+                    <span class="step-text">📋 カスタマイズ提案を完成中...</span>
+                    <span class="step-status">⏳</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card ai-analysis-card" id="ai-analysis-section">
+            <div id="ai-analysis-content">
+                <!-- AI分析結果がここに表示される -->
+            </div>
+        </div>
+        
+        <div class="card results-card" id="results-section">
+            <h2 style="text-align: center; margin-bottom: 30px;">📊 診断結果</h2>
+            <div style="text-align: center;">
+                <div style="font-size: 3rem; font-weight: bold;" id="total-score">0点</div>
+                <div style="font-size: 1.5rem; margin: 20px 0;" id="total-improvement">年間効率化効果: 0万円</div>
+                
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                    <div style="font-size: 1.2rem; font-weight: bold; color: #2c3e50; margin-bottom: 15px;" id="analysis-level">業界内ポジション</div>
+                    <div style="margin-bottom: 15px;" id="analysis-message">分析メッセージ</div>
+                    <div style="color: #667eea; font-weight: bold;" id="analysis-recommendation">推奨アクション</div>
+                </div>
+                
+                <div style="background: #e8f4f8; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                    <h3>💡 WEB制作効率化の特別提案</h3>
+                    <p>コーディング効率を劇的に向上させる具体的なAI活用方法をご提案します。</p>
+                    <div style="margin-top: 20px;">
+                        <div style="display: inline-block; margin: 5px;">
+                            <strong>🚀 制作時間短縮:</strong> 平均40-60%
+                        </div>
+                        <div style="display: inline-block; margin: 5px;">
+                            <strong>📈 品質向上:</strong> バグ発生率50%減
+                        </div>
+                        <div style="display: inline-block; margin: 5px;">
+                            <strong>💰 収益向上:</strong> 年間180万円
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                    <h3>🔧 無料コンサルティングのご案内</h3>
+                    <p>診断結果を基に、あなたの制作環境に最適化されたAI活用プランを作成いたします。</p>
+                    <p style="margin-top: 15px;">
+                        <a href="mailto:coding@web-consulting.com?subject=WEB制作・コーディング効率診断の相談" 
+                           style="background: #667eea; color: white; padding: 15px 30px; border-radius: 10px; text-decoration: none; display: inline-block; margin: 10px;">
+                           📧 専門家に相談する
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a href="../../" class="back-to-top">← トップページに戻る</a>
+
+    <!-- 設定ファイル読み込み -->
+    <script src="./config.js"></script>
+    
+    <!-- 共通診断エンジン読み込み -->
+    <script src="../../shared/js/diagnosis-engine.js"></script>
+</body>
+</html>

@@ -504,48 +504,64 @@
                 document.getElementById('question-card').style.display = 'none';
                 document.getElementById('analysis-section').style.display = 'block';
                 
-                // AI分析アニメーション開始
-                this.runAnalysisAnimation();
-                
-                // AI分析API呼び出し
-                try {
-                    await this.callAIAnalysis();
-                } catch (error) {
+                // AI分析API呼び出し（アニメーションと並行実行）
+                let aiAnalysisResult = null;
+                const aiAnalysisPromise = this.callAIAnalysis().then(result => {
+                    aiAnalysisResult = result;
+                }).catch(error => {
                     console.error('AI分析エラー:', error);
+                    aiAnalysisResult = 'fallback';
+                });
+                
+                // AI分析アニメーション開始（最低7秒は実行）
+                await this.runAnalysisAnimation();
+                
+                // AI分析の完了を待つ
+                await aiAnalysisPromise;
+                
+                // 結果表示
+                if (aiAnalysisResult === 'fallback') {
                     this.showFallbackAnalysis();
                 }
+                
+                // 最終結果へ
+                setTimeout(() => this.showResults(), 1500);
             }
             
             runAnalysisAnimation() {
-                const steps = [1000, 1500, 2000, 1500, 1000];
-                let currentStep = 0;
-                const stepElements = document.querySelectorAll('.analysis-step');
-                
-                const runStep = () => {
-                    if (currentStep > 0) {
-                        stepElements[currentStep - 1].classList.remove('active');
-                        stepElements[currentStep - 1].classList.add('completed');
-                        stepElements[currentStep - 1].querySelector('.step-status').textContent = '✅';
-                    }
+                return new Promise((resolve) => {
+                    const steps = [1500, 2000, 1500, 1500, 1000]; // 合計7.5秒
+                    let currentStep = 0;
+                    const stepElements = document.querySelectorAll('.analysis-step');
                     
-                    if (currentStep < steps.length) {
-                        stepElements[currentStep].classList.add('active');
-                        stepElements[currentStep].querySelector('.step-status').textContent = '⏳';
+                    const runStep = () => {
+                        if (currentStep > 0) {
+                            stepElements[currentStep - 1].classList.remove('active');
+                            stepElements[currentStep - 1].classList.add('completed');
+                            stepElements[currentStep - 1].querySelector('.step-status').textContent = '✅';
+                        }
                         
-                        setTimeout(() => {
-                            currentStep++;
-                            runStep();
-                        }, steps[currentStep]);
-                    } else {
-                        stepElements[currentStep - 1].classList.remove('active');
-                        stepElements[currentStep - 1].classList.add('completed');
-                        stepElements[currentStep - 1].querySelector('.step-status').textContent = '✅';
-                        
-                        setTimeout(() => this.showResults(), 1000);
-                    }
-                };
-                
-                runStep();
+                        if (currentStep < steps.length) {
+                            stepElements[currentStep].classList.add('active');
+                            stepElements[currentStep].querySelector('.step-status').textContent = '⏳';
+                            
+                            setTimeout(() => {
+                                currentStep++;
+                                runStep();
+                            }, steps[currentStep]);
+                        } else {
+                            stepElements[currentStep - 1].classList.remove('active');
+                            stepElements[currentStep - 1].classList.add('completed');
+                            stepElements[currentStep - 1].querySelector('.step-status').textContent = '✅';
+                            
+                            setTimeout(() => {
+                                resolve(); // アニメーション完了
+                            }, 500);
+                        }
+                    };
+                    
+                    runStep();
+                });
             }
 
             async callAIAnalysis() {
@@ -567,6 +583,8 @@
                         };
                     }).filter(answer => answer !== undefined);
                     
+                    console.log('AI分析用詳細データ:', detailedAnswers);
+                    
                     const response = await fetch('/api/analyze', {
                         method: 'POST',
                         headers: {
@@ -580,7 +598,9 @@
                                 scoringPhilosophy: "高スコア = AI活用による改善余地が大きい（現状は非効率）, 低スコア = 既に効率的でAI活用余地は少ない",
                                 maxScore: 100,
                                 questionCount: QUESTION_DATA.length,
-                                focusAreas: ["人材育成", "業務効率", "意思決定", "競争力", "組織運営"]
+                                focusAreas: ["人材育成", "業務効率", "意思決定", "競争力", "組織運営"],
+                                requiredAnalysisLength: "1500-2000文字の詳細分析",
+                                outputFormat: "HTML形式、具体的な改善提案、根拠明示"
                             }
                         })
                     });
@@ -594,15 +614,18 @@
                             
                             document.getElementById('ai-analysis-content').innerHTML = cleanAnalysis;
                             document.getElementById('ai-analysis-section').style.display = 'block';
+                            return 'success';
                         } else {
-                            this.showFallbackAnalysis();
+                            console.log('API応答の形式エラー:', data);
+                            return 'fallback';
                         }
                     } else {
-                        this.showFallbackAnalysis();
+                        console.log('API応答エラー:', response.status);
+                        return 'fallback';
                     }
                 } catch (error) {
                     console.error('AI分析API呼び出しエラー:', error);
-                    this.showFallbackAnalysis();
+                    return 'fallback';
                 }
             }
             

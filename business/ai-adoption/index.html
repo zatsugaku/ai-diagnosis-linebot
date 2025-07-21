@@ -118,6 +118,7 @@
             transition: all 0.3s ease;
             background: #667eea;
             color: white;
+            margin: 0 10px;
         }
         
         .btn:hover {
@@ -129,6 +130,7 @@
             display: flex;
             justify-content: center;
             margin-top: 30px;
+            flex-wrap: wrap;
         }
         
         .cumulative-display {
@@ -217,6 +219,14 @@
                 right: auto;
                 margin-bottom: 20px;
             }
+            
+            .navigation {
+                flex-direction: column;
+            }
+            
+            .btn {
+                margin: 5px 0;
+            }
         }
     </style>
 </head>
@@ -252,10 +262,10 @@
             </div>
             
             <div class="navigation">
-    <button class="btn" onclick="previousQuestion()" id="prev-btn" style="display: none;">← 前の質問に戻る</button>
-    <button class="btn" onclick="nextQuestion()" id="next-btn" style="display: none;">次の質問へ →</button>
-    <button class="btn" onclick="startAnalysis()" id="analysis-btn" style="display: none;">🤖 AI分析を開始</button>
-</div>
+                <button class="btn" onclick="previousQuestion()" id="prev-btn" style="display: none;">← 前の質問に戻る</button>
+                <button class="btn" onclick="nextQuestion()" id="next-btn" style="display: none;">次の質問へ →</button>
+                <button class="btn" onclick="startAnalysis()" id="analysis-btn" style="display: none;">🤖 AI分析を開始</button>
+            </div>
         </div>
         
         <div class="card analysis-card" id="analysis-section">
@@ -367,7 +377,7 @@
                         container.appendChild(optionElement);
                     });
                     
-                    this.hideElements(['feedback', 'next-btn', 'analysis-btn']);
+                    this.hideElements(['feedback', 'next-btn', 'analysis-btn', 'prev-btn']);
                     
                 } catch (error) {
                     console.error('質問読み込みエラー:', error);
@@ -431,20 +441,55 @@
             }
             
             showNavigationButton() {
-                if (this.currentQuestion < QUESTION_DATA.length - 1) {
-                    document.getElementById('next-btn').style.display = 'block';
+                // 前の質問ボタンの制御
+                if (this.currentQuestion > 0) {
+                    document.getElementById('prev-btn').style.display = 'inline-block';
                 } else {
-                    document.getElementById('analysis-btn').style.display = 'block';
+                    document.getElementById('prev-btn').style.display = 'none';
+                }
+                
+                // 次の質問・分析開始ボタンの制御
+                if (this.currentQuestion < QUESTION_DATA.length - 1) {
+                    document.getElementById('next-btn').style.display = 'inline-block';
+                    document.getElementById('analysis-btn').style.display = 'none';
+                } else {
+                    document.getElementById('next-btn').style.display = 'none';
+                    document.getElementById('analysis-btn').style.display = 'inline-block';
                 }
             }
             
             nextQuestion() {
-                this.hideElements(['next-btn', 'feedback']);
+                this.hideElements(['next-btn', 'feedback', 'prev-btn']);
                 
                 if (this.currentQuestion < QUESTION_DATA.length - 1) {
                     this.currentQuestion++;
                     this.loadQuestion(this.currentQuestion);
                     this.updateProgress();
+                }
+            }
+            
+            previousQuestion() {
+                this.hideElements(['next-btn', 'analysis-btn', 'feedback']);
+                
+                if (this.currentQuestion > 0) {
+                    this.currentQuestion--;
+                    this.loadQuestion(this.currentQuestion);
+                    this.updateProgress();
+                    
+                    // 前の質問の回答があれば復元
+                    if (this.answers[this.currentQuestion]) {
+                        const optionIndex = this.answers[this.currentQuestion].optionIndex;
+                        const amount = this.answers[this.currentQuestion].amount;
+                        const question = QUESTION_DATA[this.currentQuestion];
+                        const feedback = question.feedbacks[optionIndex];
+                        
+                        // 選択状態を復元
+                        setTimeout(() => {
+                            this.updateSelectedOption(optionIndex);
+                            this.showFeedback(feedback, amount);
+                            this.showNavigationButton();
+                        }, 100);
+                    }
                 }
             }
             
@@ -644,6 +689,12 @@
         function nextQuestion() {
             if (diagnosisSystem) {
                 diagnosisSystem.nextQuestion();
+            }
+        }
+
+        function previousQuestion() {
+            if (diagnosisSystem) {
+                diagnosisSystem.previousQuestion();
             }
         }
 

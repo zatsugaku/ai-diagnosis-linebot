@@ -436,7 +436,9 @@
                     }
                 }
                 
-                document.getElementById('cumulative-amount').textContent = `年間${this.totalImprovement}万円`;
+                // 100点満点で表示（累計）
+                const displayScore = Math.round(this.totalScore / 10);
+                document.getElementById('cumulative-amount').textContent = `${displayScore}点 / 年間${this.totalImprovement}万円`;
                 document.getElementById('cumulative-display').style.display = 'block';
             }
             
@@ -548,6 +550,9 @@
 
             async callAIAnalysis() {
                 try {
+                    // 100点満点で計算
+                    const displayScore = Math.round(this.totalScore / 10);
+                    
                     const response = await fetch('/api/analyze', {
                         method: 'POST',
                         headers: {
@@ -555,15 +560,20 @@
                         },
                         body: JSON.stringify({
                             answers: this.answers,
-                            totalScore: this.totalScore,
-                            totalImprovement: this.totalImprovement
+                            totalScore: displayScore, // 100点満点で送信
+                            totalImprovement: this.totalImprovement,
+                            context: "AI活用による改善余地の診断。高スコア＝AI活用の伸びしろが大きい。低スコア＝既に効率的で改善余地は少ない。"
                         })
                     });
 
                     if (response.ok) {
                         const data = await response.json();
                         if (data.success && data.analysis) {
-                            document.getElementById('ai-analysis-content').innerHTML = data.analysis;
+                            // HTMLタグやコメントを除去
+                            let cleanAnalysis = data.analysis.replace(/^```html\s*/i, '').replace(/\s*```$/i, '');
+                            cleanAnalysis = cleanAnalysis.replace(/^html[,，]\s*/i, '');
+                            
+                            document.getElementById('ai-analysis-content').innerHTML = cleanAnalysis;
                             document.getElementById('ai-analysis-section').style.display = 'block';
                         } else {
                             this.showFallbackAnalysis();
@@ -578,21 +588,24 @@
             }
 
             showFallbackAnalysis() {
+                const displayScore = Math.round(this.totalScore / 10);
                 const fallbackHTML = `
                     <div class="ai-analysis">
-                        <h3>🤖 診断分析レポート</h3>
+                        <h3>🤖 AI活用診断レポート</h3>
                         
                         <div class="current-status">
                             <h4>📊 現状分析</h4>
-                            <p>診断スコア${this.totalScore}点、年間改善効果${this.totalImprovement}万円の結果となりました。</p>
+                            <p>AI活用の改善余地スコア：<strong>${displayScore}点/100点</strong></p>
+                            <p>年間改善効果：<strong>${this.totalImprovement}万円</strong></p>
+                            <p>${displayScore >= 60 ? 'AI活用により大幅な改善が期待できます。' : displayScore >= 40 ? 'AI導入により一定の効果が期待できます。' : '効率的に運営されており、AI活用の余地は限定的です。'}</p>
                         </div>
                         
                         <div class="improvement-plan">
-                            <h4>💡 改善提案</h4>
+                            <h4>💡 AI活用による改善提案</h4>
                             <ul>
-                                <li><strong>短期改善</strong>: 最も効果の高い業務の効率化</li>
-                                <li><strong>中期改善</strong>: システム化・自動化の推進</li>
-                                <li><strong>長期改善</strong>: 組織全体の最適化</li>
+                                <li><strong>短期改善</strong>: チャットボット・RPA導入による業務自動化</li>
+                                <li><strong>中期改善</strong>: データ分析ツール導入による意思決定支援</li>
+                                <li><strong>長期改善</strong>: 予測分析・機械学習による業務最適化</li>
                             </ul>
                         </div>
                         
@@ -606,11 +619,11 @@
                         </div>
                         
                         <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; margin-top: 20px;">
-                            <h4 style="color: #155724;">💼 専門コンサルタントによる詳細分析</h4>
-                            <p style="color: #155724; margin: 10px 0;">この診断結果を基に、より詳細な改善プランを作成いたします。</p>
-                            <a href="mailto:ai-consulting@example.com?subject=AI活用診断の相談&body=診断スコア: ${this.totalScore}点%0A改善効果: ${this.totalImprovement}万円" 
+                            <h4 style="color: #155724;">💼 AI活用コンサルタントによる詳細分析</h4>
+                            <p style="color: #155724; margin: 10px 0;">この診断結果を基に、貴社に最適なAI導入プランを作成いたします。</p>
+                            <a href="mailto:ai-consulting@example.com?subject=AI活用診断の相談&body=AI活用改善余地スコア: ${displayScore}点%0A改善効果: ${this.totalImprovement}万円%0A%0A相談希望内容:%0A" 
                                style="background: #28a745; color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none; display: inline-block;">
-                               📧 無料個別相談を申し込む
+                               📧 無料AI活用相談を申し込む
                             </a>
                         </div>
                     </div>
@@ -629,33 +642,62 @@
             }
             
             updateResultsDisplay() {
-                // スコア判定（SCORE_RANGESがあれば使用、なければデフォルト）
+                // 100点満点で表示
+                const displayScore = Math.round(this.totalScore / 10);
+                
+                // スコア判定（AI活用伸びしろの考え方）
                 let scoreLevel = 'average';
-                let levelMessage = '業界平均レベル';
-                let resultMessage = '改善余地があります。';
-                let recommendation = '効率化策の検討';
+                let levelMessage = 'AI活用余地：中程度';
+                let resultMessage = 'AI導入により一定の効果が期待できます。';
+                let recommendation = '段階的なAI導入検討';
                 
-                if (typeof SCORE_RANGES !== 'undefined') {
-                    for (const [level, range] of Object.entries(SCORE_RANGES)) {
-                        if (this.totalScore >= range.min && this.totalScore <= range.max) {
-                            scoreLevel = level;
-                            levelMessage = range.level;
-                            break;
-                        }
-                    }
-                }
-                
-                if (typeof RESULT_MESSAGES !== 'undefined' && RESULT_MESSAGES[scoreLevel]) {
-                    resultMessage = RESULT_MESSAGES[scoreLevel].message;
-                    recommendation = RESULT_MESSAGES[scoreLevel].recommendation;
+                if (displayScore >= 80) {
+                    scoreLevel = 'excellent';
+                    levelMessage = 'AI活用余地：非常に大きい';
+                    resultMessage = 'AI活用により劇的な改善が期待できます。大きな投資対効果が見込めます。';
+                    recommendation = '積極的なAI導入戦略の策定';
+                } else if (displayScore >= 60) {
+                    scoreLevel = 'good';
+                    levelMessage = 'AI活用余地：大きい';
+                    resultMessage = 'AI活用により大幅な改善が期待できます。';
+                    recommendation = '本格的なAI導入プランの検討';
+                } else if (displayScore >= 40) {
+                    scoreLevel = 'average';
+                    levelMessage = 'AI活用余地：中程度';
+                    resultMessage = 'AI導入により一定の効果が期待できます。';
+                    recommendation = '段階的なAI導入検討';
+                } else if (displayScore >= 20) {
+                    scoreLevel = 'low';
+                    levelMessage = 'AI活用余地：少ない';
+                    resultMessage = '効率的に運営されており、AI活用の余地は限定的です。';
+                    recommendation = '特定領域でのAI活用検討';
+                } else {
+                    scoreLevel = 'minimal';
+                    levelMessage = 'AI活用余地：最小';
+                    resultMessage = '非常に効率的に運営されており、現状維持が最適です。';
+                    recommendation = '現状の運営体制を継続';
                 }
                 
                 // UI更新
-                document.getElementById('total-score').textContent = `${this.totalScore}点`;
+                document.getElementById('total-score').textContent = `${displayScore}点`;
                 document.getElementById('total-improvement').textContent = `年間改善効果: ${this.totalImprovement}万円`;
                 document.getElementById('analysis-level').textContent = levelMessage;
                 document.getElementById('analysis-message').textContent = resultMessage;
                 document.getElementById('analysis-recommendation').textContent = `推奨アクション: ${recommendation}`;
+                
+                // スコアの色も変更
+                const scoreElement = document.getElementById('total-score');
+                if (displayScore >= 80) {
+                    scoreElement.style.color = '#dc3545'; // 赤：大きな改善余地
+                } else if (displayScore >= 60) {
+                    scoreElement.style.color = '#fd7e14'; // オレンジ：改善余地あり
+                } else if (displayScore >= 40) {
+                    scoreElement.style.color = '#ffc107'; // 黄色：中程度
+                } else if (displayScore >= 20) {
+                    scoreElement.style.color = '#28a745'; // 緑：効率的
+                } else {
+                    scoreElement.style.color = '#20c997'; // 青緑：非常に効率的
+                }
             }
             
             hideElements(elementIds) {

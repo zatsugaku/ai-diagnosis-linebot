@@ -328,7 +328,22 @@
     </div>
 
     <!-- 設問データの読み込み -->
-    <script src="./questions.js"></script>
+    <script>
+        // 環境に応じたパス解決
+        const scriptSrc = window.location.hostname.includes('claudeusercontent.com') 
+            ? 'https://recruit-ai.work/business/ai-adoption/questions.js'
+            : './questions.js';
+        
+        const script = document.createElement('script');
+        script.src = scriptSrc;
+        script.onload = function() {
+            console.log('questions.js読み込み完了');
+        };
+        script.onerror = function() {
+            console.error('questions.js読み込み失敗');
+        };
+        document.head.appendChild(script);
+    </script>
     
     <script>
         // メインシステムロジック

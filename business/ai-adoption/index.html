@@ -553,16 +553,35 @@
                     // 100点満点で計算
                     const displayScore = Math.round(this.totalScore / 10);
                     
+                    // 詳細な診断データを構築
+                    const detailedAnswers = this.answers.map((answer, index) => {
+                        const question = QUESTION_DATA[index];
+                        return {
+                            questionNumber: index + 1,
+                            questionText: question.text,
+                            selectedOption: question.options[answer.optionIndex],
+                            score: answer.score,
+                            improvementAmount: answer.amount,
+                            category: this.getQuestionCategory(index),
+                            feedback: question.feedbacks[answer.optionIndex]
+                        };
+                    }).filter(answer => answer !== undefined);
+                    
                     const response = await fetch('/api/analyze', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                         },
                         body: JSON.stringify({
-                            answers: this.answers,
-                            totalScore: displayScore, // 100点満点で送信
+                            totalScore: displayScore,
                             totalImprovement: this.totalImprovement,
-                            context: "AI活用による改善余地の診断。高スコア＝AI活用の伸びしろが大きい。低スコア＝既に効率的で改善余地は少ない。"
+                            detailedAnswers: detailedAnswers,
+                            analysisContext: {
+                                scoringPhilosophy: "高スコア = AI活用による改善余地が大きい（現状は非効率）, 低スコア = 既に効率的でAI活用余地は少ない",
+                                maxScore: 100,
+                                questionCount: QUESTION_DATA.length,
+                                focusAreas: ["人材育成", "業務効率", "意思決定", "競争力", "組織運営"]
+                            }
                         })
                     });
 
@@ -585,6 +604,24 @@
                     console.error('AI分析API呼び出しエラー:', error);
                     this.showFallbackAnalysis();
                 }
+            }
+            
+            getQuestionCategory(questionIndex) {
+                // 質問のカテゴリを判定
+                const categories = [
+                    "時代変化への危機感",      // Q1
+                    "競争環境認識",           // Q2  
+                    "事業承継準備",           // Q3
+                    "人材定着",               // Q4
+                    "スキルアップ支援",       // Q5
+                    "人材獲得力",             // Q6
+                    "人材依存リスク",         // Q7
+                    "キーパーソン依存",       // Q8
+                    "採用・定着",             // Q9
+                    "変革姿勢"                // Q10
+                ];
+                
+                return categories[questionIndex] || "その他";
             }
 
             showFallbackAnalysis() {

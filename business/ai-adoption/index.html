@@ -356,7 +356,15 @@
     </div>
 
     <script>
-        // 🚀 AI活用診断システム - 設問データ（修正版・インライン）
+        // 🔍 システム起動前デバッグ
+        console.log('=== AI活用診断システム デバッグモード ===');
+        console.log('🕐 スクリプト実行開始時刻:', new Date().toISOString());
+        console.log('📄 document.readyState:', document.readyState);
+        console.log('🌐 ユーザーエージェント:', navigator.userAgent);
+        
+        // 🚀 AI活用診断システム - 設問データ（デバッグ版）
+        console.log('📊 設問データ定義開始...');
+        
         const QUESTION_DATA = [
             {
                 text: "Q1. AI活用が注目されている現在、貴社ではAI技術に対してどの程度関心をお持ちですか？",
@@ -719,6 +727,20 @@
             }
         ];
 
+        // データ定義完了確認
+        console.log('✅ 設問データ定義完了');
+        console.log('📊 設問数:', QUESTION_DATA.length);
+        console.log('📝 最初の設問:', QUESTION_DATA[0]?.text?.substring(0, 50) + '...');
+        console.log('🎯 最後の設問:', QUESTION_DATA[QUESTION_DATA.length - 1]?.text?.substring(0, 50) + '...');
+        
+        // 各設問の検証
+        QUESTION_DATA.forEach((q, i) => {
+            if (!q.text || !q.options || !q.scores || !q.amounts || !q.feedbacks) {
+                console.error(`❌ Q${i+1} のデータが不完全:`, q);
+            }
+        });
+        console.log('✅ 全設問データ検証完了');
+
         // スコア判定の基準（修正版）
         const SCORE_RANGES = {
             excellent: { min: 80, max: 100, level: "AI活用余地：非常に大きい", color: "#28a745" },
@@ -752,7 +774,7 @@
             }
         };
 
-        // 🚀 AI診断システム（修正版）
+        // 🚀 AI診断システム（デバッグ強化版）
         class DiagnosisSystem {
             constructor() {
                 this.currentQuestion = 0;
@@ -761,33 +783,144 @@
                 this.answers = [];
                 this.startTime = null;
                 
-                console.log('AI診断システム初期化開始');
-                this.init();
+                console.log('🚀 AI診断システム初期化開始');
+                
+                // データ存在確認
+                this.checkDataAndInit();
+            }
+            
+            checkDataAndInit() {
+                console.log('📊 データ確認開始');
+                
+                try {
+                    if (typeof QUESTION_DATA === 'undefined') {
+                        console.error('❌ QUESTION_DATA が定義されていません');
+                        this.showError('設問データが読み込まれていません。ページを再読み込みしてください。');
+                        return;
+                    }
+                    
+                    if (!Array.isArray(QUESTION_DATA)) {
+                        console.error('❌ QUESTION_DATA が配列ではありません:', typeof QUESTION_DATA);
+                        this.showError('設問データの形式が正しくありません。');
+                        return;
+                    }
+                    
+                    if (QUESTION_DATA.length === 0) {
+                        console.error('❌ QUESTION_DATA が空です');
+                        this.showError('設問データが空です。');
+                        return;
+                    }
+                    
+                    console.log('✅ データ確認完了 - 設問数:', QUESTION_DATA.length);
+                    console.log('✅ 最初の設問:', QUESTION_DATA[0]?.text?.substring(0, 50) + '...');
+                    
+                    this.init();
+                    
+                } catch (error) {
+                    console.error('💥 データ確認中にエラー:', error);
+                    this.showError('システムの初期化に失敗しました: ' + error.message);
+                }
             }
             
             init() {
-                this.startTime = new Date();
-                this.loadQuestion(0);
-                this.updateProgress();
-                console.log('AI診断システム初期化完了 - 設問数:', QUESTION_DATA.length);
+                try {
+                    console.log('🔧 システム初期化中...');
+                    
+                    this.startTime = new Date();
+                    this.loadQuestion(0);
+                    this.updateProgress();
+                    
+                    console.log('✅ AI診断システム初期化完了');
+                    
+                } catch (error) {
+                    console.error('💥 初期化エラー:', error);
+                    this.showError('システムの初期化中にエラーが発生しました: ' + error.message);
+                }
             }
             
+            showError(message) {
+                console.log('⚠️ エラー表示:', message);
+                
+                const questionText = document.getElementById('question-text');
+                if (questionText) {
+                    questionText.innerHTML = `
+                        <div class="error-message">
+                            <h3>⚠️ システムエラー</h3>
+                            <p>${message}</p>
+                            <button onclick="location.reload()" 
+                                    style="background: #667eea; color: white; padding: 15px 30px; border: none; border-radius: 10px; margin-top: 15px; cursor: pointer; font-size: 1rem;">
+                                🔄 ページを再読み込み
+                            </button>
+                            <div style="margin-top: 20px; font-size: 0.9rem; color: #666;">
+                                <p>問題が解決しない場合：</p>
+                                <p>📧 <a href="mailto:support@ai-diagnosis.com?subject=システムエラー報告&body=エラー内容: ${encodeURIComponent(message)}">サポートに連絡</a></p>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+            
+            
             loadQuestion(questionIndex) {
-                const question = QUESTION_DATA[questionIndex];
-                document.getElementById('question-text').textContent = question.text;
-                
-                const container = document.getElementById('question-options');
-                container.innerHTML = '';
-                
-                question.options.forEach((option, optionIndex) => {
-                    const optionElement = document.createElement('div');
-                    optionElement.className = 'option';
-                    optionElement.textContent = option;
-                    optionElement.onclick = () => this.selectOption(questionIndex, optionIndex);
-                    container.appendChild(optionElement);
-                });
-                
-                this.hideElements(['feedback', 'next-btn', 'analysis-btn']);
+                try {
+                    console.log(`📝 質問 ${questionIndex + 1} 読み込み開始`);
+                    
+                    if (!QUESTION_DATA || !QUESTION_DATA[questionIndex]) {
+                        console.error(`❌ 設問データが見つかりません: Q${questionIndex + 1}`);
+                        this.showError(`設問${questionIndex + 1}のデータが見つかりません。`);
+                        return;
+                    }
+                    
+                    const question = QUESTION_DATA[questionIndex];
+                    console.log(`📄 設問内容:`, question.text?.substring(0, 50) + '...');
+                    
+                    // 質問文表示
+                    const questionTextElement = document.getElementById('question-text');
+                    if (!questionTextElement) {
+                        console.error('❌ question-text要素が見つかりません');
+                        this.showError('画面の構成要素が見つかりません。');
+                        return;
+                    }
+                    
+                    questionTextElement.textContent = question.text;
+                    console.log('✅ 質問文表示完了');
+                    
+                    // 選択肢表示
+                    const container = document.getElementById('question-options');
+                    if (!container) {
+                        console.error('❌ question-options要素が見つかりません');
+                        this.showError('選択肢表示エリアが見つかりません。');
+                        return;
+                    }
+                    
+                    container.innerHTML = '';
+                    
+                    if (!question.options || !Array.isArray(question.options)) {
+                        console.error('❌ 選択肢データが不正です:', question.options);
+                        this.showError('選択肢データが正しく設定されていません。');
+                        return;
+                    }
+                    
+                    console.log(`📋 選択肢数: ${question.options.length}`);
+                    
+                    question.options.forEach((option, optionIndex) => {
+                        const optionElement = document.createElement('div');
+                        optionElement.className = 'option';
+                        optionElement.textContent = option;
+                        optionElement.onclick = () => this.selectOption(questionIndex, optionIndex);
+                        container.appendChild(optionElement);
+                    });
+                    
+                    console.log('✅ 選択肢表示完了');
+                    
+                    this.hideElements(['feedback', 'next-btn', 'analysis-btn']);
+                    
+                    console.log(`✅ Q${questionIndex + 1} 読み込み完了`);
+                    
+                } catch (error) {
+                    console.error(`💥 Q${questionIndex + 1} 読み込みエラー:`, error);
+                    this.showError(`質問${questionIndex + 1}の読み込み中にエラーが発生しました: ${error.message}`);
+                }
             }
 
             selectOption(questionIndex, optionIndex) {
@@ -1037,17 +1170,52 @@
             hideElements(elementIds) {
                 elementIds.forEach(id => {
                     const element = document.getElementById(id);
-                    if (element) element.style.display = 'none';
+                    if (element) {
+                        element.style.display = 'none';
+                    } else {
+                        console.warn(`⚠️ 要素が見つかりません: ${id}`);
+                    }
                 });
             }
         }
 
-        // システム初期化
+        // システム初期化（強化版）
         let diagnosisSystem;
-        document.addEventListener('DOMContentLoaded', () => {
-            console.log('DOM読み込み完了 - システム初期化開始');
-            diagnosisSystem = new DiagnosisSystem();
-        });
+        
+        // DOM読み込み完了を待って初期化
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeSystem);
+        } else {
+            // すでに読み込み完了している場合は即座に実行
+            initializeSystem();
+        }
+        
+        function initializeSystem() {
+            console.log('🌟 DOM読み込み完了 - システム初期化開始');
+            console.log('📊 QUESTION_DATA確認:', typeof QUESTION_DATA, Array.isArray(QUESTION_DATA) ? QUESTION_DATA.length + '問' : '配列ではない');
+            
+            try {
+                diagnosisSystem = new DiagnosisSystem();
+            } catch (error) {
+                console.error('💥 システム初期化失敗:', error);
+                
+                // フォールバック表示
+                const questionText = document.getElementById('question-text');
+                if (questionText) {
+                    questionText.innerHTML = `
+                        <div class="error-message">
+                            <h3>💥 システム初期化エラー</h3>
+                            <p>診断システムの初期化に失敗しました。</p>
+                            <p>エラー詳細: ${error.message}</p>
+                            <button onclick="location.reload()" 
+                                    style="background: #dc3545; color: white; padding: 15px 30px; border: none; border-radius: 10px; margin-top: 15px; cursor: pointer; font-size: 1rem;">
+                                🔄 ページを再読み込み
+                            </button>
+                        </div>
+                    `;
+                }
+            }
+        }
 
         // グローバル関数
         function selectOption(questionIndex, optionIndex) {
@@ -1064,3 +1232,8 @@
         }
 
         console.log('AI活用診断システム読み込み完了 - 設問数:', QUESTION_DATA.length);
+        console.log('🎉 スクリプト全体の読み込み完了！');
+        console.log('⏰ 実行準備完了時刻:', new Date().toISOString());
+    </script>
+</body>
+</html>

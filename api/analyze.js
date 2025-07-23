@@ -91,15 +91,20 @@ async function generateEnhancedAIAnalysis(totalScore, totalImprovement, detailed
 - 高スコア = AI活用による改善余地が大きい（課題が多い状況）
 - 低スコア = 既に効率的で、AI活用余地は少ない（良好な状況）
 
-# 出力必須要件
+# 必須出力要件
 1. 各質問の回答を具体的に分析（「Q3で技術革新への対応を選択されたことから...」）
 2. 業界ベンチマークとの詳細比較
 3. 具体的な改善施策（ツール名・実装期間・効果を明示）
 4. ROI計算（投資回収期間を月単位で詳細に）
 5. 3段階の実装ロードマップ（具体的な行動計画）
 
+# 言語・文体の要件
+- **全て日本語で出力**
+- 敬語を使用し、専門的だが親しみやすいトーン
+- 英語は一切使用しない
+
 # 必須出力形式
-以下のHTML構造で出力してください：
+以下のHTML構造で出力してください。**HTMLタグのみで、余計な文字は一切含めない**：
 
 <div class="ai-analysis">
   <h3>🤖 AI専門分析レポート</h3>
@@ -113,21 +118,21 @@ async function generateEnhancedAIAnalysis(totalScore, totalImprovement, detailed
   
   <h4>🔍 回答分析から見える課題</h4>
   <div class="highlight-box">
-    （各質問の回答を具体的に分析し、課題を特定。400文字以上）
+    （各質問の回答を具体的に分析し、課題を特定。400文字以上。全て日本語で記述）
   </div>
   
   <h4>🎯 重要課題TOP3と解決策</h4>
   <ol>
-    <li><strong>課題名（具体的）</strong><br>現状の問題点と、AI活用による具体的解決策（ツール名含む）</li>
-    <li><strong>課題名（具体的）</strong><br>現状の問題点と、AI活用による具体的解決策（ツール名含む）</li>
-    <li><strong>課題名（具体的）</strong><br>現状の問題点と、AI活用による具体的解決策（ツール名含む）</li>
+    <li><strong>課題名（具体的）</strong><br>現状の問題点と、AI活用による具体的解決策（日本国内で利用可能なツール名含む）</li>
+    <li><strong>課題名（具体的）</strong><br>現状の問題点と、AI活用による具体的解決策（日本国内で利用可能なツール名含む）</li>
+    <li><strong>課題名（具体的）</strong><br>現状の問題点と、AI活用による具体的解決策（日本国内で利用可能なツール名含む）</li>
   </ol>
   
   <h4>💡 段階別実装ロードマップ</h4>
   <ol>
-    <li><strong>Phase 1（1-3ヶ月）</strong><br>具体的なツール名と実装内容、期待効果</li>
-    <li><strong>Phase 2（3-6ヶ月）</strong><br>具体的なツール名と実装内容、期待効果</li>
-    <li><strong>Phase 3（6-12ヶ月）</strong><br>具体的なツール名と実装内容、期待効果</li>
+    <li><strong>Phase 1（1-3ヶ月）</strong><br>具体的な日本国内利用可能ツール名と実装内容、期待効果</li>
+    <li><strong>Phase 2（3-6ヶ月）</strong><br>具体的な日本国内利用可能ツール名と実装内容、期待効果</li>
+    <li><strong>Phase 3（6-12ヶ月）</strong><br>具体的な日本国内利用可能ツール名と実装内容、期待効果</li>
   </ol>
   
   <h4>📈 詳細ROI分析</h4>
@@ -142,14 +147,15 @@ async function generateEnhancedAIAnalysis(totalScore, totalImprovement, detailed
   <div class="cta-box">
     <h4>🚀 推奨される即座のアクション</h4>
     <p>この分析結果を基に、貴社専用のAI活用戦略を60分の無料個別相談で詳細設計いたします。</p>
-    <p><strong>特典：</strong>Phase 1の詳細実装計画書（30ページ）を無料提供</p>
+    <p><strong>特典：</strong>Phase 1の詳細実装計画書（30ページ）を無料提供いたします。</p>
   </div>
 </div>
 
 # 重要注意事項
 - 文字数：1,500-2,000文字
-- 具体性重視：抽象的な表現は避け、具体的なツール名・数値・期間を明示
-- 実行可能性：実際に導入可能な現実的な提案
+- **全て日本語**：英語は一切使用禁止
+- 具体性重視：抽象的な表現は避け、具体的な日本国内利用可能ツール名・数値・期間を明示
+- 実行可能性：日本企業が実際に導入可能な現実的な提案
 - 根拠明示：各提案の根拠を診断回答と結びつけて説明`;
 
   const userPrompt = createDetailedAnalysisPrompt(totalScore, totalImprovement, detailedAnswers);
@@ -195,7 +201,14 @@ async function generateEnhancedAIAnalysis(totalScore, totalImprovement, detailed
     console.log('OpenAI API 成功 - 改善版');
 
     if (data.choices && data.choices[0] && data.choices[0].message) {
-      return data.choices[0].message.content;
+      let content = data.choices[0].message.content;
+      
+      // HTMLタグ以外の余計な文字を除去
+      content = content.replace(/^```html\s*/i, ''); // 先頭のhtmlタグ除去
+      content = content.replace(/\s*```$/i, ''); // 末尾のバッククォート除去
+      content = content.trim(); // 前後の空白除去
+      
+      return content;
     } else {
       console.error('Unexpected response format:', data);
       throw new Error('Unexpected response format from OpenAI');

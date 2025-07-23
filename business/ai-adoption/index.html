@@ -265,8 +265,8 @@
             <p class="subtitle">3分で判明。あなたの会社の『真の実力』</p>
         </div>
         
-        <div class="cumulative-display" id="cumulative-display">
-            <div style="font-size: 0.9rem;">累計スコア</div>
+        <div class="cumulative-display" id="cumulative-display" style="display: none;">
+            <div style="font-size: 0.9rem;">最終スコア</div>
             <div style="font-size: 1.3rem;" id="cumulative-amount">0点 / 年間0万円</div>
         </div>
         
@@ -956,10 +956,15 @@
                 this.totalScore = this.answers.reduce((sum, answer) => sum + (answer?.score || 0), 0);
                 this.totalImprovement = this.answers.reduce((sum, answer) => sum + (answer?.amount || 0), 0);
                 
-                // スコア表示修正：10倍して100点満点に
-                const displayScore = this.totalScore;
-                document.getElementById('cumulative-amount').textContent = `${displayScore}点 / 年間${this.totalImprovement}万円`;
-                document.getElementById('cumulative-display').style.display = 'block';
+                // 累計表示は最後の質問まで非表示
+                if (this.currentQuestion === QUESTION_DATA.length - 1 && this.answers[this.currentQuestion]) {
+                    // 最終質問回答後に表示
+                    const displayScore = this.totalScore;
+                    document.getElementById('cumulative-amount').textContent = `${displayScore}点 / 年間${this.totalImprovement}万円`;
+                    document.getElementById('cumulative-display').style.display = 'block';
+                    
+                    console.log('📊 最終スコア表示:', displayScore + '点 /', this.totalImprovement + '万円');
+                }
             }
             
             showNavigationButton() {

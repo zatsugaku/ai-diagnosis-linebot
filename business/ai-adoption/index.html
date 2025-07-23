@@ -1061,42 +1061,62 @@
 
             async callAIAnalysis() {
                 try {
-                    const detailedAnswers = this.answers.map((answer, index) => {
-                        const question = QUESTION_DATA[index];
-                        return {
-                            questionNumber: index + 1,
-                            questionText: question.text,
-                            selectedOption: question.options[answer.optionIndex],
-                            score: answer.score,
-                            improvementAmount: answer.amount,
-                            category: question.category,
-                            feedback: question.feedbacks[answer.optionIndex]
-                        };
-                    });
+                    console.log('🤖 AI分析API呼び出し開始');
+                    
+                    // 以前の成功版APIと互換性のあるデータ形式に変換
+                    const apiCompatibleAnswers = this.answers.map((answer) => ({
+                        score: answer.score,
+                        amount: answer.amount
+                    }));
+                    
+                    const requestData = {
+                        answers: apiCompatibleAnswers,  // 元の形式に戻す
+                        totalScore: this.totalScore,
+                        totalImprovement: this.totalImprovement
+                    };
+                    
+                    console.log('📤 送信データ（API互換形式）:', requestData);
+                    console.log('🌐 API URL: /api/analyze');
                     
                     const response = await fetch('/api/analyze', {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            totalScore: this.totalScore,
-                            totalImprovement: this.totalImprovement,
-                            detailedAnswers: detailedAnswers
-                        })
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify(requestData)
                     });
 
+                    console.log('📥 API応答受信');
+                    console.log('🔍 Response Status:', response.status);
+                    
                     if (response.ok) {
                         const data = await response.json();
+                        console.log('✅ API応答データ:', data);
+                        
                         if (data.success && data.analysis) {
+                            console.log('🎉 AI分析成功 - 結果表示開始');
                             document.getElementById('ai-analysis-content').innerHTML = data.analysis;
                             document.getElementById('ai-analysis-section').style.display = 'block';
-                            console.log('AI分析成功');
                             return 'success';
+                        } else {
+                            console.warn('⚠️ API応答の形式が不正:', data);
+                            console.log('📋 フォールバック分析に切り替え');
+                            return 'fallback';
                         }
+                    } else {
+                        console.error('❌ API応答エラー:', response.status, response.statusText);
+                        const errorText = await response.text();
+                        console.error('❌ エラー詳細:', errorText);
+                        console.log('📋 フォールバック分析に切り替え');
+                        return 'fallback';
                     }
-                    console.log('AI分析失敗 - フォールバックに切替');
-                    return 'fallback';
+                    
                 } catch (error) {
-                    console.error('AI分析エラー:', error);
+                    console.error('💥 AI分析API呼び出しエラー:', error);
+                    console.error('💥 エラーの種類:', error.name);
+                    console.error('💥 エラーメッセージ:', error.message);
+                    console.log('📋 フォールバック分析に切り替え');
                     return 'fallback';
                 }
             }
@@ -1231,7 +1251,65 @@
             diagnosisSystem?.startAnalysis();
         }
 
-        console.log('AI活用診断システム読み込み完了 - 設問数:', QUESTION_DATA.length);
+        // デバッグ用：API直接テスト関数（API互換形式）
+        window.debugAI = {
+            testAPI: async function() {
+                console.log('🧪 API直接テスト開始（元の成功形式）');
+                try {
+                    const testData = {
+                        answers: [
+                            {"score": 10, "amount": 150},
+                            {"score": 8, "amount": 130},
+                            {"score": 5, "amount": 155}
+                        ],
+                        totalScore: 23,
+                        totalImprovement: 435
+                    };
+                    
+                    console.log('📤 送信テストデータ:', testData);
+                    
+                    const response = await fetch('/api/analyze', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(testData)
+                    });
+                    
+                    console.log('📊 Response Status:', response.status);
+                    console.log('📊 Response OK:', response.ok);
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        console.log('✅ レスポンスデータ:', data);
+                        return data;
+                    } else {
+                        const errorText = await response.text();
+                        console.error('❌ エラーレスポンス:', errorText);
+                        return { error: errorText };
+                    }
+                } catch (error) {
+                    console.error('💥 テストエラー:', error);
+                    return { error: error.message };
+                }
+            },
+            
+            testGET: async function() {
+                console.log('🧪 GET エンドポイントテスト');
+                try {
+                    const response = await fetch('/api/analyze');
+                    console.log('📊 GET Response Status:', response.status);
+                    const data = await response.json();
+                    console.log('📊 GET Response Data:', data);
+                    return data;
+                } catch (error) {
+                    console.error('💥 GET テストエラー:', error);
+                    return { error: error.message };
+                }
+            }
+        };
+
+        console.log('🛠️ デバッグ関数が利用可能です:');
+        console.log('  debugAI.testAPI() - POST APIテスト（元の成功形式）');
+        console.log('  debugAI.testGET() - GET APIテスト');
         console.log('🎉 スクリプト全体の読み込み完了！');
         console.log('⏰ 実行準備完了時刻:', new Date().toISOString());
     </script>

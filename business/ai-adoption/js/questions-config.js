@@ -1,287 +1,239 @@
-// Vercel Serverless Function for ChatGPT API Integration (改善版)
-export default async function handler(req, res) {
-  console.log('API呼び出し受信:', req.method);
+// AI活用診断システム - 設問データ設定ファイル
+// このファイルは非技術者でも安全に編集可能です
 
-  // CORS設定
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.setHeader('Access-Control-Max-Age', '86400');
-
-  if (req.method === 'OPTIONS') {
-    console.log('OPTIONS リクエスト処理');
-    res.status(200).end();
-    return;
-  }
-
-  if (req.method === 'GET') {
-    console.log('GET リクエスト - 動作確認');
-    return res.status(200).json({ 
-      success: true, 
-      message: 'AI診断API エンドポイント正常動作',
-      timestamp: new Date().toISOString(),
-      version: '2.0-improved'
-    });
-  }
-
-  if (req.method !== 'POST') {
-    console.log('不正なメソッド:', req.method);
-    return res.status(405).json({ 
-      success: false, 
-      error: 'Method not allowed' 
-    });
-  }
-
-  try {
-    console.log('POST リクエスト処理開始');
-    
-    // 新しいデータ形式に対応
-    const { totalScore, totalImprovement, detailedAnswers } = req.body;
-    
-    console.log('受信データ:', {
-      totalScore,
-      totalImprovement,
-      detailedAnswersCount: detailedAnswers?.length || 0
-    });
-    
-    if (typeof totalScore !== 'number' || typeof totalImprovement !== 'number' || !detailedAnswers || !Array.isArray(detailedAnswers)) {
-      console.log('無効なリクエストデータ');
-      return res.status(400).json({
-        success: false,
-        error: 'Invalid request data format'
-      });
-    }
-
-    const apiKey = process.env.OPENAI_API_KEY;
-    console.log('APIキー確認:', apiKey ? 'あり' : 'なし');
-    
-    if (!apiKey) {
-      console.error('OPENAI_API_KEY が設定されていません');
-      return res.status(500).json({
-        success: false,
-        error: 'API configuration error - OPENAI_API_KEY not set'
-      });
-    }
-
-    // 改善されたAI分析生成
-    const analysis = await generateEnhancedAIAnalysis(totalScore, totalImprovement, detailedAnswers, apiKey);
-    
-    console.log('AI分析生成成功');
-    return res.status(200).json({
-      success: true,
-      analysis: analysis
-    });
-
-  } catch (error) {
-    console.error('API処理エラー:', error);
-    return res.status(500).json({
-      success: false,
-      error: error.message || 'Internal server error'
-    });
-  }
-}
-
-// 改善されたAI分析生成関数
-async function generateEnhancedAIAnalysis(totalScore, totalImprovement, detailedAnswers, apiKey) {
-  console.log('ChatGPT API呼び出し開始 - 改善版');
-  
-  const systemPrompt = `あなたは1,200社のAI導入を支援した経験豊富な専門コンサルタントです。
-
-# 重要な分析方針
-- 高スコア = AI活用による改善余地が大きい（課題が多い状況）
-- 低スコア = 既に効率的で、AI活用余地は少ない（良好な状況）
-
-# 必須出力要件
-1. 各質問の回答を具体的に分析（「Q3で技術革新への対応を選択されたことから...」）
-2. 業界ベンチマークとの詳細比較
-3. 具体的な改善施策（ツール名・実装期間・効果を明示）
-4. ROI計算（投資回収期間を月単位で詳細に）
-5. 3段階の実装ロードマップ（具体的な行動計画）
-
-# 言語・文体の要件
-- **全て日本語で出力**
-- 敬語を使用し、専門的だが親しみやすいトーン
-- 英語は一切使用しない
-
-# 必須出力形式
-以下のHTML構造で出力してください。**HTMLタグのみで、余計な文字は一切含めない**：
-
-<div class="ai-analysis">
-  <h3>🤖 AI専門分析レポート</h3>
-  
-  <div class="highlight-box">
-    <h4>📊 診断結果サマリー</h4>
-    <p><strong>AI活用余地スコア：${totalScore}点/100点</strong></p>
-    <p><strong>年間改善効果ポテンシャル：${totalImprovement}万円</strong></p>
-    <p>（200文字以上で現状を詳細分析）</p>
-  </div>
-  
-  <h4>🔍 回答分析から見える課題</h4>
-  <div class="highlight-box">
-    （各質問の回答を具体的に分析し、課題を特定。400文字以上。全て日本語で記述）
-  </div>
-  
-  <h4>🎯 重要課題TOP3と解決策</h4>
-  <ol>
-    <li><strong>課題名（具体的）</strong><br>現状の問題点と、AI活用による具体的解決策（日本国内で利用可能なツール名含む）</li>
-    <li><strong>課題名（具体的）</strong><br>現状の問題点と、AI活用による具体的解決策（日本国内で利用可能なツール名含む）</li>
-    <li><strong>課題名（具体的）</strong><br>現状の問題点と、AI活用による具体的解決策（日本国内で利用可能なツール名含む）</li>
-  </ol>
-  
-  <h4>💡 段階別実装ロードマップ</h4>
-  <ol>
-    <li><strong>Phase 1（1-3ヶ月）</strong><br>具体的な日本国内利用可能ツール名と実装内容、期待効果</li>
-    <li><strong>Phase 2（3-6ヶ月）</strong><br>具体的な日本国内利用可能ツール名と実装内容、期待効果</li>
-    <li><strong>Phase 3（6-12ヶ月）</strong><br>具体的な日本国内利用可能ツール名と実装内容、期待効果</li>
-  </ol>
-  
-  <h4>📈 詳細ROI分析</h4>
-  <ul>
-    <li>初期投資額: <strong>○○万円</strong>（ツール導入費・人件費込み）</li>
-    <li>年間削減効果: <strong>${Math.floor(totalImprovement * 0.6)}万円</strong></li>
-    <li>年間売上向上: <strong>${Math.floor(totalImprovement * 0.4)}万円</strong></li>
-    <li>投資回収期間: <strong>○ヶ月</strong></li>
-    <li>3年間累計効果: <strong>○○○万円</strong></li>
-  </ul>
-  
-  <div class="cta-box">
-    <h4>🚀 推奨される即座のアクション</h4>
-    <p>この分析結果を基に、貴社専用のAI活用戦略を60分の無料個別相談で詳細設計いたします。</p>
-    <p><strong>特典：</strong>Phase 1の詳細実装計画書（30ページ）を無料提供いたします。</p>
-  </div>
-</div>
-
-# 重要注意事項
-- 文字数：1,500-2,000文字
-- **全て日本語**：英語は一切使用禁止
-- 具体性重視：抽象的な表現は避け、具体的な日本国内利用可能ツール名・数値・期間を明示
-- 実行可能性：日本企業が実際に導入可能な現実的な提案
-- 根拠明示：各提案の根拠を診断回答と結びつけて説明`;
-
-  const userPrompt = createDetailedAnalysisPrompt(totalScore, totalImprovement, detailedAnswers);
-
-  try {
-    console.log('OpenAI API リクエスト送信');
-    
-    const fetchPromise = fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt }
+const QUESTION_DATA = [
+    {
+        text: "Q1. AI活用が当たり前になる時代について、どう感じますか？",
+        options: [
+            "既に積極的に取り組んでいる",
+            "情報収集をしているが、まだ実行に移せていない", 
+            "重要だと思うが、何から始めればよいかわからない",
+            "他社の動向を様子見している",
+            "特に関心はない"
         ],
-        max_tokens: 2500, // 増量
-        temperature: 0.7,
-        top_p: 0.9,
-        frequency_penalty: 0.3, // 繰り返し防止
-        presence_penalty: 0.3 // 多様性向上
-      }),
-    });
-
-    // 25秒でタイムアウト
-    const timeoutPromise = new Promise((_, reject) => {
-      setTimeout(() => reject(new Error('OpenAI API timeout after 25 seconds')), 25000);
-    });
-
-    const response = await Promise.race([fetchPromise, timeoutPromise]);
-    console.log('OpenAI API レスポンス:', response.status);
-
-    if (!response.ok) {
-      const errorData = await response.text();
-      console.error('OpenAI API Error:', response.status, errorData);
-      throw new Error(`OpenAI API Error: ${response.status} - ${errorData}`);
+        scores: [20, 60, 80, 40, 100],
+        amounts: [15, 45, 70, 55, 120],
+        feedbacks: [
+            { title: "素晴らしい先進性", content: "既に取り組まれている企業は業界の先駆者です。さらなる活用領域の拡大が期待できます。" },
+            { title: "情報収集段階", content: "情報収集は重要な第一歩です。次は具体的なアクションプランの策定が効果的です。" },
+            { title: "高い改善ポテンシャル", content: "危機感を持たれていることは素晴らしいです。適切な導入支援により大きな効果が期待できます。" },
+            { title: "慎重な姿勢", content: "慎重なアプローチも重要ですが、競合に遅れをとるリスクも考慮が必要です。" },
+            { title: "関心の低さ", content: "AI活用は今後のビジネスに不可欠です。まずは基本的な情報収集から始めることをお勧めします。" }
+        ],
+        category: "時代変化への危機感"
+    },
+    {
+        text: "Q2. 競合他社と比べて、自社の競争力についてどう感じますか？",
+        options: [
+            "明確に優位に立っている",
+            "やや優位だが、差は縮まっている",
+            "ほぼ同等レベル",
+            "やや劣っていると感じる", 
+            "大きく後れを取っている"
+        ],
+        scores: [30, 50, 70, 85, 100],
+        amounts: [25, 40, 60, 85, 150],
+        feedbacks: [
+            { title: "競争優位性確保", content: "現在の優位性を維持・拡大するためのAI活用戦略が重要です。" },
+            { title: "優位性の維持課題", content: "差が縮まる前にAI活用で更なる差別化を図ることが効果的です。" },
+            { title: "差別化の機会", content: "同等レベルからの脱却にはAI活用が最も効果的な手段の一つです。" },
+            { title: "巻き返しの好機", content: "AI活用により効率化・差別化を図ることで、競合との差を縮められます。" },
+            { title: "緊急改善必要", content: "AI活用による抜本的な業務改革により、競争力の回復が期待できます。" }
+        ],
+        category: "競争環境認識"
+    },
+    {
+        text: "Q3. 今後5年間で最も心配な経営課題は何ですか？",
+        options: [
+            "人材確保・育成",
+            "売上・収益の維持・向上",
+            "技術革新への対応",
+            "コスト削減・効率化",
+            "事業承継"
+        ],
+        scores: [75, 65, 90, 80, 50],
+        amounts: [60, 50, 80, 70, 40],
+        feedbacks: [
+            { title: "人材課題の解決", content: "AI活用により業務効率化と人材育成の両面でサポートが可能です。" },
+            { title: "収益向上施策", content: "AIを活用したマーケティング自動化や業務効率化により収益改善が期待できます。" },
+            { title: "技術革新対応", content: "AI活用は技術革新への最も効果的な対応策の一つです。早期導入が競争優位をもたらします。" },
+            { title: "効率化の推進", content: "AI・RPA導入により大幅なコスト削減と効率化が実現できます。" },
+            { title: "事業承継支援", content: "AI活用により業務の標準化・見える化を進め、承継しやすい体制構築が可能です。" }
+        ],
+        category: "経営課題認識"
+    },
+    {
+        text: "Q4. 従業員の定着率について、どう感じていますか？",
+        options: [
+            "非常に高く、ほとんど退職者がいない",
+            "概ね良好で、重要な人材は定着している",
+            "普通レベル（業界平均程度）",
+            "やや問題があり、定期的に退職者が出る",
+            "深刻な問題で、優秀な人材の流出が続いている"
+        ],
+        scores: [20, 40, 60, 85, 100],
+        amounts: [18, 35, 55, 85, 120],
+        feedbacks: [
+            { title: "優秀な人材定着", content: "現在の良好な状況を維持するため、AI活用による働きやすい環境づくりが効果的です。" },
+            { title: "重要人材の維持", content: "重要人材の更なる定着のため、AI活用による業務負荷軽減が有効です。" },
+            { title: "平均的な定着率", content: "AI活用により働きやすさと成長機会を提供し、定着率向上が期待できます。" },
+            { title: "定着率の改善必要", content: "AI活用による業務効率化で労働環境改善と定着率向上が実現できます。" },
+            { title: "緊急対策必要", content: "AI活用による抜本的な働き方改革で人材流出を防ぎ、魅力的な職場づくりが急務です。" }
+        ],
+        category: "人材定着"
+    },
+    {
+        text: "Q5. 社員のスキルアップ・学習支援について、どの程度力を入れていますか？",
+        options: [
+            "体系的な教育プログラムを運営している",
+            "定期的な研修・勉強会を実施している",
+            "必要に応じて外部研修に参加させている",
+            "個人の自主性に任せている",
+            "特に取り組みはしていない"
+        ],
+        scores: [30, 50, 70, 85, 100],
+        amounts: [20, 35, 55, 75, 100],
+        feedbacks: [
+            { title: "体系的教育の実践", content: "素晴らしい取り組みです。AI活用により教育効果の測定と個別最適化が可能になります。" },
+            { title: "継続的学習環境", content: "定期的な取り組みは評価できます。AI活用でより効率的で個別化された学習が実現できます。" },
+            { title: "実践的学習支援", content: "必要に応じた支援は実践的です。AI活用でニーズの早期発見と最適な研修提案が可能です。" },
+            { title: "自主性重視", content: "自主性は重要ですが、AI活用により個人のニーズに合わせた学習機会の提案が効果的です。" },
+            { title: "学習支援の強化必要", content: "人材育成はAI時代に不可欠です。AI活用により効率的で効果的な学習環境構築が急務です。" }
+        ],
+        category: "スキルアップ支援"
+    },
+    {
+        text: "Q6. 優秀な人材の採用について、どの程度うまくいっていますか？",
+        options: [
+            "希望する人材をタイムリーに採用できている",
+            "時間はかかるが、最終的には良い人材を採用できている",
+            "普通レベル（採用できる時もあれば、できない時もある）",
+            "なかなか希望する人材が採用できない",
+            "深刻な人材不足で、採用が非常に困難"
+        ],
+        scores: [25, 45, 65, 85, 100],
+        amounts: [22, 38, 58, 85, 130],
+        feedbacks: [
+            { title: "効果的採用活動", content: "優秀な採用活動です。AI活用により採用プロセスの更なる効率化と精度向上が期待できます。" },
+            { title: "質重視の採用", content: "質を重視した採用は素晴らしいです。AI活用で採用期間短縮と候補者発掘力向上が可能です。" },
+            { title: "標準的採用力", content: "AI活用により採用成功率の向上と優秀人材の早期発見が実現できます。" },
+            { title: "採用力強化必要", content: "AI活用により採用マーケティングと候補者マッチング精度の向上が効果的です。" },
+            { title: "採用戦略の抜本改革", content: "AI活用により採用チャネルの拡大と候補者との効果的なコミュニケーションが急務です。" }
+        ],
+        category: "人材獲得力"
+    },
+    {
+        text: "Q7. 特定の人材に依存している業務や知識はどの程度ありますか？",
+        options: [
+            "ほとんどの業務が標準化・文書化されている",
+            "一部の業務で属人化があるが、概ね標準化されている",
+            "重要な業務の半分程度が特定の人材に依存している",
+            "多くの業務が特定の人材に依存している",
+            "ほぼ全ての重要業務が特定の人材に依存している"
+        ],
+        scores: [20, 45, 75, 90, 100],
+        amounts: [18, 40, 65, 95, 140],
+        feedbacks: [
+            { title: "優秀な標準化", content: "標準化された業務は素晴らしいです。AI活用により更なる効率化と改善提案が可能です。" },
+            { title: "良好な業務管理", content: "概ね標準化できています。AI活用で残りの属人化業務の見える化と標準化が効果的です。" },
+            { title: "属人化リスク中", content: "半分の依存は要注意です。AI活用により知識の見える化と業務の標準化が急務です。" },
+            { title: "高い属人化リスク", content: "多くの依存は危険です。AI活用により業務知識の抽出と共有化、マニュアル自動生成が必要です。" },
+            { title: "極めて危険な状況", content: "緊急対応が必要です。AI活用により重要業務の見える化と複数名での対応体制構築が急務です。" }
+        ],
+        category: "人材依存リスク"
+    },
+    {
+        text: "Q8. 経営陣や管理職などキーパーソンの年齢構成はどうですか？",
+        options: [
+            "バランスの取れた年齢構成になっている",
+            "やや高齢化しているが、若手の登用も進んでいる",
+            "高齢化が進んでいるが、後継者は一応いる",
+            "高齢化が深刻で、後継者育成が急務",
+            "高齢化が深刻で、後継者も不在"
+        ],
+        scores: [30, 55, 75, 90, 100],
+        amounts: [25, 45, 70, 100, 150],
+        feedbacks: [
+            { title: "理想的な年齢構成", content: "バランスの取れた組織です。AI活用により各世代の強みを活かした業務最適化が期待できます。" },
+            { title: "世代交代の進行", content: "若手登用は良い傾向です。AI活用により知識移転と次世代リーダー育成が効果的です。" },
+            { title: "後継者育成必要", content: "後継者がいるのは良いことです。AI活用により経営知識の見える化と承継準備が重要です。" },
+            { title: "緊急後継者育成", content: "後継者育成が急務です。AI活用により経営ノウハウの体系化と効率的な育成プログラムが必要です。" },
+            { title: "危機的状況", content: "緊急対応が必要です。AI活用により経営知識の保存と後継者候補の発掘・育成が急務です。" }
+        ],
+        category: "キーパーソン依存"
+    },
+    {
+        text: "Q9. 新しい人材の採用・定着について、最も大きな課題は何ですか？",
+        options: [
+            "特に大きな課題はない",
+            "採用コストが高い",
+            "良い人材が見つからない",
+            "採用しても早期退職してしまう",
+            "採用・定着ともに深刻な課題がある"
+        ],
+        scores: [20, 50, 75, 85, 100],
+        amounts: [15, 35, 60, 85, 120],
+        feedbacks: [
+            { title: "良好な採用環境", content: "順調な採用・定着は素晴らしいです。AI活用により更なる採用力向上と職場環境改善が期待できます。" },
+            { title: "コスト効率化", content: "採用コスト削減は重要課題です。AI活用により採用プロセス効率化とコスト削減が実現できます。" },
+            { title: "人材発掘力強化", content: "良い人材発見が課題ですね。AI活用により潜在候補者の発掘と適性マッチング向上が効果的です。" },
+            { title: "定着率改善", content: "早期退職は深刻な損失です。AI活用により働きやすさ向上と個人に合った業務配置が重要です。" },
+            { title: "採用戦略の全面見直し", content: "全面的改革が必要です。AI活用により採用から定着まで一貫したシステム構築が急務です。" }
+        ],
+        category: "採用・定着"
+    },
+    {
+        text: "Q10. 新しい取り組みや変化に対する組織の姿勢はどうですか？",
+        options: [
+            "積極的に新しいことに挑戦する文化がある",
+            "慎重だが、必要と判断すれば取り組む",
+            "様子を見てから動く傾向がある",
+            "変化を嫌い、現状維持を好む",
+            "変化に対して非常に消極的・抵抗的"
+        ],
+        scores: [25, 50, 70, 90, 100],
+        amounts: [20, 40, 65, 95, 140],
+        feedbacks: [
+            { title: "革新的企業文化", content: "挑戦的な文化は大きな強みです。AI活用により更なるイノベーション創出が期待できます。" },
+            { title: "バランスの良い判断", content: "慎重な判断力は重要です。AI活用により変化の効果予測と最適なタイミング判断が可能になります。" },
+            { title: "慎重な変化対応", content: "様子見は安全ですが、競争力の観点から注意が必要です。AI活用で変化への適応力向上が効果的です。" },
+            { title: "変化抵抗の改善", content: "現状維持志向は競争上不利です。AI活用により変化の必要性の見える化と段階的改革が重要です。" },
+            { title: "組織変革が急務", content: "変化抵抗は危険な状況です。AI活用により変化の効果を実証し、組織の意識改革が急務です。" }
+        ],
+        category: "変革姿勢"
     }
+];
 
-    const data = await response.json();
-    console.log('OpenAI API 成功 - 改善版');
+// 結果判定データ
+const SCORE_RANGES = {
+    excellent: { min: 80, max: 100, level: "AI活用余地：非常に大きい", color: "#e74c3c" },
+    good: { min: 60, max: 79, level: "AI活用余地：大きい", color: "#f39c12" },
+    average: { min: 40, max: 59, level: "AI活用余地：中程度", color: "#f1c40f" },
+    below: { min: 20, max: 39, level: "AI活用余地：少ない", color: "#27ae60" },
+    low: { min: 0, max: 19, level: "AI活用余地：非常に少ない", color: "#2ecc71" }
+};
 
-    if (data.choices && data.choices[0] && data.choices[0].message) {
-      let content = data.choices[0].message.content;
-      
-      // HTMLタグ以外の余計な文字を除去
-      content = content.replace(/^```html\s*/i, ''); // 先頭のhtmlタグ除去
-      content = content.replace(/\s*```$/i, ''); // 末尾のバッククォート除去
-      content = content.trim(); // 前後の空白除去
-      
-      return content;
-    } else {
-      console.error('Unexpected response format:', data);
-      throw new Error('Unexpected response format from OpenAI');
+const RESULT_MESSAGES = {
+    excellent: {
+        message: "AI活用により劇的な改善が期待できる状況です。適切な導入戦略により大きな投資対効果が見込めます。",
+        recommendation: "積極的なAI導入戦略の策定と段階的実装"
+    },
+    good: {
+        message: "AI活用による大幅な改善が可能です。戦略的な導入により競争優位性を構築できます。",
+        recommendation: "重点領域を絞ったAI導入プロジェクトの開始"
+    },
+    average: {
+        message: "AI活用による一定の改善効果が期待できます。費用対効果を慎重に検討しながら進めることが重要です。",
+        recommendation: "小規模なPoCから始める段階的なアプローチ"
+    },
+    below: {
+        message: "現在の業務効率は比較的良好です。AI活用は補完的な位置づけで検討することをお勧めします。",
+        recommendation: "特定業務に限定したAIツールの試行導入"
+    },
+    low: {
+        message: "現在の業務は高度に効率化されています。AI活用は将来への備えとして情報収集レベルで十分かもしれません。",
+        recommendation: "AI技術動向の継続的な情報収集"
     }
+};
 
-  } catch (error) {
-    console.error('ChatGPT API呼び出しエラー:', error);
-    throw error;
-  }
-}
-
-// 詳細分析プロンプト作成
-function createDetailedAnalysisPrompt(totalScore, totalImprovement, detailedAnswers) {
-  return `
-【AI活用診断 詳細分析依頼】
-
-## 企業の基本状況
-- **総合スコア**: ${totalScore}/100点 (${getScoreLevelDescription(totalScore)})
-- **年間改善ポテンシャル**: ${totalImprovement}万円
-- **診断完了日**: ${new Date().toLocaleDateString('ja-JP')}
-
-## 各質問の詳細回答分析
-${formatDetailedAnswersForAnalysis(detailedAnswers)}
-
-## 分析観点
-1. **最も改善効果が高い領域の特定**（スコアと改善金額の関係から）
-2. **業界ベンチマークとの比較**（同業他社との差異分析）
-3. **実装優先順位の決定**（費用対効果・実現可能性・緊急性）
-4. **具体的ROI試算**（投資額・回収期間・長期効果）
-
-## 出力要求
-上記データを基に、この企業が「なぜこのスコアになったのか」の根拠を示しながら、
-実行可能で具体的なAI活用戦略を提案してください。
-
-特に重視する点：
-- 診断回答と提案の論理的つながり
-- 具体的なツール名・ベンダー名
-- 月単位の実装スケジュール
-- 詳細なコスト・効果試算
-`;
-}
-
-// 詳細回答フォーマット
-function formatDetailedAnswersForAnalysis(detailedAnswers) {
-  if (!detailedAnswers || !Array.isArray(detailedAnswers)) {
-    return "詳細回答データが利用できません";
-  }
-  
-  return detailedAnswers.map((answer, index) => {
-    return `
-**${answer.questionText || `Q${index + 1}`}**
-- 選択回答: 「${answer.selectedOption || '不明'}」
-- スコア: ${answer.score}点 (改善効果: ${answer.improvementAmount}万円)
-- カテゴリ: ${answer.category || '未分類'}
-- 課題レベル: ${getIssueLevel(answer.score)}
-`;
-  }).join('\n');
-}
-
-// スコアレベル詳細説明
-function getScoreLevelDescription(score) {
-  if (score >= 80) return 'AI活用による大幅改善が期待できる状況';
-  if (score >= 60) return 'AI活用による一定の改善効果が見込める';
-  if (score >= 40) return 'AI活用の効果は限定的、慎重な検討が必要';
-  if (score >= 20) return '現状は比較的効率的、補完的なAI活用を検討';
-  return '現状は高度に効率化済み、AI活用の必要性は低い';
-}
-
-// 問題レベル判定
-function getIssueLevel(score) {
-  if (score >= 80) return '緊急対応必要';
-  if (score >= 60) return '早期改善推奨';
-  if (score >= 40) return '中期的改善検討';
-  if (score >= 20) return '軽微な改善余地';
-  return '現状維持で良好';
-}
+console.log('設問データ読み込み完了:', QUESTION_DATA.length + '問');

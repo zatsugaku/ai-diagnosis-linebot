@@ -266,7 +266,7 @@
         </div>
         
         <div class="cumulative-display" id="cumulative-display" style="display: none;">
-            <div style="font-size: 0.9rem;">最終スコア</div>
+            <div style="font-size: 0.9rem;">診断結果</div>
             <div style="font-size: 1.3rem;" id="cumulative-amount">0点 / 年間0万円</div>
         </div>
         
@@ -956,15 +956,8 @@
                 this.totalScore = this.answers.reduce((sum, answer) => sum + (answer?.score || 0), 0);
                 this.totalImprovement = this.answers.reduce((sum, answer) => sum + (answer?.amount || 0), 0);
                 
-                // 累計表示は最後の質問まで非表示
-                if (this.currentQuestion === QUESTION_DATA.length - 1 && this.answers[this.currentQuestion]) {
-                    // 最終質問回答後に表示
-                    const displayScore = this.totalScore;
-                    document.getElementById('cumulative-amount').textContent = `${displayScore}点 / 年間${this.totalImprovement}万円`;
-                    document.getElementById('cumulative-display').style.display = 'block';
-                    
-                    console.log('📊 最終スコア表示:', displayScore + '点 /', this.totalImprovement + '万円');
-                }
+                // スコア表示はAI分析時まで非表示
+                console.log('📊 内部スコア更新:', this.totalScore + '点 /', this.totalImprovement + '万円');
             }
             
             showNavigationButton() {
@@ -1170,6 +1163,13 @@
             
             showResults() {
                 document.getElementById('analysis-section').style.display = 'none';
+                
+                // AI分析と同時にスコア表示
+                const displayScore = this.totalScore;
+                document.getElementById('cumulative-amount').textContent = `${displayScore}点 / 年間${this.totalImprovement}万円`;
+                document.getElementById('cumulative-display').style.display = 'block';
+                console.log('🎉 スコア表示開始:', displayScore + '点 /', this.totalImprovement + '万円');
+                
                 document.getElementById('results-section').style.display = 'block';
                 
                 const scoreLevel = this.determineScoreLevel(this.totalScore);

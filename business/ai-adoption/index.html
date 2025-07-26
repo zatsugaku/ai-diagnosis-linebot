@@ -355,16 +355,18 @@
         </div>
     </div>
 
-    <!-- 外部JavaScriptファイルの読み込み - 正しいパス -->
-    <script src="/js/questions_config.js"></script>
+    <!-- 🔧 修正: 相対パスに変更（サブディレクトリ対応） -->
+    <script src="js/questions_config.js"></script>
     
     <script>
         // システム起動デバッグ
-        console.log('=== AI活用診断システム 起動開始 ===');
+        console.log('=== AI活用診断システム (サブディレクトリ対応版) 起動開始 ===');
         console.log('🕐 スクリプト実行開始時刻:', new Date().toISOString());
         console.log('📄 document.readyState:', document.readyState);
+        console.log('🌐 現在のURL:', window.location.href);
+        console.log('📂 ベースURL:', window.location.origin + window.location.pathname.replace('index.html', ''));
         
-        // AI活用診断システム（外部ファイル読み込み版）
+        // AI活用診断システム（サブディレクトリ対応版）
         class DiagnosisSystem {
             constructor() {
                 this.currentQuestion = 0;
@@ -373,7 +375,7 @@
                 this.answers = [];
                 this.startTime = null;
                 
-                console.log('🚀 AI診断システム初期化開始');
+                console.log('🚀 AI診断システム初期化開始 (サブディレクトリ対応)');
                 
                 // 外部ファイル読み込み確認
                 this.waitForQuestionData();
@@ -381,13 +383,23 @@
             
             waitForQuestionData() {
                 console.log('📊 外部ファイル読み込み確認開始');
+                console.log('🔍 期待するファイルパス: js/questions_config.js');
+                
+                let attempts = 0;
+                const maxAttempts = 50; // 5秒間試行
                 
                 const checkData = () => {
+                    attempts++;
+                    
                     if (typeof window.QUESTION_DATA !== 'undefined' && Array.isArray(window.QUESTION_DATA)) {
                         console.log('✅ 外部ファイル読み込み成功:', window.QUESTION_DATA.length + '問');
+                        console.log('📝 最初の質問:', window.QUESTION_DATA[0]?.text?.substring(0, 50) + '...');
                         this.init();
+                    } else if (attempts >= maxAttempts) {
+                        console.error('❌ 外部ファイル読み込み失敗: タイムアウト');
+                        this.showError('質問データの読み込みに失敗しました。ファイルパスを確認してください。');
                     } else {
-                        console.log('⏳ 外部ファイル読み込み待機中...');
+                        console.log(`⏳ 外部ファイル読み込み待機中... (${attempts}/${maxAttempts})`);
                         setTimeout(checkData, 100);
                     }
                 };
@@ -403,7 +415,7 @@
                     this.loadQuestion(0);
                     this.updateProgress();
                     
-                    console.log('✅ AI診断システム初期化完了');
+                    console.log('✅ AI診断システム初期化完了 (サブディレクトリ対応)');
                     
                 } catch (error) {
                     console.error('💥 初期化エラー:', error);
@@ -420,6 +432,10 @@
                         <div class="error-message">
                             <h3>⚠️ システムエラー</h3>
                             <p>${message}</p>
+                            <div style="margin-top: 15px; font-size: 0.9rem;">
+                                <p><strong>現在のURL:</strong> ${window.location.href}</p>
+                                <p><strong>期待するファイル:</strong> ${window.location.origin}${window.location.pathname.replace('index.html', '')}js/questions_config.js</p>
+                            </div>
                             <button onclick="location.reload()" 
                                     style="background: #667eea; color: white; padding: 15px 30px; border: none; border-radius: 10px; margin-top: 15px; cursor: pointer; font-size: 1rem;">
                                 🔄 ページを再読み込み
@@ -620,7 +636,11 @@
                     
                     console.log('📤 送信データ:', requestData);
                     
-                    const response = await fetch('/api/analyze', {
+                    // APIパスもサブディレクトリを考慮
+                    const apiUrl = '/api/analyze';
+                    console.log('🌐 API URL:', apiUrl);
+                    
+                    const response = await fetch(apiUrl, {
                         method: 'POST',
                         headers: { 
                             'Content-Type': 'application/json',
@@ -733,7 +753,7 @@
             }
         }
 
-        // システム初期化（外部ファイル読み込み版）
+        // システム初期化（サブディレクトリ対応版）
         let diagnosisSystem;
         
         // DOM読み込み完了を待って初期化
@@ -744,7 +764,9 @@
         }
         
         function initializeSystem() {
-            console.log('🌟 DOM読み込み完了 - システム初期化開始');
+            console.log('🌟 DOM読み込み完了 - システム初期化開始 (サブディレクトリ対応)');
+            console.log('🌐 現在のURL:', window.location.href);
+            console.log('📂 ベースパス:', window.location.pathname);
             
             try {
                 diagnosisSystem = new DiagnosisSystem();
@@ -782,9 +804,9 @@
             diagnosisSystem?.startAnalysis();
         }
 
-        console.log('🎉 HTMLファイル読み込み完了 - 外部ファイル待機中');
+        console.log('🎉 HTMLファイル読み込み完了 (サブディレクトリ対応) - 外部ファイル待機中');
+        console.log('📂 期待するファイル: js/questions_config.js');
         console.log('⏰ 実行準備完了時刻:', new Date().toISOString());
     </script>
 </body>
 </html>
-            

@@ -1,4 +1,4 @@
-// Vercel Serverless Function for ChatGPT API Integration (改善版)
+// Vercel Serverless Function for ChatGPT API Integration (フロントエンド互換版)
 export default async function handler(req, res) {
   console.log('API呼び出し受信:', req.method);
 
@@ -20,7 +20,7 @@ export default async function handler(req, res) {
       success: true, 
       message: 'AI診断API エンドポイント正常動作',
       timestamp: new Date().toISOString(),
-      version: '2.0-improved'
+      version: '3.0-frontend-compatible'
     });
   }
 
@@ -35,17 +35,18 @@ export default async function handler(req, res) {
   try {
     console.log('POST リクエスト処理開始');
     
-    // 新しいデータ形式に対応
-    const { totalScore, totalImprovement, detailedAnswers } = req.body;
+    // フロントエンドの送信形式に対応
+    const { answers, totalScore, totalImprovement } = req.body;
     
     console.log('受信データ:', {
       totalScore,
       totalImprovement,
-      detailedAnswersCount: detailedAnswers?.length || 0
+      answersCount: answers?.length || 0
     });
     
-    if (typeof totalScore !== 'number' || typeof totalImprovement !== 'number' || !detailedAnswers || !Array.isArray(detailedAnswers)) {
-      console.log('無効なリクエストデータ');
+    // データ検証（フロントエンド形式）
+    if (typeof totalScore !== 'number' || typeof totalImprovement !== 'number' || !answers || !Array.isArray(answers)) {
+      console.log('無効なリクエストデータ形式');
       return res.status(400).json({
         success: false,
         error: 'Invalid request data format'
@@ -63,8 +64,8 @@ export default async function handler(req, res) {
       });
     }
 
-    // 改善されたAI分析生成
-    const analysis = await generateEnhancedAIAnalysis(totalScore, totalImprovement, detailedAnswers, apiKey);
+    // AI分析生成（フロントエンド互換版）
+    const analysis = await generateAIAnalysis(totalScore, totalImprovement, answers, apiKey);
     
     console.log('AI分析生成成功');
     return res.status(200).json({
@@ -81,9 +82,9 @@ export default async function handler(req, res) {
   }
 }
 
-// 改善されたAI分析生成関数
-async function generateEnhancedAIAnalysis(totalScore, totalImprovement, detailedAnswers, apiKey) {
-  console.log('ChatGPT API呼び出し開始 - 改善版');
+// AI分析生成関数（フロントエンド互換版）
+async function generateAIAnalysis(totalScore, totalImprovement, answers, apiKey) {
+  console.log('ChatGPT API呼び出し開始');
   
   const systemPrompt = `あなたは1,200社のAI導入を支援した経験豊富な専門コンサルタントです。
 
@@ -92,11 +93,10 @@ async function generateEnhancedAIAnalysis(totalScore, totalImprovement, detailed
 - 低スコア = 既に効率的で、AI活用余地は少ない（良好な状況）
 
 # 出力必須要件
-1. 各質問の回答を具体的に分析（「Q3で技術革新への対応を選択されたことから...」）
-2. 業界ベンチマークとの詳細比較
-3. 具体的な改善施策（ツール名・実装期間・効果を明示）
-4. ROI計算（投資回収期間を月単位で詳細に）
-5. 3段階の実装ロードマップ（具体的な行動計画）
+1. 現状の課題を具体的に分析
+2. AI活用による改善策を具体的に提案
+3. 投資対効果を具体的な数値で算出
+4. 実装ロードマップを段階的に提示
 
 # 必須出力形式
 以下のHTML構造で出力してください：
@@ -108,56 +108,60 @@ async function generateEnhancedAIAnalysis(totalScore, totalImprovement, detailed
     <h4>📊 診断結果サマリー</h4>
     <p><strong>AI活用余地スコア：${totalScore}点/100点</strong></p>
     <p><strong>年間改善効果ポテンシャル：${totalImprovement}万円</strong></p>
-    <p>（200文字以上で現状を詳細分析）</p>
-  </div>
-  
-  <h4>🔍 回答分析から見える課題</h4>
-  <div class="highlight-box">
-    （各質問の回答を具体的に分析し、課題を特定。400文字以上）
+    <p>貴社の診断結果から、${getScoreLevelDescription(totalScore)}ことが判明いたしました。</p>
   </div>
   
   <h4>🎯 重要課題TOP3と解決策</h4>
   <ol>
-    <li><strong>課題名（具体的）</strong><br>現状の問題点と、AI活用による具体的解決策（ツール名含む）</li>
-    <li><strong>課題名（具体的）</strong><br>現状の問題点と、AI活用による具体的解決策（ツール名含む）</li>
-    <li><strong>課題名（具体的）</strong><br>現状の問題点と、AI活用による具体的解決策（ツール名含む）</li>
+    <li><strong>業務効率化</strong><br>ChatGPT/Claude活用による文書作成効率化で年間${Math.floor(totalImprovement * 0.3)}万円の効果</li>
+    <li><strong>データ活用促進</strong><br>BIツール導入による意思決定高速化で年間${Math.floor(totalImprovement * 0.4)}万円の効果</li>
+    <li><strong>人材育成強化</strong><br>AI学習システム導入で教育コスト削減、年間${Math.floor(totalImprovement * 0.3)}万円の効果</li>
   </ol>
   
   <h4>💡 段階別実装ロードマップ</h4>
   <ol>
-    <li><strong>Phase 1（1-3ヶ月）</strong><br>具体的なツール名と実装内容、期待効果</li>
-    <li><strong>Phase 2（3-6ヶ月）</strong><br>具体的なツール名と実装内容、期待効果</li>
-    <li><strong>Phase 3（6-12ヶ月）</strong><br>具体的なツール名と実装内容、期待効果</li>
+    <li><strong>Phase 1（1-3ヶ月）</strong><br>ChatGPT Business導入、RPA基本設定（投資額50万円、効果月額${Math.floor(totalImprovement/12 * 0.3)}万円）</li>
+    <li><strong>Phase 2（3-6ヶ月）</strong><br>データ分析ダッシュボード構築（投資額150万円、効果月額${Math.floor(totalImprovement/12 * 0.5)}万円）</li>
+    <li><strong>Phase 3（6-12ヶ月）</strong><br>AI予測分析システム導入（投資額300万円、効果月額${Math.floor(totalImprovement/12)}万円）</li>
   </ol>
   
   <h4>📈 詳細ROI分析</h4>
   <ul>
-    <li>初期投資額: <strong>○○万円</strong>（ツール導入費・人件費込み）</li>
+    <li>初期投資額: <strong>500万円</strong>（ツール導入費・人件費込み）</li>
     <li>年間削減効果: <strong>${Math.floor(totalImprovement * 0.6)}万円</strong></li>
     <li>年間売上向上: <strong>${Math.floor(totalImprovement * 0.4)}万円</strong></li>
-    <li>投資回収期間: <strong>○ヶ月</strong></li>
-    <li>3年間累計効果: <strong>○○○万円</strong></li>
+    <li>投資回収期間: <strong>${Math.ceil(500 / (totalImprovement / 12))}ヶ月</strong></li>
+    <li>3年間累計効果: <strong>${totalImprovement * 3 - 500}万円</strong></li>
   </ul>
   
   <div class="cta-box">
     <h4>🚀 推奨される即座のアクション</h4>
     <p>この分析結果を基に、貴社専用のAI活用戦略を60分の無料個別相談で詳細設計いたします。</p>
     <p><strong>特典：</strong>Phase 1の詳細実装計画書（30ページ）を無料提供</p>
+    <a href="mailto:ai-consulting@business.com?subject=AI活用診断の相談&body=診断スコア: ${totalScore}点%0A改善効果: ${totalImprovement}万円" 
+       style="background: #28a745; color: white; padding: 15px 30px; border-radius: 8px; text-decoration: none; display: inline-block; margin: 15px 0;">
+       📧 無料個別相談を申し込む
+    </a>
   </div>
-</div>
+</div>`;
 
-# 重要注意事項
-- 文字数：1,500-2,000文字
-- 具体性重視：抽象的な表現は避け、具体的なツール名・数値・期間を明示
-- 実行可能性：実際に導入可能な現実的な提案
-- 根拠明示：各提案の根拠を診断回答と結びつけて説明`;
+  const userPrompt = `
+【AI活用診断分析依頼】
 
-  const userPrompt = createDetailedAnalysisPrompt(totalScore, totalImprovement, detailedAnswers);
+企業診断結果:
+- 総合スコア: ${totalScore}/100点
+- 年間改善ポテンシャル: ${totalImprovement}万円
+- 回答データ: ${answers.length}項目の詳細分析
+
+${formatAnswersForAnalysis(answers)}
+
+この企業の現状を分析し、具体的で実行可能なAI活用戦略を提案してください。
+`;
 
   try {
     console.log('OpenAI API リクエスト送信');
     
-    const fetchPromise = fetch('https://api.openai.com/v1/chat/completions', {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${apiKey}`,
@@ -169,35 +173,25 @@ async function generateEnhancedAIAnalysis(totalScore, totalImprovement, detailed
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt }
         ],
-        max_tokens: 2500, // 増量
-        temperature: 0.7,
-        top_p: 0.9,
-        frequency_penalty: 0.3, // 繰り返し防止
-        presence_penalty: 0.3 // 多様性向上
+        max_tokens: 2000,
+        temperature: 0.7
       }),
     });
 
-    // 25秒でタイムアウト
-    const timeoutPromise = new Promise((_, reject) => {
-      setTimeout(() => reject(new Error('OpenAI API timeout after 25 seconds')), 25000);
-    });
-
-    const response = await Promise.race([fetchPromise, timeoutPromise]);
     console.log('OpenAI API レスポンス:', response.status);
 
     if (!response.ok) {
       const errorData = await response.text();
       console.error('OpenAI API Error:', response.status, errorData);
-      throw new Error(`OpenAI API Error: ${response.status} - ${errorData}`);
+      throw new Error(`OpenAI API Error: ${response.status}`);
     }
 
     const data = await response.json();
-    console.log('OpenAI API 成功 - 改善版');
+    console.log('OpenAI API 成功');
 
     if (data.choices && data.choices[0] && data.choices[0].message) {
       return data.choices[0].message.content;
     } else {
-      console.error('Unexpected response format:', data);
       throw new Error('Unexpected response format from OpenAI');
     }
 
@@ -207,68 +201,18 @@ async function generateEnhancedAIAnalysis(totalScore, totalImprovement, detailed
   }
 }
 
-// 詳細分析プロンプト作成
-function createDetailedAnalysisPrompt(totalScore, totalImprovement, detailedAnswers) {
-  return `
-【AI活用診断 詳細分析依頼】
-
-## 企業の基本状況
-- **総合スコア**: ${totalScore}/100点 (${getScoreLevelDescription(totalScore)})
-- **年間改善ポテンシャル**: ${totalImprovement}万円
-- **診断完了日**: ${new Date().toLocaleDateString('ja-JP')}
-
-## 各質問の詳細回答分析
-${formatDetailedAnswersForAnalysis(detailedAnswers)}
-
-## 分析観点
-1. **最も改善効果が高い領域の特定**（スコアと改善金額の関係から）
-2. **業界ベンチマークとの比較**（同業他社との差異分析）
-3. **実装優先順位の決定**（費用対効果・実現可能性・緊急性）
-4. **具体的ROI試算**（投資額・回収期間・長期効果）
-
-## 出力要求
-上記データを基に、この企業が「なぜこのスコアになったのか」の根拠を示しながら、
-実行可能で具体的なAI活用戦略を提案してください。
-
-特に重視する点：
-- 診断回答と提案の論理的つながり
-- 具体的なツール名・ベンダー名
-- 月単位の実装スケジュール
-- 詳細なコスト・効果試算
-`;
-}
-
-// 詳細回答フォーマット
-function formatDetailedAnswersForAnalysis(detailedAnswers) {
-  if (!detailedAnswers || !Array.isArray(detailedAnswers)) {
-    return "詳細回答データが利用できません";
-  }
-  
-  return detailedAnswers.map((answer, index) => {
-    return `
-**${answer.questionText || `Q${index + 1}`}**
-- 選択回答: 「${answer.selectedOption || '不明'}」
-- スコア: ${answer.score}点 (改善効果: ${answer.improvementAmount}万円)
-- カテゴリ: ${answer.category || '未分類'}
-- 課題レベル: ${getIssueLevel(answer.score)}
-`;
+// 回答データの分析用フォーマット
+function formatAnswersForAnalysis(answers) {
+  return answers.map((answer, index) => {
+    return `Q${index + 1}: スコア${answer.score}点, 改善効果${answer.amount}万円`;
   }).join('\n');
 }
 
-// スコアレベル詳細説明
+// スコアレベル説明
 function getScoreLevelDescription(score) {
-  if (score >= 80) return 'AI活用による大幅改善が期待できる状況';
-  if (score >= 60) return 'AI活用による一定の改善効果が見込める';
-  if (score >= 40) return 'AI活用の効果は限定的、慎重な検討が必要';
-  if (score >= 20) return '現状は比較的効率的、補完的なAI活用を検討';
-  return '現状は高度に効率化済み、AI活用の必要性は低い';
-}
-
-// 問題レベル判定
-function getIssueLevel(score) {
-  if (score >= 80) return '緊急対応必要';
-  if (score >= 60) return '早期改善推奨';
-  if (score >= 40) return '中期的改善検討';
-  if (score >= 20) return '軽微な改善余地';
-  return '現状維持で良好';
+  if (score >= 80) return 'AI活用による大幅な改善が期待できる状況';
+  if (score >= 60) return 'AI活用による一定の改善効果が見込める状況';
+  if (score >= 40) return 'AI活用の効果は限定的ですが、慎重な検討により成果が期待できる状況';
+  if (score >= 20) return '現状は比較的効率的ですが、補完的なAI活用により更なる向上が可能な状況';
+  return '現状は高度に効率化されており、AI活用の必要性は低い状況';
 }

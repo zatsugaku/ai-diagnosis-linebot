@@ -362,9 +362,11 @@ window.SYSTEM_CONFIG = {
   subtitle: "3分で判明。あなたの会社の『AI活用ポテンシャル』",
   maxScore: 100,
   completionMessage: "診断完了！AI活用による具体的な改善効果をご確認ください。",
-  apiEndpoint: "/api/analyze"
+  apiEndpoint: "/api/analyze",
+  hideAmountDisplay: true  // 金額表示を完全に無効化
 };
 
-console.log('✅ AI活用診断システム - 質問データ読み込み完了（金額表示削除版）');
+console.log('✅ AI活用診断システム - 質問データ読み込み完了（金額表示無効化版）');
 console.log(`📊 設定済み質問数: ${window.QUESTION_DATA.length}問`);
 console.log(`🎯 診断タイトル: ${window.SYSTEM_CONFIG.title}`);
+console.log(`💰 金額表示: 無効化（AIレポートでのみ表示）`);

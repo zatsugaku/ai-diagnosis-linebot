@@ -3,810 +3,1267 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>💸 隠れた利益流出診断 - AI活用で年間数百万円の改善効果を発見</title>
+    <title>🤖 AI活用度診断 - 3分で判明するあなたの会社の真の実力</title>
+    <meta name="description" content="1,200社の実績データを基に、貴社のAI活用ポテンシャルを客観的に数値化。専門AI分析による詳細レポートを無料提供。">
+    <meta name="keywords" content="AI活用診断,AI導入,生成AI,ChatGPT,Claude,業務効率化,DX推進">
+    
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            color: #333;
-        }
-        
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
             padding: 20px;
         }
-        
-        .header {
-            text-align: center;
-            color: white;
-            margin-bottom: 30px;
-        }
-        
-        .title {
-            font-size: 2.5rem;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        
-        .subtitle {
-            font-size: 1.2rem;
-            opacity: 0.9;
-        }
-        
-        .card {
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
             background: white;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 50px 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(255,255,255,0.1) 10px,
+                rgba(255,255,255,0.1) 20px
+            );
+            animation: backgroundMove 20s linear infinite;
+        }
+
+        @keyframes backgroundMove {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .header h1 {
+            font-size: 2.8em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-weight: 700;
+        }
+
+        .header .subtitle {
+            font-size: 1.4em;
+            opacity: 0.95;
             margin-bottom: 20px;
+            font-weight: 500;
         }
-        
-        .question-text {
-            font-size: 1.3rem;
+
+        .header .description {
+            font-size: 1.1em;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        .main-content {
+            padding: 50px 40px;
+        }
+
+        .progress-container {
+            margin-bottom: 40px;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .progress-text {
+            font-size: 1.1em;
             font-weight: 600;
-            margin-bottom: 25px;
-            color: #2c3e50;
+            color: #667eea;
         }
-        
-        .options {
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: linear-gradient(90deg, #e9ecef 0%, #f8f9fa 100%);
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.8s ease;
+            border-radius: 6px;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: progressShine 2s infinite;
+        }
+
+        @keyframes progressShine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .cumulative-display {
+            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+            color: white;
+            padding: 25px 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 40px;
+            display: none;
+            box-shadow: 0 10px 30px rgba(0, 184, 148, 0.3);
+            border: 3px solid rgba(255,255,255,0.2);
+            animation: slideInFromTop 0.6s ease-out;
+        }
+
+        @keyframes slideInFromTop {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .cumulative-display h2 {
+            font-size: 1.4em;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .cumulative-amount {
+            font-size: 3.2em;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin: 15px 0;
+        }
+
+        .ai-badge {
+            background: rgba(255,255,255,0.25);
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 0.95em;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .question-card {
+            background: linear-gradient(135deg, #f8faff 0%, #e8f1ff 100%);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.15);
+            border: 2px solid rgba(102, 126, 234, 0.1);
+            position: relative;
+            overflow: hidden;
+            animation: slideInFromBottom 0.6s ease-out;
+        }
+
+        @keyframes slideInFromBottom {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .question-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .question-category {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 0.9em;
+            display: inline-block;
+            margin-bottom: 25px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .question-text {
+            font-size: 1.4em;
+            font-weight: 600;
+            margin-bottom: 30px;
+            color: #2d3436;
+            line-height: 1.5;
+        }
+
+        .options-container {
             display: grid;
             gap: 15px;
             margin-bottom: 20px;
         }
-        
+
         .option {
-            padding: 20px;
-            border: 2px solid #e9ecef;
-            border-radius: 10px;
+            background: white;
+            border: 2px solid #e0e6ff;
+            border-radius: 15px;
+            padding: 22px 28px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            background: #f8f9fa;
+            transition: all 0.4s ease;
+            font-size: 1.1em;
+            position: relative;
+            overflow: hidden;
+            font-weight: 500;
         }
-        
+
+        .option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
         .option:hover {
             border-color: #667eea;
-            background: #e8f1ff;
-            transform: translateY(-2px);
+            background: #f0f2ff;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
         }
-        
+
+        .option:hover::before {
+            left: 100%;
+        }
+
         .option.selected {
             border-color: #667eea;
-            background: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
         }
-        
-        .feedback-area {
-            margin-top: 20px;
-            padding: 20px;
-            background: #e8f5e8;
-            border-radius: 10px;
-            border-left: 5px solid #28a745;
+
+        .feedback-card {
+            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
             display: none;
+            box-shadow: 0 10px 30px rgba(0, 184, 148, 0.3);
+            border: 2px solid rgba(255,255,255,0.2);
+            animation: slideInFromRight 0.5s ease-out;
         }
-        
-        .progress-bar {
-            width: 100%;
-            height: 10px;
-            background: #e9ecef;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            overflow: hidden;
+
+        @keyframes slideInFromRight {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
         }
-        
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #28a745, #20c997);
-            transition: width 0.5s ease;
-            width: 10%;
+
+        .feedback-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
-        
-        .btn {
-            padding: 15px 30px;
+
+        .feedback-content {
+            font-size: 1.1em;
+            line-height: 1.6;
+            opacity: 0.95;
+            margin-bottom: 15px;
+        }
+
+        .feedback-amount {
+            font-size: 1.3em;
+            font-weight: bold;
+            background: rgba(255,255,255,0.2);
+            padding: 10px 20px;
+            border-radius: 25px;
+            display: inline-block;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
+            gap: 20px;
+        }
+
+        .nav-button {
+            padding: 18px 40px;
             border: none;
-            border-radius: 10px;
-            font-size: 1rem;
+            border-radius: 25px;
+            font-size: 1.2em;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            background: #667eea;
+            position: relative;
+            overflow: hidden;
+            min-width: 200px;
+        }
+
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .prev-button {
+            background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
             color: white;
-            margin: 5px;
         }
-        
-        .btn:hover {
-            background: #5a6fd8;
-            transform: translateY(-2px);
+
+        .prev-button:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(149, 165, 166, 0.4);
         }
-        
-        .navigation {
-            display: flex;
-            justify-content: center;
-            margin-top: 30px;
-            flex-wrap: wrap;
-        }
-        
-        .cumulative-display {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #28a745, #20c997);
+
+        .next-button {
+            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
             color: white;
-            padding: 15px 20px;
-            border-radius: 10px;
-            font-weight: bold;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            z-index: 1000;
+        }
+
+        .next-button:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 184, 148, 0.4);
+        }
+
+        .ai-analysis-button {
+            background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+            color: white;
+            border: none;
+            padding: 20px 50px;
+            border-radius: 25px;
+            font-size: 1.4em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 30px auto;
+            display: block;
+            box-shadow: 0 10px 30px rgba(108, 92, 231, 0.3);
+            min-width: 300px;
+        }
+
+        .ai-analysis-button:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(108, 92, 231, 0.4);
+        }
+
+        .loading-container {
+            text-align: center;
+            margin: 40px 0;
             display: none;
+            background: linear-gradient(135deg, #f8faff 0%, #e8f1ff 100%);
+            padding: 40px;
+            border-radius: 20px;
+            border: 2px solid rgba(102, 126, 234, 0.1);
         }
-        
-        .analysis-steps {
-            margin: 30px 0;
+
+        .loading-container h2 {
+            color: #667eea;
+            margin-bottom: 30px;
+            font-size: 2em;
         }
-        
-        .analysis-step {
+
+        .loading-step {
+            padding: 18px 30px;
+            margin: 15px 0;
+            border-radius: 12px;
+            background: white;
+            transition: all 0.4s ease;
+            border: 1px solid #e0e6ff;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 15px 20px;
-            margin: 10px 0;
-            background: #f8f9fa;
-            border-radius: 10px;
-            border-left: 4px solid #dee2e6;
+        }
+
+        .loading-step.active {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            border-left: 5px solid #fdcb6e;
+            transform: translateX(15px);
+        }
+
+        .loading-step.completed {
+            background: linear-gradient(135deg, #d4edda 0%, #a8e6cf 100%);
+            border-left: 5px solid #00b894;
+            transform: translateX(10px);
+        }
+
+        .results-card {
+            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+            color: white;
+            padding: 50px;
+            border-radius: 25px;
+            text-align: center;
+            margin-top: 40px;
+            display: none;
+            box-shadow: 0 25px 50px rgba(0, 184, 148, 0.3);
+            border: 3px solid rgba(255,255,255,0.2);
+            animation: slideInFromBottom 0.8s ease-out;
+        }
+
+        .score-display {
+            font-size: 5em;
+            font-weight: bold;
+            margin: 30px 0;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            background: rgba(255,255,255,0.2);
+            border-radius: 25px;
+            padding: 30px;
+            display: inline-block;
+            min-width: 300px;
+        }
+
+        .improvement-amount {
+            font-size: 2.5em;
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .score-analysis {
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 20px;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .ai-analysis-card {
+            margin-top: 40px;
+            background: linear-gradient(135deg, #f8faff 0%, #e8f1ff 100%);
+            border-radius: 20px;
+            padding: 40px;
+            display: none;
+            border: 2px solid #667eea;
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.1);
+            animation: slideInFromBottom 0.8s ease-out;
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+            color: white;
+            padding: 45px;
+            border-radius: 20px;
+            text-align: center;
+            margin-top: 40px;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .cta-section h2 {
+            margin-bottom: 20px;
+            font-size: 2.2em;
+        }
+
+        .cta-section p {
+            font-size: 1.2em;
+            margin-bottom: 25px;
+            opacity: 0.95;
+        }
+
+        .cta-button {
+            background: white;
+            color: #6c5ce7;
+            padding: 20px 50px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.3em;
+            font-weight: bold;
+            cursor: pointer;
             transition: all 0.3s ease;
+            margin: 20px 15px;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 10px 30px rgba(255,255,255,0.2);
+            min-width: 250px;
         }
-        
-        .analysis-step.completed {
-            background: #d4edda;
-            border-left-color: #28a745;
+
+        .cta-button:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(255,255,255,0.3);
         }
-        
-        .analysis-step.active {
-            background: #fff3cd;
-            border-left-color: #ffc107;
-            animation: pulse 1s infinite;
+
+        .highlight-box {
+            background: linear-gradient(135deg, #e8f4f8 0%, #d1ecf1 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border-left: 5px solid #00b894;
+            box-shadow: 0 8px 25px rgba(0, 184, 148, 0.1);
         }
-        
+
+        .loading-spinner {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #667eea;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
         @keyframes pulse {
             0% { opacity: 1; }
-            50% { opacity: 0.7; }
+            50% { opacity: 0.6; }
             100% { opacity: 1; }
         }
-        
-        .loading-animation {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #667eea;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
+
+        .loading-step .spinner {
+            animation: pulse 1.5s infinite;
         }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .ai-analysis-card {
-            margin-top: 30px;
-            border: 2px solid #667eea;
-            background: linear-gradient(135deg, #f8faff 0%, #e8f1ff 100%);
-            border-radius: 15px;
-            padding: 30px;
-            display: none;
-        }
-        
-        .ai-analysis h3 {
-            color: #667eea;
-            margin-bottom: 20px;
-        }
-        
-        .ai-analysis h4 {
-            color: #2c3e50;
-            margin: 20px 0 10px 0;
-            border-bottom: 2px solid #e9ecef;
-            padding-bottom: 5px;
-        }
-        
-        .highlight-box {
-            background: #f8f9fa;
-            border-left: 4px solid #667eea;
-            padding: 15px;
-            margin: 15px 0;
-            border-radius: 5px;
-        }
-        
-        .cta-box {
-            background: #e8f5e8;
-            border: 2px solid #28a745;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            margin: 20px 0;
-        }
-        
+
         .error-message {
-            background: #f8d7da;
-            color: #721c24;
-            padding: 15px;
-            border-radius: 5px;
-            margin: 20px 0;
-            border: 1px solid #f5c6cb;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
             text-align: center;
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
         }
-        
+
         @media (max-width: 768px) {
-            .container { padding: 15px; }
-            .title { font-size: 2rem; }
-            .card { padding: 20px; }
-            .cumulative-display {
-                position: relative;
-                top: auto;
-                right: auto;
-                margin-bottom: 20px;
+            .container {
+                margin: 10px;
+                border-radius: 15px;
             }
-            .navigation { flex-direction: column; }
-            .btn { width: 100%; margin: 5px 0; }
+            
+            .header {
+                padding: 30px 20px;
+            }
+            
+            .header h1 {
+                font-size: 2.2em;
+            }
+            
+            .header .subtitle {
+                font-size: 1.2em;
+            }
+            
+            .main-content {
+                padding: 30px 20px;
+            }
+            
+            .question-card {
+                padding: 25px;
+            }
+            
+            .navigation {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-button {
+                width: 100%;
+                min-width: auto;
+            }
+            
+            .score-display {
+                font-size: 3.5em;
+                min-width: auto;
+                padding: 20px;
+            }
+            
+            .improvement-amount {
+                font-size: 1.8em;
+            }
+
+            .ai-analysis-button {
+                width: 100%;
+                min-width: auto;
+            }
+
+            .cta-button {
+                width: 100%;
+                min-width: auto;
+                margin: 10px 0;
+            }
+        }
+
+        /* 画面読み上げソフト対応 */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1 class="title">💸 隠れた利益流出診断</h1>
-            <p class="subtitle">あなたの会社が毎月「密かに失っている」利益はいくら？</p>
-        </div>
-        
-        <div class="cumulative-display" id="cumulative-display">
-            <div style="font-size: 0.9rem;">累計改善効果</div>
-            <div style="font-size: 1.3rem;" id="cumulative-amount">年間0万円</div>
-        </div>
-        
-        <div class="card" id="question-card">
-            <div class="progress-bar">
-                <div class="progress-fill" id="progress-fill"></div>
-            </div>
-            
-            <div class="question-text" id="question-text">
-                質問を読み込み中...
-            </div>
-            
-            <div class="options" id="question-options">
-            </div>
-            
-            <div class="feedback-area" id="feedback">
-                <div style="font-weight: bold; color: #155724; margin-bottom: 8px;" id="feedback-title"></div>
-                <div style="color: #155724; margin-bottom: 10px;" id="feedback-content"></div>
-                <div style="color: #d63384; font-weight: bold; font-size: 1.1rem;" id="feedback-amount"></div>
-            </div>
-            
-            <div class="navigation">
-                <button class="btn" onclick="previousQuestion()" id="prev-btn" style="display: none;">← 前の質問に戻る</button>
-                <button class="btn" onclick="nextQuestion()" id="next-btn" style="display: none;">次の質問へ →</button>
-                <button class="btn" onclick="startAnalysis()" id="analysis-btn" style="display: none;">🤖 AI分析を開始</button>
-            </div>
-        </div>
-        
-        <div class="card" id="analysis-section" style="display: none;">
-            <h2 style="text-align: center; margin-bottom: 30px;">
-                <span class="loading-animation"></span>
-                🤖 AI分析中...
-            </h2>
-            
-            <div class="analysis-steps">
-                <div class="analysis-step">
-                    <span>🔍 1,200社のデータベースと照合中...</span>
-                    <span class="step-status">⏳</span>
-                </div>
-                <div class="analysis-step">
-                    <span>📊 課題と改善ポイントを発見中...</span>
-                    <span class="step-status">⏳</span>
-                </div>
-                <div class="analysis-step">
-                    <span>🎯 戦略シナリオを生成中...</span>
-                    <span class="step-status">⏳</span>
-                </div>
-                <div class="analysis-step">
-                    <span>💰 投資効果を算出中...</span>
-                    <span class="step-status">⏳</span>
-                </div>
-                <div class="analysis-step">
-                    <span>📋 詳細レポートを完成中...</span>
-                    <span class="step-status">⏳</span>
+        <header class="header">
+            <div class="header-content">
+                <h1>🤖 AI活用度診断</h1>
+                <div class="subtitle">3分で判明するあなたの会社の「真の実力」</div>
+                <div class="description">
+                    1,200社の実績データを基に、貴社のAI活用ポテンシャルを客観的に数値化。
+                    特に「人材の潜在能力」という最も重要な資産に着目した診断システムです。
                 </div>
             </div>
-        </div>
-        
-        <div class="card ai-analysis-card" id="ai-analysis-section">
-            <div id="ai-analysis-content"></div>
-        </div>
-        
-        <div class="card" id="results-section" style="display: none;">
-            <h2 style="text-align: center; margin-bottom: 30px;">📊 診断結果</h2>
-            <div style="text-align: center;">
-                <div style="font-size: 3rem; font-weight: bold;" id="total-score">0点</div>
-                <div style="font-size: 1.5rem; margin: 20px 0;" id="total-improvement">年間改善効果: 0万円</div>
-                
-                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0;">
-                    <div style="font-size: 1.2rem; font-weight: bold; color: #2c3e50; margin-bottom: 15px;" id="analysis-level">業界内ポジション</div>
-                    <div style="margin-bottom: 15px;" id="analysis-message">分析メッセージ</div>
-                    <div style="color: #667eea; font-weight: bold;" id="analysis-recommendation">推奨アクション</div>
+        </header>
+
+        <main class="main-content">
+            <div class="progress-container">
+                <div class="progress-info">
+                    <span class="progress-text" id="progress-text">質問1 / 10</span>
+                    <span class="progress-text" id="completion-rate">完了率: 10%</span>
                 </div>
-                
-                <div class="cta-box">
-                    <h3>🚀 無料相談のご案内</h3>
-                    <p>この診断結果を基に、詳細な改善プランを作成いたします。</p>
-                    <p style="margin-top: 15px;">
-                        <a href="mailto:contact@ai-consulting.example.com?subject=AI活用診断の相談" 
-                           style="background: #28a745; color: white; padding: 15px 30px; border-radius: 10px; text-decoration: none; display: inline-block; margin: 10px;">
-                           📧 メールで相談する
-                        </a>
-                    </p>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
                 </div>
             </div>
-        </div>
+
+            <div class="cumulative-display" id="cumulative-display">
+                <h2>🎯 AI活用による改善効果</h2>
+                <div class="cumulative-amount" id="cumulative-amount">年間0万円</div>
+                <div class="ai-badge">AI分析による算出</div>
+            </div>
+
+            <div class="question-container" id="question-container">
+                <div class="question-text" id="loading-message">AI診断システムを初期化中...</div>
+            </div>
+
+            <nav class="navigation">
+                <button class="nav-button prev-button" id="prev-button" onclick="diagnosisSystem.previousQuestion()" disabled aria-label="前の質問に戻る">
+                    ← 前の質問に戻る
+                </button>
+                <button class="nav-button next-button" id="next-button" onclick="diagnosisSystem.nextQuestion()" disabled aria-label="次の質問へ進む">
+                    次の質問へ →
+                </button>
+            </nav>
+
+            <button class="ai-analysis-button" id="ai-analysis-button" onclick="diagnosisSystem.startAIAnalysis()" style="display: none;" aria-label="AI分析を開始">
+                🤖 AI詳細分析を開始
+            </button>
+
+            <div class="loading-container" id="loading-container">
+                <h2>🤖 AI専門分析実行中...</h2>
+                <div class="loading-step" id="step1">
+                    <span>🔍 1,200社のベンチマークデータと照合中...</span>
+                    <span class="spinner">⏳</span>
+                </div>
+                <div class="loading-step" id="step2">
+                    <span>📊 AI活用課題と改善ポイントを特定中...</span>
+                    <span class="spinner">⏳</span>
+                </div>
+                <div class="loading-step" id="step3">
+                    <span>🎯 最適なAI導入戦略を生成中...</span>
+                    <span class="spinner">⏳</span>
+                </div>
+                <div class="loading-step" id="step4">
+                    <span>💰 ROI・投資効果を精密算出中...</span>
+                    <span class="spinner">⏳</span>
+                </div>
+                <div class="loading-step" id="step5">
+                    <span>📋 個別カスタマイズレポートを完成中...</span>
+                    <span class="spinner">⏳</span>
+                </div>
+            </div>
+
+            <div class="results-card" id="results-card">
+                <h2>📊 AI活用度診断結果</h2>
+                <div class="score-display" id="final-score">0点</div>
+                <div class="improvement-amount" id="final-amount">年間改善効果: 0万円</div>
+                <div class="score-analysis" id="score-message">
+                    <h3>🎯 AI活用ポテンシャル評価</h3>
+                    <p id="position-message">分析メッセージ</p>
+                    <h3>🚀 推奨アクションプラン</h3>
+                    <p id="action-message">推奨アクション</p>
+                </div>
+            </div>
+
+            <div class="ai-analysis-card" id="ai-analysis-section">
+                <div id="analysis-content"></div>
+            </div>
+
+            <div class="cta-section">
+                <h2>🚀 無料AI活用戦略相談</h2>
+                <p>この診断結果を基に、貴社専用のAI活用ロードマップを無料で作成いたします。</p>
+                <p>60分の個別相談で、具体的な導入計画と投資対効果を詳細設計。</p>
+                <a href="mailto:ai-consulting@business.com?subject=AI活用診断結果の相談&body=診断結果を基にAI活用戦略の相談を希望します。" class="cta-button">
+                    📧 無料個別相談を申し込む
+                </a>
+                <a href="tel:0120-123-456" class="cta-button">
+                    📞 今すぐ電話で相談
+                </a>
+            </div>
+        </main>
     </div>
 
-    <!-- 🔧 修正: 相対パスに変更（サブディレクトリ対応） -->
+    <!-- 質問データの読み込み -->
     <script src="public/js/questions_config.js"></script>
     
     <script>
-        // システム起動デバッグ
-        console.log('=== AI活用診断システム (サブディレクトリ対応版) 起動開始 ===');
-        console.log('🕐 スクリプト実行開始時刻:', new Date().toISOString());
-        console.log('📄 document.readyState:', document.readyState);
-        console.log('🌐 現在のURL:', window.location.href);
-        console.log('📂 ベースURL:', window.location.origin + window.location.pathname.replace('index.html', ''));
-        
-        // AI活用診断システム（サブディレクトリ対応版）
         class DiagnosisSystem {
             constructor() {
                 this.currentQuestion = 0;
+                this.answers = [];
                 this.totalScore = 0;
                 this.totalImprovement = 0;
-                this.answers = [];
-                this.startTime = null;
+                this.questionData = null;
+                this.startTime = new Date();
                 
-                console.log('🚀 AI診断システム初期化開始 (サブディレクトリ対応)');
+                // デバッグモード
+                this.debugMode = true;
                 
-                // 外部ファイル読み込み確認
+                if (this.debugMode) {
+                    console.log('🚀 AI活用診断システム初期化開始');
+                    console.log('⏰ 開始時刻:', this.startTime.toISOString());
+                }
+                
+                // 質問データの読み込み待ち
                 this.waitForQuestionData();
             }
-            
+
             waitForQuestionData() {
-                console.log('📊 外部ファイル読み込み確認開始');
-                console.log('🔍 期待するファイルパス: js/questions_config.js');
-                
-                let attempts = 0;
-                const maxAttempts = 50; // 5秒間試行
-                
                 const checkData = () => {
-                    attempts++;
-                    
-                    if (typeof window.QUESTION_DATA !== 'undefined' && Array.isArray(window.QUESTION_DATA)) {
-                        console.log('✅ 外部ファイル読み込み成功:', window.QUESTION_DATA.length + '問');
-                        console.log('📝 最初の質問:', window.QUESTION_DATA[0]?.text?.substring(0, 50) + '...');
-                        this.init();
-                    } else if (attempts >= maxAttempts) {
-                        console.error('❌ 外部ファイル読み込み失敗: タイムアウト');
-                        this.showError('質問データの読み込みに失敗しました。ファイルパスを確認してください。');
+                    if (typeof window.QUESTION_DATA !== 'undefined' && window.QUESTION_DATA.length > 0) {
+                        if (this.debugMode) {
+                            console.log('✅ 質問データ読み込み成功:', window.QUESTION_DATA.length, '問');
+                            console.log('📝 最初の質問:', window.QUESTION_DATA[0]?.text?.substring(0, 50) + '...');
+                        }
+                        
+                        this.questionData = window.QUESTION_DATA;
+                        this.initializeDiagnosis();
                     } else {
-                        console.log(`⏳ 外部ファイル読み込み待機中... (${attempts}/${maxAttempts})`);
+                        if (this.debugMode) {
+                            console.log('⏳ 質問データ読み込み待機中...');
+                        }
                         setTimeout(checkData, 100);
                     }
                 };
-                
                 checkData();
             }
-            
-            init() {
+
+            initializeDiagnosis() {
                 try {
-                    console.log('🔧 システム初期化中...');
-                    
-                    this.startTime = new Date();
-                    this.loadQuestion(0);
+                    this.showQuestion();
                     this.updateProgress();
+                    this.updateNavigation();
                     
-                    console.log('✅ AI診断システム初期化完了 (サブディレクトリ対応)');
-                    
+                    if (this.debugMode) {
+                        console.log('✅ AI診断システム初期化完了');
+                    }
                 } catch (error) {
                     console.error('💥 初期化エラー:', error);
-                    this.showError('システムの初期化中にエラーが発生しました: ' + error.message);
-                }
-            }
-            
-            showError(message) {
-                console.log('⚠️ エラー表示:', message);
-                
-                const questionText = document.getElementById('question-text');
-                if (questionText) {
-                    questionText.innerHTML = `
-                        <div class="error-message">
-                            <h3>⚠️ システムエラー</h3>
-                            <p>${message}</p>
-                            <div style="margin-top: 15px; font-size: 0.9rem;">
-                                <p><strong>現在のURL:</strong> ${window.location.href}</p>
-                                <p><strong>期待するファイル:</strong> ${window.location.origin}${window.location.pathname.replace('index.html', '')}js/questions_config.js</p>
-                            </div>
-                            <button onclick="location.reload()" 
-                                    style="background: #667eea; color: white; padding: 15px 30px; border: none; border-radius: 10px; margin-top: 15px; cursor: pointer; font-size: 1rem;">
-                                🔄 ページを再読み込み
-                            </button>
-                        </div>
-                    `;
-                }
-            }
-            
-            loadQuestion(questionIndex) {
-                try {
-                    console.log(`📝 質問 ${questionIndex + 1} 読み込み開始`);
-                    
-                    const question = window.QUESTION_DATA[questionIndex];
-                    if (!question) {
-                        console.error(`❌ 設問データが見つかりません: Q${questionIndex + 1}`);
-                        this.showError(`設問${questionIndex + 1}のデータが見つかりません。`);
-                        return;
-                    }
-                    
-                    console.log(`📄 設問内容:`, question.text?.substring(0, 50) + '...');
-                    
-                    // 質問文表示
-                    document.getElementById('question-text').textContent = question.text;
-                    
-                    // 選択肢表示
-                    const container = document.getElementById('question-options');
-                    container.innerHTML = '';
-                    
-                    question.options.forEach((option, optionIndex) => {
-                        const optionElement = document.createElement('div');
-                        optionElement.className = 'option';
-                        optionElement.textContent = option;
-                        optionElement.onclick = () => this.selectOption(questionIndex, optionIndex);
-                        container.appendChild(optionElement);
-                    });
-                    
-                    this.hideElements(['feedback', 'next-btn', 'analysis-btn']);
-                    console.log(`✅ Q${questionIndex + 1} 読み込み完了`);
-                    
-                } catch (error) {
-                    console.error(`💥 Q${questionIndex + 1} 読み込みエラー:`, error);
-                    this.showError(`質問${questionIndex + 1}の読み込み中にエラーが発生しました: ${error.message}`);
+                    this.showError('システムの初期化に失敗しました。ページを再読み込みしてください。');
                 }
             }
 
-            selectOption(questionIndex, optionIndex) {
-                const question = window.QUESTION_DATA[questionIndex];
+            showError(message) {
+                const container = document.getElementById('question-container');
+                container.innerHTML = `
+                    <div class="error-message">
+                        <h3>⚠️ システムエラー</h3>
+                        <p>${message}</p>
+                        <button onclick="location.reload()" class="cta-button" style="margin-top: 20px;">
+                            🔄 ページを再読み込み
+                        </button>
+                    </div>
+                `;
+            }
+
+            showQuestion() {
+                if (!this.questionData || this.currentQuestion >= this.questionData.length) {
+                    this.showResults();
+                    return;
+                }
+
+                const question = this.questionData[this.currentQuestion];
+                const container = document.getElementById('question-container');
+                
+                container.innerHTML = `
+                    <div class="question-card">
+                        <div class="question-category">${question.category}</div>
+                        <div class="question-text">${question.text}</div>
+                        <div class="options-container">
+                            ${question.options.map((option, index) => `
+                                <div class="option" data-index="${index}" onclick="diagnosisSystem.selectOption(${index})" role="button" tabindex="0" aria-label="選択肢 ${index + 1}: ${option}">
+                                    ${option}
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="feedback-card" id="feedback-${this.currentQuestion}">
+                            <div class="feedback-title"></div>
+                            <div class="feedback-content"></div>
+                            <div class="feedback-amount"></div>
+                        </div>
+                    </div>
+                `;
+
+                // 既に回答がある場合は選択状態を復元
+                if (this.answers[this.currentQuestion] !== undefined) {
+                    this.selectOption(this.answers[this.currentQuestion].selectedIndex, false);
+                }
+
+                // キーボード対応
+                this.addKeyboardSupport();
+            }
+
+            addKeyboardSupport() {
+                const options = document.querySelectorAll('.option');
+                options.forEach((option, index) => {
+                    option.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            this.selectOption(index);
+                        }
+                    });
+                });
+            }
+
+            selectOption(optionIndex, animate = true) {
+                // 前の選択をクリア
+                document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+                
+                // 新しい選択をマーク
+                const selectedOption = document.querySelector(`[data-index="${optionIndex}"]`);
+                if (selectedOption) {
+                    selectedOption.classList.add('selected');
+                    selectedOption.setAttribute('aria-selected', 'true');
+                }
+
+                const question = this.questionData[this.currentQuestion];
                 const score = question.scores[optionIndex];
                 const amount = question.amounts[optionIndex];
                 const feedback = question.feedbacks[optionIndex];
+
+                // 回答を保存
+                this.answers[this.currentQuestion] = {
+                    selectedIndex: optionIndex,
+                    score: score,
+                    amount: amount,
+                    timestamp: new Date()
+                };
+
+                // フィードバックを表示
+                const feedbackCard = document.getElementById(`feedback-${this.currentQuestion}`);
+                const feedbackTitle = feedbackCard.querySelector('.feedback-title');
+                const feedbackContent = feedbackCard.querySelector('.feedback-content');
+                const feedbackAmount = feedbackCard.querySelector('.feedback-amount');
                 
-                this.answers[questionIndex] = { score, amount, optionIndex, timestamp: new Date() };
-                this.updateSelectedOption(optionIndex);
-                this.showFeedback(feedback, amount);
+                feedbackTitle.textContent = feedback.title;
+                feedbackContent.textContent = feedback.content;
+                feedbackAmount.textContent = `年間${amount}万円の改善効果`;
+                feedbackCard.style.display = 'block';
+
+                // 累計を更新（初回回答後のみ表示）
                 this.updateTotals();
-                this.showNavigationButton();
-                
-                console.log(`Q${questionIndex + 1} 回答:`, {score, amount, totalScore: this.totalScore, totalImprovement: this.totalImprovement});
-            }
-            
-            updateSelectedOption(selectedIndex) {
-                const options = document.querySelectorAll('#question-options .option');
-                options.forEach((option, index) => {
-                    option.classList.toggle('selected', index === selectedIndex);
-                });
-            }
-            
-            showFeedback(feedback, amount) {
-                document.getElementById('feedback-title').textContent = feedback.title;
-                document.getElementById('feedback-content').textContent = feedback.content;
-                document.getElementById('feedback-amount').textContent = `年間${amount}万円の改善効果`;
-                document.getElementById('feedback').style.display = 'block';
-            }
-            
-            updateTotals() {
-                this.totalScore = this.answers.reduce((sum, answer) => sum + (answer?.score || 0), 0);
-                this.totalImprovement = this.answers.reduce((sum, answer) => sum + (answer?.amount || 0), 0);
-                
-                // 累積表示
-                document.getElementById('cumulative-amount').textContent = `年間${this.totalImprovement}万円`;
-                document.getElementById('cumulative-display').style.display = 'block';
-                
-                console.log('📊 累積更新:', this.totalScore + '点 /', this.totalImprovement + '万円');
-            }
-            
-            showNavigationButton() {
-                document.getElementById('prev-btn').style.display = this.currentQuestion > 0 ? 'inline-block' : 'none';
-                
-                if (this.currentQuestion < window.QUESTION_DATA.length - 1) {
-                    document.getElementById('next-btn').style.display = 'inline-block';
-                    document.getElementById('analysis-btn').style.display = 'none';
-                } else {
-                    document.getElementById('next-btn').style.display = 'none';
-                    document.getElementById('analysis-btn').style.display = 'inline-block';
+                this.updateNavigation();
+
+                if (this.debugMode) {
+                    console.log(`Q${this.currentQuestion + 1} 回答:`, {
+                        option: optionIndex,
+                        score: score,
+                        amount: amount,
+                        totalScore: this.totalScore,
+                        totalImprovement: this.totalImprovement
+                    });
                 }
             }
-            
-            previousQuestion() {
-                this.hideElements(['next-btn', 'analysis-btn', 'feedback']);
+
+            updateTotals() {
+                this.totalScore = 0;
+                this.totalImprovement = 0;
+
+                this.answers.forEach(answer => {
+                    if (answer !== undefined) {
+                        this.totalScore += answer.score;
+                        this.totalImprovement += answer.amount;
+                    }
+                });
+
+                // 累積表示の更新（初回回答後のみ表示）
+                if (this.answers.length > 0 && this.answers.some(a => a !== undefined)) {
+                    const cumulativeDisplay = document.getElementById('cumulative-display');
+                    const cumulativeAmount = document.getElementById('cumulative-amount');
+                    
+                    cumulativeDisplay.style.display = 'block';
+                    cumulativeAmount.textContent = `年間${this.totalImprovement}万円`;
+                }
+            }
+
+            updateProgress() {
+                const progress = ((this.currentQuestion + 1) / this.questionData.length) * 100;
+                const completionRate = Math.round(progress);
                 
+                document.getElementById('progress-fill').style.width = `${progress}%`;
+                document.getElementById('progress-text').textContent = `質問${this.currentQuestion + 1} / ${this.questionData.length}`;
+                document.getElementById('completion-rate').textContent = `完了率: ${completionRate}%`;
+            }
+
+            updateNavigation() {
+                const prevButton = document.getElementById('prev-button');
+                const nextButton = document.getElementById('next-button');
+
+                prevButton.disabled = this.currentQuestion === 0;
+                nextButton.disabled = this.answers[this.currentQuestion] === undefined;
+
+                // 最後の質問の場合
+                if (this.currentQuestion === this.questionData.length - 1 && this.answers[this.currentQuestion] !== undefined) {
+                    nextButton.style.display = 'none';
+                    document.getElementById('ai-analysis-button').style.display = 'block';
+                } else {
+                    nextButton.style.display = 'inline-block';
+                    document.getElementById('ai-analysis-button').style.display = 'none';
+                }
+            }
+
+            previousQuestion() {
                 if (this.currentQuestion > 0) {
                     this.currentQuestion--;
-                    this.loadQuestion(this.currentQuestion);
+                    this.showQuestion();
                     this.updateProgress();
-                    
-                    if (this.answers[this.currentQuestion]) {
-                        const answer = this.answers[this.currentQuestion];
-                        const question = window.QUESTION_DATA[this.currentQuestion];
-                        setTimeout(() => {
-                            this.updateSelectedOption(answer.optionIndex);
-                            this.showFeedback(question.feedbacks[answer.optionIndex], answer.amount);
-                            this.showNavigationButton();
-                        }, 100);
-                    }
+                    this.updateNavigation();
                 }
             }
-            
+
             nextQuestion() {
-                this.hideElements(['next-btn', 'feedback', 'prev-btn']);
-                
-                if (this.currentQuestion < window.QUESTION_DATA.length - 1) {
+                if (this.currentQuestion < this.questionData.length - 1) {
                     this.currentQuestion++;
-                    this.loadQuestion(this.currentQuestion);
+                    this.showQuestion();
                     this.updateProgress();
+                    this.updateNavigation();
+                } else {
+                    this.showResults();
                 }
             }
-            
-            updateProgress() {
-                const progress = ((this.currentQuestion + 1) / window.QUESTION_DATA.length) * 100;
-                document.getElementById('progress-fill').style.width = `${progress}%`;
+
+            showResults() {
+                // ナビゲーションを非表示
+                document.querySelector('.navigation').style.display = 'none';
+                
+                // AI分析ボタンを表示
+                document.getElementById('ai-analysis-button').style.display = 'block';
+                
+                // 質問コンテナを非表示
+                document.getElementById('question-container').style.display = 'none';
+                
+                // 結果を表示
+                this.displayFinalResults();
             }
-            
-            async startAnalysis() {
-                document.getElementById('question-card').style.display = 'none';
-                document.getElementById('analysis-section').style.display = 'block';
+
+            displayFinalResults() {
+                const resultsCard = document.getElementById('results-card');
+                const finalScore = document.getElementById('final-score');
+                const finalAmount = document.getElementById('final-amount');
+                const positionMessage = document.getElementById('position-message');
+                const actionMessage = document.getElementById('action-message');
+
+                finalScore.textContent = `${this.totalScore}点`;
+                finalAmount.textContent = `年間改善効果: ${this.totalImprovement}万円`;
+
+                // スコアに基づくメッセージ（AI活用度バージョン）
+                let position, action;
+                if (this.totalScore >= 70) {
+                    position = "🚨 AI活用による大幅な改善余地あり（上位15%）- 戦略的AI導入により劇的な効率化が期待できます";
+                    action = "即座にAI活用戦略の策定を開始し、段階的なAI導入を推進することを強く推奨します";
+                } else if (this.totalScore >= 50) {
+                    position = "⚡ AI活用による改善余地あり（上位35%）- 適切なAI導入により大きな効果が見込めます";
+                    action = "AI活用の具体的な検討を開始し、優先度の高い業務領域からAI導入を進めることを推奨します";
+                } else if (this.totalScore >= 30) {
+                    position = "📈 AI活用の一定の効果（平均レベル）- 戦略的なAI活用により競争優位性を獲得できます";
+                    action = "AI活用の情報収集と小規模な実証実験から始め、段階的にAI活用を拡大することを推奨します";
+                } else {
+                    position = "✨ 効率的な運営状況（上位20%）- 先進的なAI活用により更なる競争優位性を確立できます";
+                    action = "現在の効率性を維持しつつ、最新のAI技術活用で業界リーダーシップを強化することを推奨します";
+                }
+
+                positionMessage.textContent = position;
+                actionMessage.textContent = action;
                 
-                console.log('AI分析開始 - 最終スコア:', this.totalScore, '改善効果:', this.totalImprovement);
+                resultsCard.style.display = 'block';
+
+                if (this.debugMode) {
+                    console.log('📊 最終結果:', {
+                        score: this.totalScore,
+                        improvement: this.totalImprovement,
+                        duration: new Date() - this.startTime
+                    });
+                }
+            }
+
+            async startAIAnalysis() {
+                // ボタンを非表示
+                document.getElementById('ai-analysis-button').style.display = 'none';
                 
-                const [_, aiResult] = await Promise.all([
-                    this.runAnalysisAnimation(),
-                    this.callAIAnalysis()
-                ]);
+                // ローディング表示
+                const loadingContainer = document.getElementById('loading-container');
+                loadingContainer.style.display = 'block';
                 
-                if (aiResult !== 'success') {
-                    this.showFallbackAnalysis();
+                if (this.debugMode) {
+                    console.log('🤖 AI分析開始');
                 }
                 
-                setTimeout(() => this.showResults(), 1500);
+                // ステップごとのローディング演出
+                await this.animateLoadingSteps();
+                
+                // AI分析を実行
+                try {
+                    const analysisResult = await this.callAIAnalysis();
+                    this.displayAIAnalysis(analysisResult);
+                } catch (error) {
+                    console.error('AI分析エラー:', error);
+                    this.displayFallbackAnalysis();
+                }
+                
+                // ローディングを非表示
+                loadingContainer.style.display = 'none';
             }
-            
-            runAnalysisAnimation() {
-                return new Promise((resolve) => {
-                    const steps = [1500, 2000, 1500, 1500, 1000];
-                    let currentStep = 0;
-                    const stepElements = document.querySelectorAll('.analysis-step .step-status');
+
+            async animateLoadingSteps() {
+                const steps = ['step1', 'step2', 'step3', 'step4', 'step5'];
+                const durations = [1500, 2000, 1500, 1500, 1000];
+                
+                for (let i = 0; i < steps.length; i++) {
+                    const step = document.getElementById(steps[i]);
+                    step.classList.add('active');
                     
-                    const runStep = () => {
-                        if (currentStep > 0) {
-                            const prevStep = document.querySelectorAll('.analysis-step')[currentStep - 1];
-                            prevStep.classList.remove('active');
-                            prevStep.classList.add('completed');
-                            stepElements[currentStep - 1].textContent = '✅';
-                        }
-                        
-                        if (currentStep < steps.length) {
-                            const currentStepElement = document.querySelectorAll('.analysis-step')[currentStep];
-                            currentStepElement.classList.add('active');
-                            stepElements[currentStep].textContent = '🔄';
-                            
-                            setTimeout(() => {
-                                currentStep++;
-                                runStep();
-                            }, steps[currentStep]);
-                        } else {
-                            resolve();
-                        }
-                    };
+                    await new Promise(resolve => setTimeout(resolve, durations[i]));
                     
-                    runStep();
-                });
+                    step.classList.remove('active');
+                    step.classList.add('completed');
+                    step.querySelector('.spinner').textContent = '✅';
+                }
             }
 
             async callAIAnalysis() {
-                try {
-                    console.log('🤖 AI分析API呼び出し開始');
-                    
-                    const apiCompatibleAnswers = this.answers.map((answer) => ({
-                        score: answer.score,
-                        amount: answer.amount
-                    }));
-                    
-                    const requestData = {
-                        answers: apiCompatibleAnswers,
+                const response = await fetch('/api/analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        answers: this.answers,
                         totalScore: this.totalScore,
                         totalImprovement: this.totalImprovement
-                    };
-                    
-                    console.log('📤 送信データ:', requestData);
-                    
-                    // APIパスもサブディレクトリを考慮
-                    const apiUrl = '/api/analyze';
-                    console.log('🌐 API URL:', apiUrl);
-                    
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: { 
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json'
-                        },
-                        body: JSON.stringify(requestData)
-                    });
+                    })
+                });
 
-                    console.log('📥 API応答受信:', response.status);
-                    
-                    if (response.ok) {
-                        const data = await response.json();
-                        console.log('✅ API応答データ:', data);
-                        
-                        if (data.success && data.analysis) {
-                            console.log('🎉 AI分析成功');
-                            document.getElementById('ai-analysis-content').innerHTML = data.analysis;
-                            document.getElementById('ai-analysis-section').style.display = 'block';
-                            return 'success';
-                        } else {
-                            console.warn('⚠️ API応答の形式が不正:', data);
-                            return 'fallback';
-                        }
-                    } else {
-                        console.error('❌ API応答エラー:', response.status);
-                        return 'fallback';
-                    }
-                    
-                } catch (error) {
-                    console.error('💥 AI分析API呼び出しエラー:', error);
-                    return 'fallback';
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                if (!data.success) {
+                    throw new Error(data.error || 'AI分析に失敗しました');
+                }
+
+                return data.analysis;
+            }
+
+            displayAIAnalysis(analysis) {
+                const analysisSection = document.getElementById('ai-analysis-section');
+                const analysisContent = document.getElementById('analysis-content');
+                
+                analysisContent.innerHTML = analysis;
+                analysisSection.style.display = 'block';
+
+                if (this.debugMode) {
+                    console.log('✅ AI分析結果表示完了');
                 }
             }
 
-            showFallbackAnalysis() {
-                const scoreLevel = this.determineScoreLevel(this.totalScore);
+            displayFallbackAnalysis() {
+                const analysisSection = document.getElementById('ai-analysis-section');
+                const analysisContent = document.getElementById('analysis-content');
                 
                 const analysisHTML = `
                     <div class="ai-analysis">
-                        <h3>🤖 AI専門分析レポート</h3>
+                        <h3>🤖 AI活用度分析レポート</h3>
+                        
                         <div class="highlight-box">
-                            <h4>📊 総合評価</h4>
-                            <p><strong>AI活用余地スコア：${this.totalScore}点/100点</strong></p>
-                            <p><strong>年間改善効果：${this.totalImprovement}万円</strong></p>
-                            <p>${window.RESULT_MESSAGES[scoreLevel].message}</p>
+                            <h4>📊 診断結果サマリー</h4>
+                            <p><strong>AI活用ポテンシャルスコア：${this.totalScore}点/100点</strong></p>
+                            <p><strong>年間改善効果ポテンシャル：${this.totalImprovement}万円</strong></p>
+                            <p>貴社の診断結果から、AI活用による大幅な業務効率化と競争力向上が期待できることが判明いたしました。</p>
                         </div>
                         
-                        <h4>💡 具体的改善提案</h4>
+                        <h4>🎯 AI活用重要課題TOP3と解決策</h4>
                         <ol>
-                            <li><strong>短期改善（1-3ヶ月）</strong><br>ChatGPT活用による文書作成効率化、業務自動化ツールの導入</li>
-                            <li><strong>中期改善（3-6ヶ月）</strong><br>データ分析ダッシュボード構築、AI活用による業務プロセス改善</li>
-                            <li><strong>長期改善（6-12ヶ月）</strong><br>予測分析システム、機械学習による業務最適化の本格展開</li>
+                            <li><strong>業務自動化・効率化</strong><br>ChatGPT/Claude等の生成AI活用により文書作成・データ処理時間を70%削減、年間${Math.floor(this.totalImprovement * 0.3)}万円の効果</li>
+                            <li><strong>データ活用・意思決定高速化</strong><br>AI分析ツール導入による予測精度向上と意思決定迅速化で年間${Math.floor(this.totalImprovement * 0.4)}万円の効果</li>
+                            <li><strong>AI人材育成・組織変革</strong><br>AIリテラシー向上とスキル研修により全社的生産性向上で年間${Math.floor(this.totalImprovement * 0.3)}万円の効果</li>
                         </ol>
                         
-                        <h4>📈 期待される効果</h4>
+                        <h4>💡 段階別AI導入ロードマップ</h4>
+                        <ol>
+                            <li><strong>Phase 1（1-3ヶ月）：AI基盤構築</strong><br>ChatGPT Business・Claude Pro導入、AI活用ガイドライン策定（投資額50万円、効果月額${Math.floor(this.totalImprovement/12 * 0.3)}万円）</li>
+                            <li><strong>Phase 2（3-6ヶ月）：AI活用拡大</strong><br>RPA・AI分析ツール導入、部門別AI活用推進（投資額150万円、効果月額${Math.floor(this.totalImprovement/12 * 0.5)}万円）</li>
+                            <li><strong>Phase 3（6-12ヶ月）：AI戦略展開</strong><br>カスタムAIシステム構築、競争優位性確立（投資額300万円、効果月額${Math.floor(this.totalImprovement/12)}万円）</li>
+                        </ol>
+                        
+                        <h4>📈 AI活用ROI分析</h4>
                         <ul>
-                            <li>年間コスト削減: <strong>${Math.floor(this.totalImprovement * 0.6)}万円</strong></li>
-                            <li>売上向上効果: <strong>${Math.floor(this.totalImprovement * 0.4)}万円</strong></li>
-                            <li>業務効率向上: <strong>${Math.min(50, Math.floor(this.totalScore / 2))}%</strong></li>
+                            <li>初期投資額: <strong>500万円</strong>（AIツール・研修・システム構築費込み）</li>
+                            <li>年間コスト削減効果: <strong>${Math.floor(this.totalImprovement * 0.6)}万円</strong></li>
+                            <li>年間売上・生産性向上: <strong>${Math.floor(this.totalImprovement * 0.4)}万円</strong></li>
+                            <li>投資回収期間: <strong>${Math.ceil(500 / (this.totalImprovement / 12))}ヶ月</strong></li>
+                            <li>3年間累計効果: <strong>${this.totalImprovement * 3 - 500}万円</strong></li>
                         </ul>
                         
-                        <div class="cta-box">
-                            <h4>💼 次のステップ</h4>
-                            <p>この分析結果を基に、貴社に最適なAI活用戦略を詳細に策定いたします。</p>
-                            <a href="mailto:contact@ai-consulting.example.com?subject=AI活用診断の相談&body=診断スコア: ${this.totalScore}点%0A改善効果: ${this.totalImprovement}万円" 
-                               style="background: #28a745; color: white; padding: 15px 30px; border-radius: 8px; text-decoration: none; display: inline-block; margin: 15px 0;">
-                               📧 無料個別相談を申し込む
-                            </a>
+                        <h4>🚀 AI活用成功のための重要ポイント</h4>
+                        <ul>
+                            <li><strong>経営層のコミット</strong>：AI活用を経営戦略として明確に位置づけ</li>
+                            <li><strong>段階的導入</strong>：小さく始めて成功事例を積み上げ、全社展開</li>
+                            <li><strong>人材育成重視</strong>：AIリテラシー向上と変化への適応支援</li>
+                            <li><strong>セキュリティ対策</strong>：データ保護とリスク管理の徹底</li>
+                        </ul>
+                        
+                        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 15px; margin: 30px 0; text-align: center;">
+                            <h4>🎯 次のステップ：無料AI活用戦略策定</h4>
+                            <p style="margin: 15px 0;">この診断結果を基に、貴社の業界・規模・課題に特化したAI活用戦略を60分の無料個別相談で詳細設計いたします。</p>
+                            <p><strong>🎁 特典：</strong>Phase 1の詳細実装計画書（30ページ）+ AI活用チェックリストを無料提供</p>
+                            <p><strong>📅 相談内容：</strong>具体的AI活用方法 | 投資対効果試算 | 導入スケジュール | リスク対策</p>
                         </div>
                     </div>
                 `;
                 
-                document.getElementById('ai-analysis-content').innerHTML = analysisHTML;
-                document.getElementById('ai-analysis-section').style.display = 'block';
-            }
-            
-            showResults() {
-                document.getElementById('analysis-section').style.display = 'none';
-                document.getElementById('results-section').style.display = 'block';
-                
-                const scoreLevel = this.determineScoreLevel(this.totalScore);
-                
-                document.getElementById('total-score').textContent = `${this.totalScore}点`;
-                document.getElementById('total-improvement').textContent = `年間改善効果: ${this.totalImprovement}万円`;
-                document.getElementById('analysis-level').textContent = window.SCORE_RANGES[scoreLevel].level;
-                document.getElementById('analysis-message').textContent = window.RESULT_MESSAGES[scoreLevel].message;
-                document.getElementById('analysis-recommendation').textContent = `推奨アクション: ${window.RESULT_MESSAGES[scoreLevel].recommendation}`;
-                
-                console.log('診断完了:', { score: this.totalScore, improvement: this.totalImprovement, level: scoreLevel });
-            }
-            
-            determineScoreLevel(score) {
-                for (const [level, range] of Object.entries(window.SCORE_RANGES)) {
-                    if (score >= range.min && score <= range.max) {
-                        return level;
-                    }
+                analysisContent.innerHTML = analysisHTML;
+                analysisSection.style.display = 'block';
+
+                if (this.debugMode) {
+                    console.log('📋 フォールバック分析表示完了');
                 }
-                return 'minimal';
-            }
-            
-            hideElements(elementIds) {
-                elementIds.forEach(id => {
-                    const element = document.getElementById(id);
-                    if (element) {
-                        element.style.display = 'none';
-                    } else {
-                        console.warn(`⚠️ 要素が見つかりません: ${id}`);
-                    }
-                });
             }
         }
 
-        // システム初期化（サブディレクトリ対応版）
+        // デバッグ用のグローバル関数
+        window.debugAI = {
+            testAPI: async function() {
+                try {
+                    const response = await fetch('/api/analyze', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            answers: [{score: 5, amount: 100}],
+                            totalScore: 5,
+                            totalImprovement: 100
+                        })
+                    });
+                    const data = await response.json();
+                    console.log('API テスト結果:', data);
+                    return data;
+                } catch (error) {
+                    console.error('API テストエラー:', error);
+                    return error;
+                }
+            },
+            
+            testGET: async function() {
+                try {
+                    const response = await fetch('/api/analyze');
+                    const data = await response.json();
+                    console.log('GET テスト結果:', data);
+                    return data;
+                } catch (error) {
+                    console.error('GET テストエラー:', error);
+                    return error;
+                }
+            },
+
+            showCurrentData: function() {
+                if (window.diagnosisSystem && window.diagnosisSystem.questionData) {
+                    console.log('現在の質問データ:', window.diagnosisSystem.questionData);
+                    window.diagnosisSystem.questionData.forEach((q, i) => {
+                        console.log(`Q${i+1}: ${q.text.substring(0, 60)}...`);
+                    });
+                } else {
+                    console.log('質問データが読み込まれていません');
+                }
+            },
+
+            skipToResults: function() {
+                if (window.diagnosisSystem) {
+                    // ダミーデータで回答を埋める
+                    for (let i = 0; i < window.diagnosisSystem.questionData.length; i++) {
+                        window.diagnosisSystem.answers[i] = {
+                            selectedIndex: 2,
+                            score: 5,
+                            amount: 80,
+                            timestamp: new Date()
+                        };
+                    }
+                    window.diagnosisSystem.updateTotals();
+                    window.diagnosisSystem.showResults();
+                    console.log('🚀 結果画面にスキップしました');
+                }
+            }
+        };
+
+        // システム初期化
         let diagnosisSystem;
         
         // DOM読み込み完了を待って初期化
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initializeSystem);
-        } else {
-            initializeSystem();
-        }
-        
-        function initializeSystem() {
-            console.log('🌟 DOM読み込み完了 - システム初期化開始 (サブディレクトリ対応)');
-            console.log('🌐 現在のURL:', window.location.href);
-            console.log('📂 ベースパス:', window.location.pathname);
-            
-            try {
+            document.addEventListener('DOMContentLoaded', () => {
                 diagnosisSystem = new DiagnosisSystem();
-            } catch (error) {
-                console.error('💥 システム初期化失敗:', error);
-                
-                const questionText = document.getElementById('question-text');
-                if (questionText) {
-                    questionText.innerHTML = `
-                        <div class="error-message">
-                            <h3>💥 システム初期化エラー</h3>
-                            <p>診断システムの初期化に失敗しました。</p>
-                            <p>エラー詳細: ${error.message}</p>
-                            <button onclick="location.reload()" 
-                                    style="background: #dc3545; color: white; padding: 15px 30px; border: none; border-radius: 10px; margin-top: 15px; cursor: pointer; font-size: 1rem;">
-                                🔄 ページを再読み込み
-                            </button>
-                        </div>
-                    `;
-                }
-            }
+            });
+        } else {
+            diagnosisSystem = new DiagnosisSystem();
         }
 
-        // グローバル関数
-        function selectOption(questionIndex, optionIndex) {
-            diagnosisSystem?.selectOption(questionIndex, optionIndex);
-        }
-        function previousQuestion() {
-            diagnosisSystem?.previousQuestion();
-        }
-        function nextQuestion() {
-            diagnosisSystem?.nextQuestion();
-        }
-        function startAnalysis() {
-            diagnosisSystem?.startAnalysis();
-        }
-
-        console.log('🎉 HTMLファイル読み込み完了 (サブディレクトリ対応) - 外部ファイル待機中');
-        console.log('📂 期待するファイル: js/questions_config.js');
-        console.log('⏰ 実行準備完了時刻:', new Date().toISOString());
+        // Google Analytics（実装時に追加）
+        // gtag('config', 'GA_MEASUREMENT_ID');
+        
+        console.log('🎉 AI活用診断システム読み込み完了');
     </script>
 </body>
 </html>

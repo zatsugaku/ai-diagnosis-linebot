@@ -901,13 +901,15 @@
                 
                 feedbackTitle.textContent = feedback.title;
                 feedbackContent.textContent = feedback.content;
+                
                 // hideAmountDisplay設定をチェック
-if (window.SYSTEM_CONFIG && window.SYSTEM_CONFIG.hideAmountDisplay) {
-    feedbackAmount.style.display = 'none'; // 金額表示を完全に隠す
-} else {
-    feedbackAmount.textContent = `年間${amount}万円の改善効果`;
-    feedbackAmount.style.display = 'inline-block';
-}
+                if (window.SYSTEM_CONFIG && window.SYSTEM_CONFIG.hideAmountDisplay) {
+                    feedbackAmount.style.display = 'none'; // 金額表示を完全に隠す
+                } else {
+                    feedbackAmount.textContent = `年間${amount}万円の改善効果`;
+                    feedbackAmount.style.display = 'inline-block';
+                }
+                
                 feedbackCard.style.display = 'block';
 
                 // 累計を更新（初回回答後のみ表示）
@@ -936,13 +938,18 @@ if (window.SYSTEM_CONFIG && window.SYSTEM_CONFIG.hideAmountDisplay) {
                     }
                 });
 
-                // 累積表示の更新（初回回答後のみ表示）
+                // 累積表示の更新（hideAmountDisplay設定をチェック）
                 if (this.answers.length > 0 && this.answers.some(a => a !== undefined)) {
                     const cumulativeDisplay = document.getElementById('cumulative-display');
                     const cumulativeAmount = document.getElementById('cumulative-amount');
                     
-                    cumulativeDisplay.style.display = 'block';
-                    cumulativeAmount.textContent = `年間${this.totalImprovement}万円`;
+                    // hideAmountDisplay設定をチェック
+                    if (window.SYSTEM_CONFIG && window.SYSTEM_CONFIG.hideAmountDisplay) {
+                        cumulativeDisplay.style.display = 'none'; // 累積表示全体を非表示
+                    } else {
+                        cumulativeDisplay.style.display = 'block';
+                        cumulativeAmount.textContent = `年間${this.totalImprovement}万円`;
+                    }
                 }
             }
 
@@ -1273,3 +1280,4 @@ if (window.SYSTEM_CONFIG && window.SYSTEM_CONFIG.hideAmountDisplay) {
     </script>
 </body>
 </html>
+                

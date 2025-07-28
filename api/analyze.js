@@ -1,4 +1,4 @@
-// Vercel Serverless Function for ChatGPT API Integration (修正版 - 0万円問題解決)
+// Vercel Serverless Function for ChatGPT API Integration (構文エラー修正版)
 export default async function handler(req, res) {
   console.log('API呼び出し受信:', req.method);
 
@@ -20,7 +20,7 @@ export default async function handler(req, res) {
       success: true, 
       message: 'AI診断API エンドポイント正常動作',
       timestamp: new Date().toISOString(),
-      version: '3.1-fixed-zero-amount-issue'
+      version: '3.2-syntax-error-fixed'
     });
   }
 
@@ -64,7 +64,7 @@ export default async function handler(req, res) {
       });
     }
 
-    // AI分析生成（修正版 - 0万円問題解決）
+    // AI分析生成（構文エラー修正版）
     const analysis = await generateAIAnalysis(totalScore, totalImprovement, answers, apiKey);
     
     console.log('AI分析生成成功');
@@ -82,12 +82,12 @@ export default async function handler(req, res) {
   }
 }
 
-// AI分析生成関数（修正版 - 効果算出ロジック改善）
+// AI分析生成関数（構文エラー修正版）
 async function generateAIAnalysis(totalScore, totalImprovement, answers, apiKey) {
   console.log('ChatGPT API呼び出し開始');
   
   // スコアベースの効果算出（0万円問題の解決）
-  const calculatedImprovement = Math.max(totalScore * 20, 300); // 最低300万円、1点につき20万円
+  const calculatedImprovement = Math.max(totalScore * 20, 300);
   const effectiveImprovement = totalImprovement > 0 ? totalImprovement : calculatedImprovement;
   
   console.log('効果算出:', {
@@ -95,6 +95,26 @@ async function generateAIAnalysis(totalScore, totalImprovement, answers, apiKey)
     calculatedImprovement: calculatedImprovement,
     effectiveImprovement: effectiveImprovement
   });
+  
+  // スコアレベル説明を事前に計算
+  let scoreLevelDesc = 'AI活用による改善が期待できる状況';
+  if (totalScore >= 80) scoreLevelDesc = 'AI活用による大幅な改善が期待できる状況';
+  else if (totalScore >= 60) scoreLevelDesc = 'AI活用による一定の改善効果が見込める状況';
+  else if (totalScore >= 40) scoreLevelDesc = 'AI活用の効果は限定的ですが、慎重な検討により成果が期待できる状況';
+  else if (totalScore >= 20) scoreLevelDesc = '現状は比較的効率的ですが、補完的なAI活用により更なる向上が可能な状況';
+  else scoreLevelDesc = '現状は高度に効率化されており、AI活用の必要性は低い状況';
+  
+  // 効果計算を事前に実行
+  const effect1 = Math.floor(effectiveImprovement * 0.3);
+  const effect2 = Math.floor(effectiveImprovement * 0.4);
+  const effect3 = Math.floor(effectiveImprovement * 0.3);
+  const monthlyEffect1 = Math.floor(effectiveImprovement/12 * 0.3);
+  const monthlyEffect2 = Math.floor(effectiveImprovement/12 * 0.5);
+  const monthlyEffect3 = Math.floor(effectiveImprovement/12);
+  const yearlyEfficiency = Math.floor(effectiveImprovement * 0.6);
+  const yearlySales = Math.floor(effectiveImprovement * 0.4);
+  const recoveryPeriod = Math.ceil(500 / (effectiveImprovement / 12));
+  const threeYearEffect = effectiveImprovement * 3 - 500;
   
   const systemPrompt = `あなたは1,200社のAI導入を支援した経験豊富な専門コンサルタントです。
 
@@ -110,8 +130,8 @@ async function generateAIAnalysis(totalScore, totalImprovement, answers, apiKey)
 3. 投資対効果を適切なレベルで算出
 4. 実装ロードマップを段階的に提示
 
-# 必須出力形式（```htmlは出力しない）
-以下のHTML構造で出力してください：
+# 必須出力形式
+以下のHTML構造で出力してください（```htmlは出力しない）：
 
 <div class="ai-analysis">
   <h3>🤖 AI活用度分析レポート</h3>
@@ -120,30 +140,30 @@ async function generateAIAnalysis(totalScore, totalImprovement, answers, apiKey)
     <h4>📊 診断結果サマリー</h4>
     <p><strong>AI活用改善スコア：${totalScore}点/100点</strong></p>
     <p><strong>年間改善効果ポテンシャル：${effectiveImprovement}万円規模</strong></p>
-    <p>貴社の診断結果から、${getScoreLevelDescription(totalScore)}ことが判明いたしました。</p>
+    <p>貴社の診断結果から、${scoreLevelDesc}ことが判明いたしました。</p>
   </div>
   
   <h4>🎯 重要課題TOP3と解決策</h4>
   <ol>
-    <li><strong>業務効率化</strong><br>ChatGPT/Claude活用による文書作成効率化で年間${Math.floor(effectiveImprovement * 0.3)}万円規模の効果</li>
-    <li><strong>データ活用促進</strong><br>BIツール導入による意思決定高速化で年間${Math.floor(effectiveImprovement * 0.4)}万円規模の効果</li>
-    <li><strong>人材育成強化</strong><br>AI学習システム導入で教育コスト削減、年間${Math.floor(effectiveImprovement * 0.3)}万円規模の効果</li>
+    <li><strong>業務効率化</strong><br>ChatGPT/Claude活用による文書作成効率化で年間${effect1}万円規模の効果</li>
+    <li><strong>データ活用促進</strong><br>BIツール導入による意思決定高速化で年間${effect2}万円規模の効果</li>
+    <li><strong>人材育成強化</strong><br>AI学習システム導入で教育コスト削減、年間${effect3}万円規模の効果</li>
   </ol>
   
   <h4>💡 段階別実装ロードマップ</h4>
   <ol>
-    <li><strong>Phase 1（1-3ヶ月）：基盤構築</strong><br>ChatGPT Business導入、基本研修実施（投資額50万円、効果月額${Math.floor(effectiveImprovement/12 * 0.3)}万円規模）</li>
-    <li><strong>Phase 2（3-6ヶ月）：活用拡大</strong><br>RPA・分析ツール導入、部門展開（投資額150万円、効果月額${Math.floor(effectiveImprovement/12 * 0.5)}万円規模）</li>
-    <li><strong>Phase 3（6-12ヶ月）：高度化</strong><br>予測分析・自動化システム構築（投資額300万円、効果月額${Math.floor(effectiveImprovement/12)}万円規模）</li>
+    <li><strong>Phase 1（1-3ヶ月）：基盤構築</strong><br>ChatGPT Business導入、基本研修実施（投資額50万円、効果月額${monthlyEffect1}万円規模）</li>
+    <li><strong>Phase 2（3-6ヶ月）：活用拡大</strong><br>RPA・分析ツール導入、部門展開（投資額150万円、効果月額${monthlyEffect2}万円規模）</li>
+    <li><strong>Phase 3（6-12ヶ月）：高度化</strong><br>予測分析・自動化システム構築（投資額300万円、効果月額${monthlyEffect3}万円規模）</li>
   </ol>
   
   <h4>📈 参考ROI分析</h4>
   <ul>
     <li>推奨初期投資額: <strong>500万円</strong>（ツール・研修・システム構築費込み）</li>
-    <li>年間効率化効果: <strong>${Math.floor(effectiveImprovement * 0.6)}万円規模</strong></li>
-    <li>年間売上・生産性向上: <strong>${Math.floor(effectiveImprovement * 0.4)}万円規模</strong></li>
-    <li>投資回収期間: <strong>${Math.ceil(500 / (effectiveImprovement / 12))}ヶ月程度</strong></li>
-    <li>3年間累計効果: <strong>${effectiveImprovement * 3 - 500}万円規模</strong></li>
+    <li>年間効率化効果: <strong>${yearlyEfficiency}万円規模</strong></li>
+    <li>年間売上・生産性向上: <strong>${yearlySales}万円規模</strong></li>
+    <li>投資回収期間: <strong>${recoveryPeriod}ヶ月程度</strong></li>
+    <li>3年間累計効果: <strong>${threeYearEffect}万円規模</strong></li>
   </ul>
   
   <h4>⚡ 即座に実行可能なクイックウィン</h4>
@@ -153,15 +173,11 @@ async function generateAIAnalysis(totalScore, totalImprovement, answers, apiKey)
     <li>メール定型文作成の簡易自動化テンプレート導入（即実施可能）</li>
   </ul>
   
-  <div class="cta-box">
+  <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 15px; margin: 30px 0; text-align: center;">
     <h4>🚀 無料60分個別コンサルティングのご案内</h4>
-    <p>この分析結果を基に、貴社専用のAI活用戦略を詳細設計いたします。</p>
+    <p style="margin: 15px 0;">この分析結果を基に、貴社専用のAI活用戦略を詳細設計いたします。</p>
     <p><strong>特典：</strong>Phase 1の詳細実装計画書（25ページ）を無料提供</p>
     <p><strong>参加者特典：</strong>ChatGPT Business導入支援（通常30万円）を特別価格でご提供</p>
-    <a href="mailto:ai-consulting@business.com?subject=AI活用診断の相談&body=診断スコア: ${totalScore}点%0A改善効果: ${effectiveImprovement}万円規模" 
-       style="background: #28a745; color: white; padding: 15px 30px; border-radius: 8px; text-decoration: none; display: inline-block; margin: 15px 0;">
-       📧 無料個別相談を申し込む
-    </a>
   </div>
 </div>`;
 
@@ -227,13 +243,4 @@ function formatAnswersForAnalysis(answers) {
   return answers.map((answer, index) => {
     return `Q${index + 1}: スコア${answer.score}点, 改善効果${answer.amount}万円`;
   }).join('\n');
-}
-
-// スコアレベル説明
-function getScoreLevelDescription(score) {
-  if (score >= 80) return 'AI活用による大幅な改善が期待できる状況';
-  if (score >= 60) return 'AI活用による一定の改善効果が見込める状況';
-  if (score >= 40) return 'AI活用の効果は限定的ですが、慎重な検討により成果が期待できる状況';
-  if (score >= 20) return '現状は比較的効率的ですが、補完的なAI活用により更なる向上が可能な状況';
-  return '現状は高度に効率化されており、AI活用の必要性は低い状況';
 }

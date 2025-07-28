@@ -901,7 +901,13 @@
                 
                 feedbackTitle.textContent = feedback.title;
                 feedbackContent.textContent = feedback.content;
-                feedbackAmount.textContent = `年間${amount}万円の改善効果`;
+                // hideAmountDisplay設定をチェック
+if (window.SYSTEM_CONFIG && window.SYSTEM_CONFIG.hideAmountDisplay) {
+    feedbackAmount.style.display = 'none'; // 金額表示を完全に隠す
+} else {
+    feedbackAmount.textContent = `年間${amount}万円の改善効果`;
+    feedbackAmount.style.display = 'inline-block';
+}
                 feedbackCard.style.display = 'block';
 
                 // 累計を更新（初回回答後のみ表示）

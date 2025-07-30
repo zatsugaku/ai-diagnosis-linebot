@@ -1,28 +1,29 @@
-// AI活用診断システム - 質問データ（金額表示削除版・全10問完全版）
+// AI活用診断システム - 質問データ（完全修正版）
 // このファイルを /business/ai-adoption/public/js/questions_config.js に配置してください
 
 console.log('📊 AI活用診断システム - 質問データ読み込み開始');
 
+// 即座にグローバル変数として設定
 window.QUESTION_DATA = [
   {
     text: "Q1. 貴社では現在、AI技術（ChatGPT、Claude、生成AI等）をどの程度活用していますか？",
     category: "AI活用現状",
     options: [
       "まったく活用していない",
-      "個人レベルで一部の社員が試している",
+      "個人レベルで一部の社員が試している", 
       "部分的に業務で活用している",
       "組織的・戦略的に活用している",
       "AI活用が競争優位の源泉になっている"
     ],
     scores: [10, 8, 5, 2, 0],
-    amounts: [0, 0, 0, 0, 0],
+    amounts: [200, 150, 100, 50, 25],
     feedbacks: [
       {
         title: "💡 AI活用の大きなチャンス",
         content: "AI未活用企業の87%が2年以内に競争劣位に陥るリスクがあります。ChatGPT/Claude等の導入により業務効率を劇的に向上させることが可能です。"
       },
       {
-        title: "🚀 組織展開のタイミング",
+        title: "🚀 組織展開のタイミング", 
         content: "個人活用から組織活用への転換期です。全社的なAI活用ルール策定と研修により効果を最大化できます。"
       },
       {
@@ -44,13 +45,13 @@ window.QUESTION_DATA = [
     category: "業務効率性",
     options: [
       "資料作成・文書作成・企画書作成",
-      "データ入力・集計・分析作業", 
-      "顧客対応・問い合わせ処理・営業活動",
+      "データ入力・集計・分析作業",
+      "顧客対応・問い合わせ処理・営業活動", 
       "会議・打ち合わせ・社内調整",
       "既に効率化されており特に問題なし"
     ],
     scores: [10, 9, 8, 7, 2],
-    amounts: [0, 0, 0, 0, 0],
+    amounts: [180, 160, 140, 120, 40],
     feedbacks: [
       {
         title: "📝 AI文書作成で劇的改善",
@@ -61,7 +62,7 @@ window.QUESTION_DATA = [
         content: "RPA+AI活用でデータ処理の完全自動化が可能です。Excel VBAからPython AI活用への移行で更なる高度化も実現できます。"
       },
       {
-        title: "🤖 AI顧客対応システム",
+        title: "🤖 AI顧客対応システム", 
         content: "AIチャットボット導入で問い合わせ対応を80%自動化できます。営業支援AIにより成約率向上も期待できます。"
       },
       {
@@ -76,16 +77,16 @@ window.QUESTION_DATA = [
   },
   {
     text: "Q3. 貴社のデータ活用状況はどの段階にありますか？",
-    category: "データ活用度", 
+    category: "データ活用度",
     options: [
       "データの収集・蓄積すらできていない",
       "データはあるが分析・活用できていない",
-      "基本的な集計・分析は行っている",
+      "基本的な集計・分析は行っている", 
       "高度なデータ分析で意思決定している",
       "AI・機械学習で予測・最適化を実現"
     ],
     scores: [10, 8, 5, 3, 0],
-    amounts: [0, 0, 0, 0, 0],
+    amounts: [150, 130, 80, 60, 30],
     feedbacks: [
       {
         title: "📊 データ基盤構築の効果",
@@ -116,11 +117,11 @@ window.QUESTION_DATA = [
       "AIについてほとんど知識がない",
       "AIの基本概念は理解しているが活用できない",
       "一部の社員がAIツールを使いこなしている",
-      "多くの社員がAIを日常業務で活用している",
+      "多くの社員がAIを日常業務で活用している", 
       "AI専門人材がおり高度な活用ができている"
     ],
     scores: [10, 8, 5, 2, 0],
-    amounts: [0, 0, 0, 0, 0],
+    amounts: [170, 140, 90, 50, 25],
     feedbacks: [
       {
         title: "🎓 AIリテラシー研修の効果",
@@ -146,7 +147,7 @@ window.QUESTION_DATA = [
   },
   {
     text: "Q5. AI導入において、最も大きな課題・障壁は何ですか？",
-    category: "導入課題",
+    category: "導入課題", 
     options: [
       "予算・投資対効果が不透明",
       "AI人材・知識・スキルが不足している",
@@ -155,7 +156,7 @@ window.QUESTION_DATA = [
       "特に大きな課題は感じていない"
     ],
     scores: [9, 10, 7, 6, 1],
-    amounts: [0, 0, 0, 0, 0],
+    amounts: [160, 180, 120, 100, 30],
     feedbacks: [
       {
         title: "💰 ROI明確化による投資促進",
@@ -190,7 +191,7 @@ window.QUESTION_DATA = [
       "AI主導の高度な顧客体験を実現"
     ],
     scores: [10, 7, 5, 2, 0],
-    amounts: [0, 0, 0, 0, 0],
+    amounts: [140, 110, 80, 50, 25],
     feedbacks: [
       {
         title: "🤖 AI顧客対応システム導入",
@@ -219,13 +220,13 @@ window.QUESTION_DATA = [
     category: "競合比較",
     options: [
       "明らかに遅れている",
-      "やや遅れている",
+      "やや遅れている", 
       "同程度・平均的",
       "やや進んでいる",
       "業界をリードしている"
     ],
     scores: [10, 7, 5, 2, 0],
-    amounts: [0, 0, 0, 0, 0],
+    amounts: [150, 120, 90, 60, 30],
     feedbacks: [
       {
         title: "🏃‍♂️ 競合追撃・差別化戦略",
@@ -260,7 +261,7 @@ window.QUESTION_DATA = [
       "まだ具体的な期待効果は不明確"
     ],
     scores: [7, 9, 8, 6, 10],
-    amounts: [0, 0, 0, 0, 0],
+    amounts: [120, 160, 140, 100, 180],
     feedbacks: [
       {
         title: "💰 確実なコスト削減効果",
@@ -295,7 +296,7 @@ window.QUESTION_DATA = [
       "既に継続的な拡大・改善を実行中"
     ],
     scores: [10, 8, 5, 2, 0],
-    amounts: [0, 0, 0, 0, 0],
+    amounts: [170, 130, 90, 60, 30],
     feedbacks: [
       {
         title: "📋 AI戦略ロードマップ策定",
@@ -330,7 +331,7 @@ window.QUESTION_DATA = [
       "まだ成功要因がよくわからない"
     ],
     scores: [6, 8, 7, 5, 10],
-    amounts: [0, 0, 0, 0, 0],
+    amounts: [80, 120, 100, 90, 160],
     feedbacks: [
       {
         title: "💪 経営主導AI変革の実現",
@@ -356,17 +357,22 @@ window.QUESTION_DATA = [
   }
 ];
 
-// システム設定
+// システム設定（戦略的判断を反映）
 window.SYSTEM_CONFIG = {
   title: "🤖 AI活用度診断",
-  subtitle: "3分で判明。あなたの会社の『AI活用ポテンシャル』",
+  subtitle: "3分で判明。あなたの会社の『AI活用ポテンシャル』", 
   maxScore: 100,
   completionMessage: "診断完了！AI活用による具体的な改善効果をご確認ください。",
   apiEndpoint: "/api/analyze",
-  hideAmountDisplay: true  // 金額表示を完全に無効化
+  hideAmountDisplay: false  // 修正: 一時的に表示を有効化してテスト
 };
 
-console.log('✅ AI活用診断システム - 質問データ読み込み完了（金額表示無効化版）');
+console.log('✅ AI活用診断システム - 質問データ読み込み完了（修正版）');
 console.log(`📊 設定済み質問数: ${window.QUESTION_DATA.length}問`);
 console.log(`🎯 診断タイトル: ${window.SYSTEM_CONFIG.title}`);
-console.log(`💰 金額表示: 無効化（AIレポートでのみ表示）`);
+console.log(`💰 金額表示: ${window.SYSTEM_CONFIG.hideAmountDisplay ? '無効化' : '有効化'}（テスト用）`);
+
+// 即座に初期化トリガー
+if (typeof window.diagnosisSystem !== 'undefined' && window.diagnosisSystem.waitForQuestionData) {
+  window.diagnosisSystem.waitForQuestionData();
+}

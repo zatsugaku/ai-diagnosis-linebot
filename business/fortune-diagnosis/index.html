@@ -1,0 +1,1238 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔮 占い適性診断 - あなたにピッタリの占い手法を見つけよう</title>
+    <meta name="description" content="3分で判明！あなたの性格・価値観から最適な占い手法を診断。タロット、占星術、手相など6つの手法から最適なものをご提案。">
+    <meta name="keywords" content="占い診断,タロット,占星術,手相,数秘術,易経,オラクルカード,占い適性">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            overflow: hidden;
+            min-height: 95vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 30px 30px 20px 30px;
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .header::before {
+            content: '🔮✨🌙⭐🔯💫🌟';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            font-size: 1.5em;
+            opacity: 0.1;
+            animation: floatingStars 20s linear infinite;
+        }
+
+        @keyframes floatingStars {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-weight: 700;
+        }
+
+        .header .subtitle {
+            font-size: 1.1em;
+            opacity: 0.95;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .header .description {
+            font-size: 1em;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.4;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            justify-content: center;
+        }
+
+        .progress-container {
+            margin-bottom: 20px;
+            flex-shrink: 0;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .progress-text {
+            font-size: 1em;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(90deg, #e9ecef 0%, #f8f9fa 100%);
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.8s ease;
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: progressShine 2s infinite;
+        }
+
+        @keyframes progressShine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .question-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 0;
+        }
+
+        .question-card {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.2);
+            border: 3px solid rgba(255,255,255,0.3);
+            position: relative;
+            overflow: hidden;
+            animation: slideInFromBottom 0.6s ease-out;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        @keyframes slideInFromBottom {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .question-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .question-category {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            display: inline-block;
+            margin-bottom: 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .question-text {
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: #2d3436;
+            line-height: 1.4;
+        }
+
+        .options-container {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .option {
+            background: white;
+            border: 2px solid #e0e6ff;
+            border-radius: 12px;
+            padding: 18px 22px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            font-size: 1em;
+            position: relative;
+            overflow: hidden;
+            font-weight: 500;
+        }
+
+        .option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .option:hover {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
+        }
+
+        .option:hover::before {
+            left: 100%;
+        }
+
+        .option.selected {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .integrated-feedback {
+            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            display: none;
+            box-shadow: 0 8px 25px rgba(0, 184, 148, 0.3);
+            border: 2px solid rgba(255,255,255,0.2);
+            animation: slideInFromRight 0.5s ease-out;
+        }
+
+        @keyframes slideInFromRight {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .feedback-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feedback-content {
+            font-size: 1em;
+            line-height: 1.5;
+            opacity: 0.95;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            gap: 15px;
+            flex-shrink: 0;
+        }
+
+        .nav-button {
+            padding: 15px 35px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            flex: 1;
+            max-width: 200px;
+        }
+
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .prev-button {
+            background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+            color: white;
+        }
+
+        .prev-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(149, 165, 166, 0.4);
+        }
+
+        .next-button {
+            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+            color: white;
+        }
+
+        .next-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 184, 148, 0.4);
+        }
+
+        .fortune-analysis-button {
+            background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+            color: white;
+            border: none;
+            padding: 18px 45px;
+            border-radius: 25px;
+            font-size: 1.3em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 20px auto;
+            display: block;
+            box-shadow: 0 10px 30px rgba(108, 92, 231, 0.3);
+            width: 100%;
+            max-width: 350px;
+        }
+
+        .fortune-analysis-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(108, 92, 231, 0.4);
+        }
+
+        .loading-container {
+            text-align: center;
+            margin: 30px 0;
+            display: none;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 30px;
+            border-radius: 20px;
+            border: 2px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .loading-container h2 {
+            color: #667eea;
+            margin-bottom: 25px;
+            font-size: 1.8em;
+        }
+
+        .loading-step {
+            padding: 15px 25px;
+            margin: 12px 0;
+            border-radius: 10px;
+            background: white;
+            transition: all 0.4s ease;
+            border: 1px solid #e0e6ff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.95em;
+        }
+
+        .loading-step.active {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            border-left: 4px solid #fdcb6e;
+            transform: translateX(10px);
+        }
+
+        .loading-step.completed {
+            background: linear-gradient(135deg, #d4edda 0%, #a8e6cf 100%);
+            border-left: 4px solid #00b894;
+            transform: translateX(5px);
+        }
+
+        .results-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 25px;
+            text-align: center;
+            margin-top: 30px;
+            display: none;
+            box-shadow: 0 20px 45px rgba(102, 126, 234, 0.3);
+            border: 3px solid rgba(255,255,255,0.2);
+            animation: slideInFromBottom 0.8s ease-out;
+        }
+
+        .fortune-display {
+            font-size: 3.5em;
+            margin: 25px 0;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            background: rgba(255,255,255,0.15);
+            border-radius: 20px;
+            padding: 25px;
+            display: inline-block;
+            min-width: 250px;
+        }
+
+        .fortune-description {
+            font-size: 1.3em;
+            margin: 25px 0;
+            padding: 18px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            font-weight: 500;
+        }
+
+        .fortune-details {
+            background: rgba(255,255,255,0.1);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+            text-align: left;
+        }
+
+        .fortune-details h3 {
+            margin-bottom: 15px;
+            color: #fff;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+            padding-bottom: 10px;
+        }
+
+        .fortune-details ul, .fortune-details ol {
+            margin: 15px 0;
+            padding-left: 20px;
+        }
+
+        .fortune-details li {
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+
+        .ai-analysis-card {
+            margin-top: 30px;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            border-radius: 20px;
+            padding: 35px;
+            display: none;
+            border: 3px solid #667eea;
+            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.1);
+            animation: slideInFromBottom 0.8s ease-out;
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+            color: white;
+            padding: 35px;
+            border-radius: 20px;
+            text-align: center;
+            margin-top: 30px;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .cta-section h2 {
+            margin-bottom: 18px;
+            font-size: 2em;
+        }
+
+        .cta-section p {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            opacity: 0.95;
+        }
+
+        .cta-button {
+            background: white;
+            color: #6c5ce7;
+            padding: 18px 40px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 15px 10px;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 8px 25px rgba(255,255,255,0.2);
+            min-width: 220px;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(255,255,255,0.3);
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+
+        .share-button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .share-twitter {
+            background: #1da1f2;
+            color: white;
+        }
+
+        .share-line {
+            background: #00c300;
+            color: white;
+        }
+
+        .share-facebook {
+            background: #3b5998;
+            color: white;
+        }
+
+        .share-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        /* スマホ対応 */
+        @media (max-width: 768px) {
+            body {
+                padding: 5px;
+            }
+            
+            .container {
+                border-radius: 15px;
+                min-height: 98vh;
+            }
+            
+            .header {
+                padding: 20px 15px 15px 15px;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .main-content {
+                padding: 15px;
+            }
+            
+            .question-card {
+                padding: 25px 20px;
+            }
+            
+            .navigation {
+                flex-direction: column;
+                gap: 12px;
+            }
+            
+            .nav-button {
+                width: 100%;
+                max-width: none;
+                padding: 16px 30px;
+            }
+            
+            .fortune-display {
+                font-size: 2.8em;
+                min-width: auto;
+                padding: 20px;
+            }
+
+            .fortune-analysis-button {
+                width: 100%;
+                max-width: none;
+                padding: 16px 35px;
+                font-size: 1.2em;
+            }
+
+            .share-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .share-button {
+                width: 100%;
+                max-width: 250px;
+                justify-content: center;
+            }
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <h1>🔮 占い適性診断</h1>
+                <div class="subtitle">3分で判明。あなたにピッタリの占い手法</div>
+                <div class="description">
+                    性格・価値観・学習スタイルから、最も相性の良い占い手法を診断します。
+                    タロット、占星術、手相、数秘術、易経、オラクルカードの中からあなたに最適なものをご提案。
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="progress-container">
+                <div class="progress-info">
+                    <span class="progress-text" id="progress-text">質問1 / 8</span>
+                    <span class="progress-text" id="completion-rate">完了率: 12%</span>
+                </div>
+                <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="12">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+            </div>
+
+            <div class="question-container" id="question-container">
+                <div class="question-text" id="loading-message">🔮 占い診断システムを初期化中...</div>
+            </div>
+
+            <nav class="navigation" role="navigation" aria-label="診断ナビゲーション">
+                <button class="nav-button prev-button" id="prev-button" onclick="fortuneDiagnosis.previousQuestion()" disabled aria-label="前の質問に戻る">
+                    ← 前の質問に戻る
+                </button>
+                <button class="nav-button next-button" id="next-button" onclick="fortuneDiagnosis.nextQuestion()" disabled aria-label="次の質問へ進む">
+                    次の質問へ →
+                </button>
+            </nav>
+
+            <button class="fortune-analysis-button" id="fortune-analysis-button" onclick="fortuneDiagnosis.startFortuneAnalysis()" style="display: none;" aria-label="詳細分析を開始">
+                🔮 詳細分析を開始
+            </button>
+
+            <div class="loading-container" id="loading-container" aria-live="polite">
+                <h2>🔮 占い適性分析実行中...</h2>
+                <div class="loading-step" id="step1">
+                    <span>🔍 性格・価値観パターンを分析中...</span>
+                    <span class="spinner" aria-hidden="true">⏳</span>
+                </div>
+                <div class="loading-step" id="step2">
+                    <span>📊 6つの占い手法との相性を算出中...</span>
+                    <span class="spinner" aria-hidden="true">⏳</span>
+                </div>
+                <div class="loading-step" id="step3">
+                    <span>🎯 最適な学習方法を特定中...</span>
+                    <span class="spinner" aria-hidden="true">⏳</span>
+                </div>
+                <div class="loading-step" id="step4">
+                    <span>💡 個別アドバイスを生成中...</span>
+                    <span class="spinner" aria-hidden="true">⏳</span>
+                </div>
+                <div class="loading-step" id="step5">
+                    <span>📋 カスタマイズレポートを完成中...</span>
+                    <span class="spinner" aria-hidden="true">⏳</span>
+                </div>
+            </div>
+
+            <div class="results-card" id="results-card" role="region" aria-label="診断結果">
+                <h2>🎯 占い適性診断結果</h2>
+                <div class="fortune-display" id="final-fortune" aria-label="診断結果">🌟 タロットカード</div>
+                <div class="fortune-description" id="fortune-description">
+                    あなたは直感的で想像力豊か。タロットの象徴的なイメージから深い洞察を得られるタイプです。
+                </div>
+                <div class="fortune-details" id="fortune-details">
+                    <!-- 詳細が動的に挿入される -->
+                </div>
+                
+                <div class="share-buttons">
+                    <button class="share-button share-twitter" onclick="shareResult('twitter')">
+                        🐦 Twitter で共有
+                    </button>
+                    <button class="share-button share-line" onclick="shareResult('line')">
+                        💬 LINE で共有
+                    </button>
+                    <button class="share-button share-facebook" onclick="shareResult('facebook')">
+                        📘 Facebook で共有
+                    </button>
+                </div>
+            </div>
+
+            <div class="ai-analysis-card" id="ai-analysis-section" role="region" aria-label="詳細分析結果">
+                <div id="analysis-content"></div>
+            </div>
+
+            <div class="cta-section">
+                <h2>🔮 LINE で占い情報をお届け</h2>
+                <p>今日の運勢や占い豆知識を毎日配信中！</p>
+                <p>あなたに最適な占い手法の詳しい解説やアドバイスも。</p>
+                <a href="https://line.me/R/ti/p/@your-line-id" class="cta-button">
+                    💬 LINE友達登録（無料）
+                </a>
+            </div>
+        </main>
+    </div>
+
+    <!-- 質問データの読み込み -->
+    <script src="fortune_questions_config.js"></script>
+    
+    <script>
+        class FortuneDiagnosisSystem {
+            constructor() {
+                this.currentQuestion = 0;
+                this.answers = [];
+                this.fortunes = {}; // 各占い手法のスコア
+                this.questionData = null;
+                this.startTime = new Date();
+                
+                this.debugMode = false; // 本番では false
+                
+                this.log('🔮 占い適性診断システム初期化開始');
+                this.log('⏰ 開始時刻:', this.startTime.toISOString());
+                
+                this.waitForQuestionData();
+            }
+
+            log(...args) {
+                if (this.debugMode) {
+                    console.log(...args);
+                }
+            }
+
+            waitForQuestionData() {
+                const checkData = () => {
+                    if (typeof window.QUESTION_DATA !== 'undefined' && window.QUESTION_DATA.length > 0) {
+                        this.log('✅ 質問データ読み込み成功:', window.QUESTION_DATA.length, '問');
+                        
+                        this.questionData = window.QUESTION_DATA;
+                        this.initializeFortunes();
+                        this.initializeDiagnosis();
+                    } else {
+                        this.log('⏳ 質問データ読み込み待機中...');
+                        setTimeout(checkData, 100);
+                    }
+                };
+                checkData();
+            }
+
+            initializeFortunes() {
+                // 各占い手法のスコアを初期化
+                this.fortunes = {
+                    tarot: 0,
+                    astrology: 0,
+                    palmistry: 0,
+                    numerology: 0,
+                    iching: 0,
+                    oracle: 0
+                };
+            }
+
+            initializeDiagnosis() {
+                try {
+                    this.showQuestion();
+                    this.updateProgress();
+                    this.updateNavigation();
+                    
+                    this.log('✅ 占い診断システム初期化完了');
+                } catch (error) {
+                    console.error('💥 初期化エラー:', error);
+                    this.showError('システムの初期化に失敗しました。ページを再読み込みしてください。');
+                }
+            }
+
+            showError(message) {
+                const container = document.getElementById('question-container');
+                container.innerHTML = `
+                    <div class="error-message" role="alert">
+                        <h3>⚠️ システムエラー</h3>
+                        <p>${message}</p>
+                        <button onclick="location.reload()" class="cta-button" style="margin-top: 20px;">
+                            🔄 ページを再読み込み
+                        </button>
+                    </div>
+                `;
+            }
+
+            showQuestion() {
+                if (!this.questionData || this.currentQuestion >= this.questionData.length) {
+                    this.showResults();
+                    return;
+                }
+
+                const question = this.questionData[this.currentQuestion];
+                const container = document.getElementById('question-container');
+                
+                container.innerHTML = `
+                    <div class="question-card">
+                        <div class="question-category">${question.category}</div>
+                        <div class="question-text">${question.text}</div>
+                        <div class="options-container" role="radiogroup" aria-labelledby="question-text">
+                            ${question.options.map((option, index) => `
+                                <div class="option" data-index="${index}" onclick="fortuneDiagnosis.selectOption(${index})" role="button" tabindex="0" aria-label="選択肢 ${index + 1}: ${option}">
+                                    ${option}
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="integrated-feedback" id="feedback-${this.currentQuestion}" aria-live="polite">
+                            <div class="feedback-title"></div>
+                            <div class="feedback-content"></div>
+                        </div>
+                    </div>
+                `;
+
+                // 既に回答がある場合は選択状態を復元
+                if (this.answers[this.currentQuestion] !== undefined) {
+                    this.selectOption(this.answers[this.currentQuestion].selectedIndex, false);
+                }
+
+                this.addKeyboardSupport();
+            }
+
+            addKeyboardSupport() {
+                const options = document.querySelectorAll('.option');
+                options.forEach((option, index) => {
+                    option.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            this.selectOption(index);
+                        }
+                    });
+                });
+            }
+
+            selectOption(optionIndex, animate = true) {
+                document.querySelectorAll('.option').forEach(opt => {
+                    opt.classList.remove('selected');
+                    opt.setAttribute('aria-selected', 'false');
+                });
+                
+                const selectedOption = document.querySelector(`[data-index="${optionIndex}"]`);
+                if (selectedOption) {
+                    selectedOption.classList.add('selected');
+                    selectedOption.setAttribute('aria-selected', 'true');
+                }
+
+                const question = this.questionData[this.currentQuestion];
+                const feedback = question.feedbacks[optionIndex];
+
+                // 回答を保存
+                this.answers[this.currentQuestion] = {
+                    selectedIndex: optionIndex,
+                    timestamp: new Date()
+                };
+
+                // スコア計算（占い手法別）
+                this.calculateFortuneScores(this.currentQuestion, optionIndex);
+
+                // フィードバック表示
+                const feedbackCard = document.getElementById(`feedback-${this.currentQuestion}`);
+                const feedbackTitle = feedbackCard.querySelector('.feedback-title');
+                const feedbackContent = feedbackCard.querySelector('.feedback-content');
+                
+                feedbackTitle.textContent = feedback.title;
+                feedbackContent.textContent = feedback.content;
+                feedbackCard.style.display = 'block';
+
+                this.updateNavigation();
+
+                this.log(`Q${this.currentQuestion + 1} 回答:`, {
+                    option: optionIndex,
+                    fortunes: this.fortunes
+                });
+            }
+
+            calculateFortuneScores(questionIndex, optionIndex) {
+                // 各質問の回答に基づいて占い手法のスコアを更新
+                const scoringRules = {
+                    0: { // Q1: 意思決定スタイル
+                        0: { astrology: 3, numerology: 3 }, // 論理的分析
+                        1: { tarot: 4, oracle: 3 }, // 直感重視
+                        2: { palmistry: 3, iching: 2 }, // 相談重視
+                        3: { iching: 3, numerology: 2 } // 慎重思考
+                    },
+                    1: { // Q2: ストレス解消
+                        0: { palmistry: 3, numerology: 2 }, // 体を動かす
+                        1: { tarot: 4, oracle: 3 }, // 創作活動
+                        2: { palmistry: 3, astrology: 2 }, // 人と話す
+                        3: { iching: 4, oracle: 3 } // 一人で静かに
+                    },
+                    2: { // Q3: 未来観
+                        0: { oracle: 3, astrology: 3 }, // ワクワク
+                        1: { tarot: 4, astrology: 2 }, // 興味深いが不安
+                        2: { iching: 3, palmistry: 2 }, // 心配・不安
+                        3: { oracle: 2, palmistry: 2 } // あまり考えたくない
+                    },
+                    3: { // Q4: 学習スタイル
+                        0: { astrology: 4, numerology: 3 }, // 体系的理論
+                        1: { tarot: 4, palmistry: 3 }, // 実践しながら
+                        2: { palmistry: 3, astrology: 2 }, // 人から教わる
+                        3: { iching: 3, numerology: 2 } // マイペース
+                    },
+                    4: { // Q5: 価値観
+                        0: { astrology: 3, numerology: 2 }, // 成長・向上
+                        1: { tarot: 3, oracle: 2 }, // 愛・調和
+                        2: { iching: 3, astrology: 2 }, // 安定・安心
+                        3: { tarot: 4, oracle: 3 } // 自由・創造
+                    },
+                    5: { // Q6: 人間関係
+                        0: { tarot: 4, astrology: 2 }, // 深く理解
+                        1: { oracle: 3, palmistry: 2 }, // 楽しく過ごす
+                        2: { palmistry: 3, iching: 2 }, // 支え合う
+                        3: { astrology: 3, numerology: 2 } // 尊重
+                    },
+                    6: { // Q7: 問題解決志向
+                        0: { palmistry: 3, numerology: 2 }, // 具体的アドバイス
+                        1: { oracle: 4, tarot: 2 }, // 心の支え
+                        2: { tarot: 4, astrology: 3 }, // 分析・理解
+                        3: { iching: 4, oracle: 2 } // 受容・流れ
+                    },
+                    7: { // Q8: 運命観
+                        0: { palmistry: 3, numerology: 2 }, // 自分で切り開く
+                        1: { astrology: 3, tarot: 2 }, // バランス思考
+                        2: { tarot: 4, oracle: 4 }, // 運命感受
+                        3: { iching: 4, astrology: 2 } // 運命受容
+                    }
+                };
+
+                const questionScoring = scoringRules[questionIndex];
+                if (questionScoring && questionScoring[optionIndex]) {
+                    Object.keys(questionScoring[optionIndex]).forEach(fortuneType => {
+                        this.fortunes[fortuneType] += questionScoring[optionIndex][fortuneType];
+                    });
+                }
+            }
+
+            updateProgress() {
+                const progress = ((this.currentQuestion + 1) / this.questionData.length) * 100;
+                const completionRate = Math.round(progress);
+                
+                const progressFill = document.getElementById('progress-fill');
+                const progressBar = progressFill.parentElement;
+                
+                progressFill.style.width = `${progress}%`;
+                progressBar.setAttribute('aria-valuenow', completionRate);
+                
+                document.getElementById('progress-text').textContent = `質問${this.currentQuestion + 1} / ${this.questionData.length}`;
+                document.getElementById('completion-rate').textContent = `完了率: ${completionRate}%`;
+            }
+
+            updateNavigation() {
+                const prevButton = document.getElementById('prev-button');
+                const nextButton = document.getElementById('next-button');
+
+                prevButton.disabled = this.currentQuestion === 0;
+                nextButton.disabled = this.answers[this.currentQuestion] === undefined;
+
+                if (this.currentQuestion === this.questionData.length - 1 && this.answers[this.currentQuestion] !== undefined) {
+                    nextButton.style.display = 'none';
+                    document.getElementById('fortune-analysis-button').style.display = 'block';
+                } else {
+                    nextButton.style.display = 'inline-block';
+                    document.getElementById('fortune-analysis-button').style.display = 'none';
+                }
+            }
+
+            previousQuestion() {
+                if (this.currentQuestion > 0) {
+                    this.currentQuestion--;
+                    this.showQuestion();
+                    this.updateProgress();
+                    this.updateNavigation();
+                }
+            }
+
+            nextQuestion() {
+                if (this.currentQuestion < this.questionData.length - 1) {
+                    this.currentQuestion++;
+                    this.showQuestion();
+                    this.updateProgress();
+                    this.updateNavigation();
+                } else {
+                    this.showResults();
+                }
+            }
+
+            showResults() {
+                document.querySelector('.navigation').style.display = 'none';
+                document.getElementById('fortune-analysis-button').style.display = 'block';
+                document.getElementById('question-container').style.display = 'none';
+                
+                this.displayFortuneResults();
+            }
+
+            displayFortuneResults() {
+                const topFortune = this.getTopFortune();
+                const fortuneData = window.FORTUNE_TYPES[topFortune];
+                
+                const resultsCard = document.getElementById('results-card');
+                const fortuneDisplay = document.getElementById('final-fortune');
+                const fortuneDescription = document.getElementById('fortune-description');
+                const fortuneDetails = document.getElementById('fortune-details');
+
+                fortuneDisplay.textContent = `${fortuneData.emoji} ${fortuneData.name}`;
+                fortuneDescription.textContent = fortuneData.description;
+
+                fortuneDetails.innerHTML = `
+                    <h3>📋 あなたの特徴</h3>
+                    <ul>
+                        ${fortuneData.characteristics.map(trait => `<li>${trait}</li>`).join('')}
+                    </ul>
+                    
+                    <h3>🚀 始め方ガイド</h3>
+                    <ol>
+                        ${fortuneData.howToStart.map(step => `<li>${step}</li>`).join('')}
+                    </ol>
+                    
+                    <h3>💡 成功のコツ</h3>
+                    <ul>
+                        ${fortuneData.tips.map(tip => `<li>${tip}</li>`).join('')}
+                    </ul>
+                `;
+                
+                resultsCard.style.display = 'block';
+
+                this.log('🎯 診断結果:', {
+                    topFortune: topFortune,
+                    scores: this.fortunes,
+                    duration: new Date() - this.startTime
+                });
+            }
+
+            getTopFortune() {
+                let maxScore = 0;
+                let topFortune = 'tarot';
+                
+                Object.keys(this.fortunes).forEach(fortuneType => {
+                    if (this.fortunes[fortuneType] > maxScore) {
+                        maxScore = this.fortunes[fortuneType];
+                        topFortune = fortuneType;
+                    }
+                });
+                
+                return topFortune;
+            }
+
+            async startFortuneAnalysis() {
+                document.getElementById('fortune-analysis-button').style.display = 'none';
+                
+                const loadingContainer = document.getElementById('loading-container');
+                loadingContainer.style.display = 'block';
+                
+                this.log('🔮 詳細分析開始');
+                
+                await this.animateLoadingSteps();
+                
+                try {
+                    const analysisResult = await this.callFortuneAnalysis();
+                    this.displayFortuneAnalysis(analysisResult);
+                } catch (error) {
+                    console.error('占い分析エラー:', error);
+                    this.displayFallbackAnalysis();
+                }
+                
+                loadingContainer.style.display = 'none';
+            }
+
+            async animateLoadingSteps() {
+                const steps = ['step1', 'step2', 'step3', 'step4', 'step5'];
+                const durations = [1500, 2000, 1500, 1500, 1000];
+                
+                for (let i = 0; i < steps.length; i++) {
+                    const step = document.getElementById(steps[i]);
+                    step.classList.add('active');
+                    
+                    await new Promise(resolve => setTimeout(resolve, durations[i]));
+                    
+                    step.classList.remove('active');
+                    step.classList.add('completed');
+                    step.querySelector('.spinner').textContent = '✅';
+                }
+            }
+
+            async callFortuneAnalysis() {
+                const topFortune = this.getTopFortune();
+                
+                const response = await fetch('/api/fortune-analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        answers: this.answers,
+                        fortunes: this.fortunes,
+                        topFortune: topFortune
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                if (!data.success) {
+                    throw new Error(data.error || '占い分析に失敗しました');
+                }
+
+                return data.analysis;
+            }
+
+            displayFortuneAnalysis(analysis) {
+                const analysisSection = document.getElementById('ai-analysis-section');
+                const analysisContent = document.getElementById('analysis-content');
+                
+                analysisContent.innerHTML = analysis;
+                analysisSection.style.display = 'block';
+
+                this.log('✅ 占い分析結果表示完了');
+            }
+
+            displayFallbackAnalysis() {
+                const topFortune = this.getTopFortune();
+                const fortuneData = window.FORTUNE_TYPES[topFortune];
+                
+                const analysisSection = document.getElementById('ai-analysis-section');
+                const analysisContent = document.getElementById('analysis-content');
+                
+                const analysisHTML = `
+                    <div class="fortune-analysis">
+                        <h3>🔮 詳細分析レポート</h3>
+                        
+                        <div class="highlight-box" style="background: linear-gradient(135deg, #e8f4f8 0%, #d1ecf1 100%); padding: 25px; border-radius: 12px; margin: 25px 0; border-left: 5px solid #00b894;">
+                            <h4>📊 診断結果サマリー</h4>
+                            <p><strong>最適占い手法：${fortuneData.name}</strong></p>
+                            <p><strong>適性度：${this.fortunes[topFortune]}/32ポイント</strong></p>
+                            <p>あなたの性格・価値観から、${fortuneData.name}が最も適していることが判明しました。</p>
+                        </div>
+                        
+                        <h4>🎯 なぜこの占いがあなたに最適なのか</h4>
+                        <p>${fortuneData.description}</p>
+                        <p>あなたの回答パターンから、この占い手法の特徴があなたの思考スタイルや価値観と非常によく合致していることがわかります。</p>
+                        
+                        <h4>📚 効果的な学習ステップ</h4>
+                        <ol>
+                            ${fortuneData.howToStart.map((step, index) => `
+                                <li><strong>ステップ${index + 1}：</strong>${step}</li>
+                            `).join('')}
+                        </ol>
+                        
+                        <h4>🌟 より深く活用するために</h4>
+                        <ul>
+                            ${fortuneData.tips.map(tip => `<li>${tip}</li>`).join('')}
+                        </ul>
+                        
+                        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 25px; border-radius: 15px; margin: 25px 0; text-align: center;">
+                            <h4>🎁 LINE で占い情報配信中</h4>
+                            <p style="margin: 15px 0;">毎日の運勢や${fortuneData.name}の活用テクニックを配信しています。</p>
+                            <p><strong>特典：</strong>あなた専用の占い学習ガイドを無料プレゼント！</p>
+                        </div>
+                    </div>
+                `;
+                
+                analysisContent.innerHTML = analysisHTML;
+                analysisSection.style.display = 'block';
+
+                this.log('📋 フォールバック分析表示完了');
+            }
+        }
+
+        // 結果共有機能
+        function shareResult(platform) {
+            const topFortune = fortuneDiagnosis.getTopFortune();
+            const fortuneData = window.FORTUNE_TYPES[topFortune];
+            
+            const shareData = {
+                title: `私に最適な占いは「${fortuneData.name}」でした！`,
+                text: `🔮 占い適性診断で自分にピッタリの占い手法を発見！\n\n${fortuneData.emoji} ${fortuneData.name}\n\nあなたも診断してみませんか？`,
+                url: window.location.href
+            };
+            
+            const shareTexts = {
+                twitter: `${shareData.text}\n\n${shareData.url}\n\n#占い診断 #占い適性`,
+                line: `${shareData.text}\n${shareData.url}`,
+                facebook: shareData.url
+            };
+            
+            const shareUrls = {
+                twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareTexts.twitter)}`,
+                line: `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(shareData.url)}&text=${encodeURIComponent(shareTexts.line)}`,
+                facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareData.url)}`
+            };
+            
+            window.open(shareUrls[platform], '_blank', 'width=600,height=400');
+        }
+
+        // システム初期化
+        let fortuneDiagnosis;
+        
+        function initializeSystem() {
+            fortuneDiagnosis = new FortuneDiagnosisSystem();
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeSystem);
+        } else {
+            initializeSystem();
+        }
+
+        console.log('🎉 占い適性診断システム読み込み完了');
+    </script>
+</body>
+</html>

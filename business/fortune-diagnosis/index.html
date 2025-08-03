@@ -468,6 +468,47 @@
             animation: slideInFromBottom 0.8s ease-out;
         }
 
+        .share-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+
+        .share-button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .share-twitter {
+            background: #1da1f2;
+            color: white;
+        }
+
+        .share-line {
+            background: #00c300;
+            color: white;
+        }
+
+        .share-facebook {
+            background: #3b5998;
+            color: white;
+        }
+
+        .share-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
         .cta-section {
             background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
             color: white;
@@ -509,47 +550,6 @@
         .cta-button:hover {
             transform: translateY(-3px);
             box-shadow: 0 15px 35px rgba(255,255,255,0.3);
-        }
-
-        .share-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin: 25px 0;
-            flex-wrap: wrap;
-        }
-
-        .share-button {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 20px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .share-twitter {
-            background: #1da1f2;
-            color: white;
-        }
-
-        .share-line {
-            background: #00c300;
-            color: white;
-        }
-
-        .share-facebook {
-            background: #3b5998;
-            color: white;
-        }
-
-        .share-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
         }
 
         /* スマホ対応 */
@@ -680,7 +680,7 @@
                     <span class="spinner" aria-hidden="true">⏳</span>
                 </div>
                 <div class="loading-step" id="step3">
-                    <span>🎯 最適な学習方法を特定中...</span>
+                    <span>🎯 最適な受け方を特定中...</span>
                     <span class="spinner" aria-hidden="true">⏳</span>
                 </div>
                 <div class="loading-step" id="step4">
@@ -697,7 +697,7 @@
                 <h2>🎯 占い適性診断結果</h2>
                 <div class="fortune-display" id="final-fortune" aria-label="診断結果">🌟 タロットカード</div>
                 <div class="fortune-description" id="fortune-description">
-                    あなたは直感的で想像力豊か。タロットの象徴的なイメージから深い洞察を得られるタイプです。
+                    あなたは直感的で想像力豊か。タロットの象徴的なメッセージから深い洞察を受け取れるタイプです。
                 </div>
                 <div class="fortune-details" id="fortune-details">
                     <!-- 詳細が動的に挿入される -->
@@ -723,7 +723,7 @@
             <div class="cta-section">
                 <h2>🔮 LINE で占い情報をお届け</h2>
                 <p>今日の運勢や占い豆知識を毎日配信中！</p>
-                <p>あなたに最適な占い手法の詳しい解説やアドバイスも。</p>
+                <p>あなたに最適な占い手法の詳しい活用方法も。</p>
                 <a href="https://line.me/R/ti/p/@your-line-id" class="cta-button">
                     💬 LINE友達登録（無料）
                 </a>
@@ -1031,19 +1031,19 @@
                 fortuneDescription.textContent = fortuneData.description;
 
                 fortuneDetails.innerHTML = `
-                    <h3>📋 あなたの特徴</h3>
+                    <h3>💡 この占いを受けるメリット</h3>
                     <ul>
-                        ${fortuneData.characteristics.map(trait => `<li>${trait}</li>`).join('')}
+                        ${fortuneData.benefits.map(benefit => `<li>${benefit}</li>`).join('')}
                     </ul>
                     
-                    <h3>🚀 始め方ガイド</h3>
-                    <ol>
-                        ${fortuneData.howToStart.map(step => `<li>${step}</li>`).join('')}
-                    </ol>
-                    
-                    <h3>💡 成功のコツ</h3>
+                    <h3>🎯 どんな時に受けると良いか</h3>
                     <ul>
-                        ${fortuneData.tips.map(tip => `<li>${tip}</li>`).join('')}
+                        ${fortuneData.whenToConsult.map(situation => `<li>${situation}</li>`).join('')}
+                    </ul>
+                    
+                    <h3>🔮 効果的な受け方</h3>
+                    <ul>
+                        ${fortuneData.howToReceive.map(method => `<li>${method}</li>`).join('')}
                     </ul>
                 `;
                 
@@ -1155,33 +1155,36 @@
                     <div class="fortune-analysis">
                         <h3>🔮 詳細分析レポート</h3>
                         
-                        <div class="highlight-box" style="background: linear-gradient(135deg, #e8f4f8 0%, #d1ecf1 100%); padding: 25px; border-radius: 12px; margin: 25px 0; border-left: 5px solid #00b894;">
+                        <div style="background: linear-gradient(135deg, #e8f4f8 0%, #d1ecf1 100%); padding: 25px; border-radius: 12px; margin: 25px 0; border-left: 5px solid #00b894;">
                             <h4>📊 診断結果サマリー</h4>
-                            <p><strong>最適占い手法：${fortuneData.name}</strong></p>
-                            <p><strong>適性度：${this.fortunes[topFortune]}/32ポイント</strong></p>
-                            <p>あなたの性格・価値観から、${fortuneData.name}が最も適していることが判明しました。</p>
+                            <p><strong>あなたに最適な占い：${fortuneData.name}</strong></p>
+                            <p><strong>相性度：${this.fortunes[topFortune]}/32ポイント</strong></p>
+                            <p>あなたの性格・価値観から、${fortuneData.name}を受けることで最も良いアドバイスを得られることが判明しました。</p>
                         </div>
                         
-                        <h4>🎯 なぜこの占いがあなたに最適なのか</h4>
+                        <h4>🔮 なぜこの占いを受けると良いのか</h4>
                         <p>${fortuneData.description}</p>
-                        <p>あなたの回答パターンから、この占い手法の特徴があなたの思考スタイルや価値観と非常によく合致していることがわかります。</p>
+                        <p>あなたの回答パターンから、この占い手法があなたの悩みや課題解決に最も適していることがわかります。</p>
                         
-                        <h4>📚 効果的な学習ステップ</h4>
-                        <ol>
-                            ${fortuneData.howToStart.map((step, index) => `
-                                <li><strong>ステップ${index + 1}：</strong>${step}</li>
-                            `).join('')}
-                        </ol>
-                        
-                        <h4>🌟 より深く活用するために</h4>
+                        <h4>💡 この占いを受けるメリット</h4>
                         <ul>
-                            ${fortuneData.tips.map(tip => `<li>${tip}</li>`).join('')}
+                            ${fortuneData.benefits.map(benefit => `<li>${benefit}</li>`).join('')}
+                        </ul>
+                        
+                        <h4>🎯 どんな時に受けると良いか</h4>
+                        <ul>
+                            ${fortuneData.whenToConsult.map(situation => `<li>${situation}</li>`).join('')}
+                        </ul>
+                        
+                        <h4>🔍 効果的な受け方</h4>
+                        <ul>
+                            ${fortuneData.howToReceive.map(method => `<li>${method}</li>`).join('')}
                         </ul>
                         
                         <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 25px; border-radius: 15px; margin: 25px 0; text-align: center;">
                             <h4>🎁 LINE で占い情報配信中</h4>
-                            <p style="margin: 15px 0;">毎日の運勢や${fortuneData.name}の活用テクニックを配信しています。</p>
-                            <p><strong>特典：</strong>あなた専用の占い学習ガイドを無料プレゼント！</p>
+                            <p style="margin: 15px 0;">毎日の運勢や${fortuneData.name}の効果的な受け方を配信しています。</p>
+                            <p><strong>特典：</strong>あなた専用の占い活用ガイドを無料プレゼント！</p>
                         </div>
                     </div>
                 `;
@@ -1232,7 +1235,7 @@
             initializeSystem();
         }
 
-        console.log('🎉 占い適性診断システム読み込み完了');
+        console.log('🎉 占い適性診断システム読み込み完了（修正版）');
     </script>
 </body>
 </html>

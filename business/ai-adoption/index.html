@@ -102,7 +102,6 @@
             justify-content: center;
         }
 
-        /* 進捗バーをコンパクトに */
         .progress-container {
             margin-bottom: 20px;
             flex-shrink: 0;
@@ -155,7 +154,6 @@
             100% { transform: translateX(100%); }
         }
 
-        /* 質問コンテナを中央固定 */
         .question-container {
             flex: 1;
             display: flex;
@@ -164,7 +162,6 @@
             min-height: 0;
         }
 
-        /* 質問カードを中央配置・コンパクト化 */
         .question-card {
             background: linear-gradient(135deg, #f8faff 0%, #e8f1ff 100%);
             border-radius: 20px;
@@ -263,7 +260,6 @@
             box-shadow: 0 12px 30px rgba(102, 126, 234, 0.4);
         }
 
-        /* フィードバックを質問カード内に統合 */
         .integrated-feedback {
             background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
             color: white;
@@ -296,7 +292,6 @@
             opacity: 0.95;
         }
 
-        /* ナビゲーションをコンパクトに */
         .navigation {
             display: flex;
             justify-content: space-between;
@@ -632,7 +627,7 @@
             }
         }
 
-        /* 画面読み上げソフト対応 */
+        /* アクセシビリティ対応 */
         .sr-only {
             position: absolute;
             width: 1px;
@@ -643,6 +638,40 @@
             clip: rect(0, 0, 0, 0);
             white-space: nowrap;
             border: 0;
+        }
+
+        /* フォーカス表示の改善 */
+        .option:focus,
+        .nav-button:focus,
+        .ai-analysis-button:focus,
+        .cta-button:focus {
+            outline: 3px solid #667eea;
+            outline-offset: 2px;
+        }
+
+        /* 印刷対応 */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+                border: 1px solid #ccc;
+            }
+            
+            .header {
+                background: #667eea !important;
+                -webkit-print-color-adjust: exact;
+                color-adjust: exact;
+            }
+            
+            .navigation,
+            .ai-analysis-button,
+            .cta-section {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -665,7 +694,7 @@
                     <span class="progress-text" id="progress-text">質問1 / 10</span>
                     <span class="progress-text" id="completion-rate">完了率: 10%</span>
                 </div>
-                <div class="progress-bar">
+                <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="10">
                     <div class="progress-fill" id="progress-fill"></div>
                 </div>
             </div>
@@ -674,7 +703,7 @@
                 <div class="question-text" id="loading-message">AI診断システムを初期化中...</div>
             </div>
 
-            <nav class="navigation">
+            <nav class="navigation" role="navigation" aria-label="診断ナビゲーション">
                 <button class="nav-button prev-button" id="prev-button" onclick="diagnosisSystem.previousQuestion()" disabled aria-label="前の質問に戻る">
                     ← 前の質問に戻る
                 </button>
@@ -687,33 +716,33 @@
                 🤖 AI詳細分析を開始
             </button>
 
-            <div class="loading-container" id="loading-container">
+            <div class="loading-container" id="loading-container" aria-live="polite">
                 <h2>🤖 AI専門分析実行中...</h2>
                 <div class="loading-step" id="step1">
                     <span>🔍 1,200社のベンチマークデータと照合中...</span>
-                    <span class="spinner">⏳</span>
+                    <span class="spinner" aria-hidden="true">⏳</span>
                 </div>
                 <div class="loading-step" id="step2">
                     <span>📊 AI活用課題と改善ポイントを特定中...</span>
-                    <span class="spinner">⏳</span>
+                    <span class="spinner" aria-hidden="true">⏳</span>
                 </div>
                 <div class="loading-step" id="step3">
                     <span>🎯 最適なAI導入戦略を生成中...</span>
-                    <span class="spinner">⏳</span>
+                    <span class="spinner" aria-hidden="true">⏳</span>
                 </div>
                 <div class="loading-step" id="step4">
                     <span>💰 ROI・投資効果を精密算出中...</span>
-                    <span class="spinner">⏳</span>
+                    <span class="spinner" aria-hidden="true">⏳</span>
                 </div>
                 <div class="loading-step" id="step5">
                     <span>📋 個別カスタマイズレポートを完成中...</span>
-                    <span class="spinner">⏳</span>
+                    <span class="spinner" aria-hidden="true">⏳</span>
                 </div>
             </div>
 
-            <div class="results-card" id="results-card">
+            <div class="results-card" id="results-card" role="region" aria-label="診断結果">
                 <h2>📊 AI活用度診断結果</h2>
-                <div class="score-display" id="final-score">0点</div>
+                <div class="score-display" id="final-score" aria-label="診断スコア">0点</div>
                 <div class="improvement-amount" id="final-amount">年間改善効果: 0万円</div>
                 <div class="score-analysis" id="score-message">
                     <h3>🎯 AI活用ポテンシャル評価</h3>
@@ -723,7 +752,7 @@
                 </div>
             </div>
 
-            <div class="ai-analysis-card" id="ai-analysis-section">
+            <div class="ai-analysis-card" id="ai-analysis-section" role="region" aria-label="詳細分析結果">
                 <div id="analysis-content"></div>
             </div>
 
@@ -739,7 +768,7 @@
     </div>
 
     <!-- 質問データの読み込み -->
-    <script src="public/js/questions_config.js"></script>
+    <script src="fixed_questions_config.js"></script>
     
     <script>
         class DiagnosisSystem {
@@ -752,31 +781,31 @@
                 this.startTime = new Date();
                 
                 // デバッグモード
-                this.debugMode = true;
+                this.debugMode = false; // 本番では false に変更
                 
-                if (this.debugMode) {
-                    console.log('🚀 AI活用診断システム初期化開始');
-                    console.log('⏰ 開始時刻:', this.startTime.toISOString());
-                }
+                this.log('🚀 AI活用診断システム初期化開始');
+                this.log('⏰ 開始時刻:', this.startTime.toISOString());
                 
                 // 質問データの読み込み待ち
                 this.waitForQuestionData();
             }
 
+            log(...args) {
+                if (this.debugMode) {
+                    console.log(...args);
+                }
+            }
+
             waitForQuestionData() {
                 const checkData = () => {
                     if (typeof window.QUESTION_DATA !== 'undefined' && window.QUESTION_DATA.length > 0) {
-                        if (this.debugMode) {
-                            console.log('✅ 質問データ読み込み成功:', window.QUESTION_DATA.length, '問');
-                            console.log('📝 最初の質問:', window.QUESTION_DATA[0]?.text?.substring(0, 50) + '...');
-                        }
+                        this.log('✅ 質問データ読み込み成功:', window.QUESTION_DATA.length, '問');
+                        this.log('📝 最初の質問:', window.QUESTION_DATA[0]?.text?.substring(0, 50) + '...');
                         
                         this.questionData = window.QUESTION_DATA;
                         this.initializeDiagnosis();
                     } else {
-                        if (this.debugMode) {
-                            console.log('⏳ 質問データ読み込み待機中...');
-                        }
+                        this.log('⏳ 質問データ読み込み待機中...');
                         setTimeout(checkData, 100);
                     }
                 };
@@ -789,9 +818,7 @@
                     this.updateProgress();
                     this.updateNavigation();
                     
-                    if (this.debugMode) {
-                        console.log('✅ AI診断システム初期化完了');
-                    }
+                    this.log('✅ AI診断システム初期化完了');
                 } catch (error) {
                     console.error('💥 初期化エラー:', error);
                     this.showError('システムの初期化に失敗しました。ページを再読み込みしてください。');
@@ -801,7 +828,7 @@
             showError(message) {
                 const container = document.getElementById('question-container');
                 container.innerHTML = `
-                    <div class="error-message">
+                    <div class="error-message" role="alert">
                         <h3>⚠️ システムエラー</h3>
                         <p>${message}</p>
                         <button onclick="location.reload()" class="cta-button" style="margin-top: 20px;">
@@ -824,14 +851,14 @@
                     <div class="question-card">
                         <div class="question-category">${question.category}</div>
                         <div class="question-text">${question.text}</div>
-                        <div class="options-container">
+                        <div class="options-container" role="radiogroup" aria-labelledby="question-text">
                             ${question.options.map((option, index) => `
                                 <div class="option" data-index="${index}" onclick="diagnosisSystem.selectOption(${index})" role="button" tabindex="0" aria-label="選択肢 ${index + 1}: ${option}">
                                     ${option}
                                 </div>
                             `).join('')}
                         </div>
-                        <div class="integrated-feedback" id="feedback-${this.currentQuestion}">
+                        <div class="integrated-feedback" id="feedback-${this.currentQuestion}" aria-live="polite">
                             <div class="feedback-title"></div>
                             <div class="feedback-content"></div>
                         </div>
@@ -854,6 +881,14 @@
                         if (e.key === 'Enter' || e.key === ' ') {
                             e.preventDefault();
                             this.selectOption(index);
+                        } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+                            e.preventDefault();
+                            const nextIndex = (index + 1) % options.length;
+                            options[nextIndex].focus();
+                        } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+                            e.preventDefault();
+                            const prevIndex = (index - 1 + options.length) % options.length;
+                            options[prevIndex].focus();
                         }
                     });
                 });
@@ -861,7 +896,10 @@
 
             selectOption(optionIndex, animate = true) {
                 // 前の選択をクリア
-                document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+                document.querySelectorAll('.option').forEach(opt => {
+                    opt.classList.remove('selected');
+                    opt.setAttribute('aria-selected', 'false');
+                });
                 
                 // 新しい選択をマーク
                 const selectedOption = document.querySelector(`[data-index="${optionIndex}"]`);
@@ -896,15 +934,13 @@
                 this.updateTotals();
                 this.updateNavigation();
 
-                if (this.debugMode) {
-                    console.log(`Q${this.currentQuestion + 1} 回答:`, {
-                        option: optionIndex,
-                        score: score,
-                        amount: amount,
-                        totalScore: this.totalScore,
-                        totalImprovement: this.totalImprovement
-                    });
-                }
+                this.log(`Q${this.currentQuestion + 1} 回答:`, {
+                    option: optionIndex,
+                    score: score,
+                    amount: amount,
+                    totalScore: this.totalScore,
+                    totalImprovement: this.totalImprovement
+                });
             }
 
             updateTotals() {
@@ -923,7 +959,12 @@
                 const progress = ((this.currentQuestion + 1) / this.questionData.length) * 100;
                 const completionRate = Math.round(progress);
                 
-                document.getElementById('progress-fill').style.width = `${progress}%`;
+                const progressFill = document.getElementById('progress-fill');
+                const progressBar = progressFill.parentElement;
+                
+                progressFill.style.width = `${progress}%`;
+                progressBar.setAttribute('aria-valuenow', completionRate);
+                
                 document.getElementById('progress-text').textContent = `質問${this.currentQuestion + 1} / ${this.questionData.length}`;
                 document.getElementById('completion-rate').textContent = `完了率: ${completionRate}%`;
             }
@@ -1010,13 +1051,11 @@
                 
                 resultsCard.style.display = 'block';
 
-                if (this.debugMode) {
-                    console.log('📊 最終結果:', {
-                        score: this.totalScore,
-                        improvement: this.totalImprovement,
-                        duration: new Date() - this.startTime
-                    });
-                }
+                this.log('📊 最終結果:', {
+                    score: this.totalScore,
+                    improvement: this.totalImprovement,
+                    duration: new Date() - this.startTime
+                });
             }
 
             async startAIAnalysis() {
@@ -1027,9 +1066,7 @@
                 const loadingContainer = document.getElementById('loading-container');
                 loadingContainer.style.display = 'block';
                 
-                if (this.debugMode) {
-                    console.log('🤖 AI分析開始');
-                }
+                this.log('🤖 AI分析開始');
                 
                 // ステップごとのローディング演出
                 await this.animateLoadingSteps();
@@ -1095,9 +1132,7 @@
                 analysisContent.innerHTML = analysis;
                 analysisSection.style.display = 'block';
 
-                if (this.debugMode) {
-                    console.log('✅ AI分析結果表示完了');
-                }
+                this.log('✅ AI分析結果表示完了');
             }
 
             displayFallbackAnalysis() {
@@ -1158,90 +1193,66 @@
                 analysisContent.innerHTML = analysisHTML;
                 analysisSection.style.display = 'block';
 
-                if (this.debugMode) {
-                    console.log('📋 フォールバック分析表示完了');
-                }
+                this.log('📋 フォールバック分析表示完了');
             }
         }
 
-        // デバッグ用のグローバル関数
-        window.debugAI = {
-            testAPI: async function() {
-                try {
-                    const response = await fetch('/api/analyze', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            answers: [{score: 5, amount: 100}],
-                            totalScore: 5,
-                            totalImprovement: 100
-                        })
-                    });
-                    const data = await response.json();
-                    console.log('API テスト結果:', data);
-                    return data;
-                } catch (error) {
-                    console.error('API テストエラー:', error);
-                    return error;
-                }
-            },
-            
-            testGET: async function() {
-                try {
-                    const response = await fetch('/api/analyze');
-                    const data = await response.json();
-                    console.log('GET テスト結果:', data);
-                    return data;
-                } catch (error) {
-                    console.error('GET テストエラー:', error);
-                    return error;
-                }
-            },
-
-            showCurrentData: function() {
-                if (window.diagnosisSystem && window.diagnosisSystem.questionData) {
-                    console.log('現在の質問データ:', window.diagnosisSystem.questionData);
-                    window.diagnosisSystem.questionData.forEach((q, i) => {
-                        console.log(`Q${i+1}: ${q.text.substring(0, 60)}...`);
-                    });
-                } else {
-                    console.log('質問データが読み込まれていません');
-                }
-            },
-
-            skipToResults: function() {
-                if (window.diagnosisSystem) {
-                    // ダミーデータで回答を埋める
-                    for (let i = 0; i < window.diagnosisSystem.questionData.length; i++) {
-                        window.diagnosisSystem.answers[i] = {
-                            selectedIndex: 2,
-                            score: 5,
-                            amount: 80,
-                            timestamp: new Date()
-                        };
+        // デバッグ用のグローバル関数（本番では削除推奨）
+        if (typeof window !== 'undefined') {
+            window.debugAI = {
+                testAPI: async function() {
+                    try {
+                        const response = await fetch('/api/analyze', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                answers: [{score: 5, amount: 100}],
+                                totalScore: 5,
+                                totalImprovement: 100
+                            })
+                        });
+                        const data = await response.json();
+                        console.log('API テスト結果:', data);
+                        return data;
+                    } catch (error) {
+                        console.error('API テストエラー:', error);
+                        return error;
                     }
-                    window.diagnosisSystem.updateTotals();
-                    window.diagnosisSystem.showResults();
-                    console.log('🚀 結果画面にスキップしました');
+                },
+                
+                skipToResults: function() {
+                    if (window.diagnosisSystem && window.diagnosisSystem.questionData) {
+                        // ダミーデータで回答を埋める
+                        for (let i = 0; i < window.diagnosisSystem.questionData.length; i++) {
+                            window.diagnosisSystem.answers[i] = {
+                                selectedIndex: 2,
+                                score: 5,
+                                amount: 80,
+                                timestamp: new Date()
+                            };
+                        }
+                        window.diagnosisSystem.updateTotals();
+                        window.diagnosisSystem.showResults();
+                        console.log('🚀 結果画面にスキップしました');
+                    }
                 }
-            }
-        };
+            };
+        }
 
         // システム初期化
         let diagnosisSystem;
         
         // DOM読み込み完了を待って初期化
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => {
-                diagnosisSystem = new DiagnosisSystem();
-            });
-        } else {
+        function initializeSystem() {
             diagnosisSystem = new DiagnosisSystem();
         }
 
-        // Google Analytics（実装時に追加）
-        // gtag('config', 'GA_MEASUREMENT_ID');
-        
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeSystem);
+        } else {
+            initializeSystem();
+        }
+
         console.log('🎉 AI活用診断システム読み込み完了');
     </script>
 </body>

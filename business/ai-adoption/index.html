@@ -198,8 +198,8 @@
 
         // 2) 無ければ静的JSONにフォールバック
         if (!res.ok) {
-          endpoint = `/configs/${encodeURIComponent(set)}.json`;
-          res = await fetch(endpoint);
+          endpoint = /business/ai-adoption/public/configs/${encodeURIComponent(set)}.json;
+res = await fetch(endpoint);
         }
         if (!res.ok) throw new Error(`設定の取得に失敗: ${res.status}`);
 

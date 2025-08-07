@@ -1,4 +1,4 @@
-// Vercel Serverless Function for Fortune Analysis (占い分析専用 - 修正版)
+// Vercel Serverless Function for Fortune Analysis (占い分析専用)
 export default async function handler(req, res) {
   console.log('🔮 占い分析API呼び出し受信:', req.method);
 
@@ -18,9 +18,9 @@ export default async function handler(req, res) {
     console.log('GET リクエスト - 動作確認');
     return res.status(200).json({ 
       success: true, 
-      message: '占い分析API エンドポイント正常動作（修正版）',
+      message: '占い分析API エンドポイント正常動作',
       timestamp: new Date().toISOString(),
-      version: '2.0-receive-direction'
+      version: '1.0-fortune-analysis'
     });
   }
 
@@ -63,7 +63,7 @@ export default async function handler(req, res) {
       });
     }
 
-    // 占い分析生成（修正版）
+    // 占い分析生成
     const analysis = await generateFortuneAnalysis(answers, fortunes, topFortune, apiKey);
     
     console.log('占い分析生成成功');
@@ -81,47 +81,41 @@ export default async function handler(req, res) {
   }
 }
 
-// 占い分析生成関数（修正版：受ける方向）
+// 占い分析生成関数
 async function generateFortuneAnalysis(answers, fortunes, topFortune, apiKey) {
-  console.log('ChatGPT API呼び出し開始 - 占い分析（修正版）');
+  console.log('ChatGPT API呼び出し開始 - 占い分析');
   
   // 占い手法の詳細情報
   const fortuneTypes = {
     'tarot': {
       name: 'タロットカード占い',
       characteristics: '直感的、象徴的思考、創造性重視',
-      approach: '感覚的で芸術的なアプローチ',
-      benefits: '感覚に響くメッセージ、創造性の刺激、心の声を引き出す'
+      approach: '感覚的で芸術的なアプローチ'
     },
     'astrology': {
       name: '西洋占星術',
       characteristics: '論理的、体系的思考、分析力重視',
-      approach: '理論的で構造化されたアプローチ',
-      benefits: '詳細な性格分析、科学的根拠、長期的人生設計'
+      approach: '理論的で構造化されたアプローチ'
     },
     'palmistry': {
       name: '手相占い',
       characteristics: '実用的、現実的思考、対人重視',
-      approach: '具体的で実践的なアプローチ',
-      benefits: '目に見える証拠、実用的アドバイス、対面での相談'
+      approach: '具体的で実践的なアプローチ'
     },
     'numerology': {
       name: '数秘術',
       characteristics: '論理的、パターン認識、規則性重視',
-      approach: '数学的で体系的なアプローチ',
-      benefits: '数字による客観分析、人生の周期把握、論理的納得感'
+      approach: '数学的で体系的なアプローチ'
     },
     'iching': {
       name: '易経',
       characteristics: '哲学的、深層思考、伝統重視',
-      approach: '瞑想的で内省的なアプローチ',
-      benefits: '古の智恵、精神的成長、困難への対処法'
+      approach: '瞑想的で内省的なアプローチ'
     },
     'oracle': {
       name: 'オラクルカード',
       characteristics: 'スピリチュアル、直感的、癒し重視',
-      approach: '感覚的で調和的なアプローチ',
-      benefits: '愛に満ちたメッセージ、心の癒し、ポジティブエネルギー'
+      approach: '感覚的で調和的なアプローチ'
     }
   };
 
@@ -137,12 +131,12 @@ async function generateFortuneAnalysis(answers, fortunes, topFortune, apiKey) {
 
   const systemPrompt = `あなたは30年の経験を持つ占い専門家・心理分析の専門家です。
 
-# 重要な分析方針
+# 分析方針
 - ユーザーの性格・価値観・思考パターンを深く分析
-- なぜその占いを「受ける」ことが最適なのかを心理学的観点から説明
-- どんな悩みや状況で、その占いが最も効果的かを提案
-- 占いを受ける方法や注意点をアドバイス
-- 「占いを学ぶ」ではなく「占いを受ける」ことに完全に焦点を当てる
+- なぜその占い手法が最適なのかを心理学的観点から説明
+- 実践的で始めやすい具体的なアドバイス
+- スピリチュアルと科学的視点のバランスを重視
+- 初心者でも理解しやすい内容
 
 # 出力形式（HTML構造で回答）
 <div class="fortune-analysis">
@@ -154,32 +148,27 @@ async function generateFortuneAnalysis(answers, fortunes, topFortune, apiKey) {
   </div>
   
   <div class="fortune-match">
-    <h4>🎯 なぜ${selectedFortune.name}を受けると良いのか</h4>
+    <h4>🎯 なぜ${selectedFortune.name}が最適なのか</h4>
     <p>あなたの性格特性と占い手法の特徴がどのように合致するかを具体的に説明...</p>
   </div>
   
-  <div class="fortune-benefits">
-    <h4>💡 この占いを受けるメリット</h4>
-    <ul>
-      <li>具体的なメリット1</li>
-      <li>具体的なメリット2</li>
-      <li>具体的なメリット3</li>
-    </ul>
+  <div class="learning-path">
+    <h4>📚 あなたに最適な学習方法</h4>
+    <ol>
+      <li>具体的なステップ1</li>
+      <li>具体的なステップ2</li>
+      <li>具体的なステップ3</li>
+    </ol>
   </div>
   
-  <div class="when-to-consult">
-    <h4>🔍 どんな時に受けると良いか</h4>
-    <p>あなたの性格に基づいた占いのタイミング...</p>
+  <div class="advanced-tips">
+    <h4>🌟 上達のための特別アドバイス</h4>
+    <p>あなたの性格に基づいた具体的な上達方法...</p>
   </div>
   
-  <div class="how-to-receive">
-    <h4>🎯 効果的な受け方</h4>
-    <p>あなたに最適な占いの受け方や注意点...</p>
-  </div>
-  
-  <div class="additional-advice">
-    <h4>🌟 さらに良い結果を得るために</h4>
-    <p>あなたの性格を活かした占いの活用法...</p>
+  <div class="compatibility-analysis">
+    <h4>📈 他の占い手法との相性</h4>
+    <p>将来的に学ぶと良い占い手法の提案...</p>
   </div>
 </div>`;
 
@@ -191,7 +180,6 @@ async function generateFortuneAnalysis(answers, fortunes, topFortune, apiKey) {
 - 適性度: ${scoreRatio}% (${fortunes[topFortune]}/${maxScore}ポイント)
 - 手法の特徴: ${selectedFortune.characteristics}
 - アプローチ: ${selectedFortune.approach}
-- 期待できる効果: ${selectedFortune.benefits}
 
 ■ 全占い手法のスコア
 ${Object.entries(fortunes).map(([key, score]) => 
@@ -202,12 +190,10 @@ ${Object.entries(fortunes).map(([key, score]) =>
 ${formatAnswersForFortune(answers)}
 
 この方の性格・価値観・思考パターンを詳しく分析し、
-なぜ${selectedFortune.name}を「受ける」ことが最適なのか、
-どのような悩みや状況で受けると効果的なのか、
-どのように受けると最良の結果を得られるのかを、
+なぜ${selectedFortune.name}が最適なのか、
+どのように学習・活用すれば効果的なのかを、
 心理学的観点も交えて詳しく解説してください。
 
-重要：「占いを学ぶ・覚える」ではなく「占いを受ける・相談する」ことに完全に焦点を当ててください。
 実用的で始めやすく、かつ深い洞察を提供する内容でお願いします。
 占い初心者でも理解できる優しい説明を心がけてください。
 `;

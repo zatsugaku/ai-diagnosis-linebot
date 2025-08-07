@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🤖 AI活用度診断 v2.0 - 3分で判明するあなたの会社の真の実力</title>
-    <meta name="description" content="1,200社の実績データを基に、貴社のAI活用ポテンシャルを客観的に数値化。専門AI分析による詳細レポートを無料提供。">
-    <meta name="keywords" content="AI活用診断,AI導入,生成AI,ChatGPT,Claude,業務効率化,DX推進">
+    <title>🔮 占い適性診断 - あなたにピッタリの占い手法を見つけよう</title>
+    <meta name="description" content="3分で判明！あなたの性格・価値観から最適な占い手法を診断。タロット、占星術、手相など6つの手法から最適なものをご提案。">
+    <meta name="keywords" content="占い診断,タロット,占星術,手相,数秘術,易経,オラクルカード,占い適性">
     
     <style>
         * {
@@ -46,23 +46,18 @@
         }
 
         .header::before {
-            content: '';
+            content: '🔮✨🌙⭐🔯💫🌟';
             position: absolute;
             top: -50%;
             left: -50%;
             width: 200%;
             height: 200%;
-            background: repeating-linear-gradient(
-                45deg,
-                transparent,
-                transparent 10px,
-                rgba(255,255,255,0.1) 10px,
-                rgba(255,255,255,0.1) 20px
-            );
-            animation: backgroundMove 20s linear infinite;
+            font-size: 1.5em;
+            opacity: 0.1;
+            animation: floatingStars 20s linear infinite;
         }
 
-        @keyframes backgroundMove {
+        @keyframes floatingStars {
             0% { transform: translate(-50%, -50%) rotate(0deg); }
             100% { transform: translate(-50%, -50%) rotate(360deg); }
         }
@@ -163,11 +158,11 @@
         }
 
         .question-card {
-            background: linear-gradient(135deg, #f8faff 0%, #e8f1ff 100%);
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
             border-radius: 20px;
             padding: 30px;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.15);
-            border: 2px solid rgba(102, 126, 234, 0.1);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.2);
+            border: 3px solid rgba(255,255,255,0.3);
             position: relative;
             overflow: hidden;
             animation: slideInFromBottom 0.6s ease-out;
@@ -243,7 +238,7 @@
 
         .option:hover {
             border-color: #667eea;
-            background: #f0f2ff;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
         }
@@ -341,7 +336,7 @@
             box-shadow: 0 8px 25px rgba(0, 184, 148, 0.4);
         }
 
-        .ai-analysis-button {
+        .fortune-analysis-button {
             background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
             color: white;
             border: none;
@@ -358,7 +353,7 @@
             max-width: 350px;
         }
 
-        .ai-analysis-button:hover {
+        .fortune-analysis-button:hover {
             transform: translateY(-3px);
             box-shadow: 0 15px 35px rgba(108, 92, 231, 0.4);
         }
@@ -367,7 +362,7 @@
             text-align: center;
             margin: 30px 0;
             display: none;
-            background: linear-gradient(135deg, #f8faff 0%, #e8f1ff 100%);
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
             padding: 30px;
             border-radius: 20px;
             border: 2px solid rgba(102, 126, 234, 0.1);
@@ -405,40 +400,39 @@
         }
 
         .results-card {
-            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             padding: 40px;
             border-radius: 25px;
             text-align: center;
             margin-top: 30px;
             display: none;
-            box-shadow: 0 20px 45px rgba(0, 184, 148, 0.3);
+            box-shadow: 0 20px 45px rgba(102, 126, 234, 0.3);
             border: 3px solid rgba(255,255,255,0.2);
             animation: slideInFromBottom 0.8s ease-out;
         }
 
-        .score-display {
-            font-size: 4.5em;
-            font-weight: bold;
+        .fortune-display {
+            font-size: 3.5em;
             margin: 25px 0;
             text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
-            background: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.15);
             border-radius: 20px;
             padding: 25px;
             display: inline-block;
             min-width: 250px;
         }
 
-        .improvement-amount {
-            font-size: 2.2em;
+        .fortune-description {
+            font-size: 1.3em;
             margin: 25px 0;
             padding: 18px;
-            background: rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.1);
             border-radius: 15px;
-            font-weight: 600;
+            font-weight: 500;
         }
 
-        .score-analysis {
+        .fortune-details {
             background: rgba(255,255,255,0.1);
             padding: 25px;
             border-radius: 15px;
@@ -446,15 +440,73 @@
             text-align: left;
         }
 
+        .fortune-details h3 {
+            margin-bottom: 15px;
+            color: #fff;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+            padding-bottom: 10px;
+        }
+
+        .fortune-details ul, .fortune-details ol {
+            margin: 15px 0;
+            padding-left: 20px;
+        }
+
+        .fortune-details li {
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+
         .ai-analysis-card {
             margin-top: 30px;
-            background: linear-gradient(135deg, #f8faff 0%, #e8f1ff 100%);
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
             border-radius: 20px;
             padding: 35px;
             display: none;
-            border: 2px solid #667eea;
+            border: 3px solid #667eea;
             box-shadow: 0 12px 30px rgba(102, 126, 234, 0.1);
             animation: slideInFromBottom 0.8s ease-out;
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+
+        .share-button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .share-twitter {
+            background: #1da1f2;
+            color: white;
+        }
+
+        .share-line {
+            background: #00c300;
+            color: white;
+        }
+
+        .share-facebook {
+            background: #3b5998;
+            color: white;
+        }
+
+        .share-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
         }
 
         .cta-section {
@@ -500,181 +552,7 @@
             box-shadow: 0 15px 35px rgba(255,255,255,0.3);
         }
 
-        .highlight-box {
-            background: linear-gradient(135deg, #e8f4f8 0%, #d1ecf1 100%);
-            padding: 25px;
-            border-radius: 12px;
-            margin: 25px 0;
-            border-left: 5px solid #00b894;
-            box-shadow: 0 6px 20px rgba(0, 184, 148, 0.1);
-        }
-
-        .loading-spinner {
-            display: inline-block;
-            width: 30px;
-            height: 30px;
-            border: 3px solid rgba(102, 126, 234, 0.3);
-            border-radius: 50%;
-            border-top-color: #667eea;
-            animation: spin 1s ease-in-out infinite;
-            vertical-align: middle;
-            margin-right: 10px;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.6; }
-            100% { opacity: 1; }
-        }
-
-        .loading-step .spinner {
-            animation: pulse 1.5s infinite;
-        }
-
-        .error-message {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
-            color: white;
-            padding: 25px;
-            border-radius: 12px;
-            margin: 25px 0;
-            text-align: center;
-            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
-        }
-
-        /* 新規追加: 一時メッセージ */
-        .temporary-message {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 15px 25px;
-            color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            z-index: 10000;
-            animation: slideDown 0.3s ease;
-        }
-
-        .temporary-message.info {
-            background: #2196F3;
-        }
-
-        .temporary-message.warning {
-            background: #ff9800;
-        }
-
-        .temporary-message.success {
-            background: #4CAF50;
-        }
-
-        .temporary-message.error {
-            background: #f44336;
-        }
-
-        /* 新規追加: 復元ダイアログ */
-        .resume-dialog {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: 9999;
-        }
-
-        .resume-dialog-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.5);
-        }
-
-        .resume-dialog-content {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            max-width: 400px;
-            text-align: center;
-            z-index: 10000;
-        }
-
-        .resume-dialog-title {
-            color: #667eea;
-            margin-bottom: 15px;
-            font-size: 1.5em;
-        }
-
-        .resume-dialog-text {
-            color: #666;
-            margin-bottom: 20px;
-        }
-
-        .resume-dialog-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-        }
-
-        .resume-dialog-button {
-            border: none;
-            padding: 12px 30px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-
-        .resume-dialog-button.primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .resume-dialog-button.secondary {
-            background: #e0e0e0;
-            color: #333;
-        }
-
-        /* 新規追加: オフラインインジケーター */
-        .offline-indicator {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            background: #ff9800;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            z-index: 1000;
-            display: none;
-            animation: pulse 2s infinite;
-        }
-
-        .offline-indicator.active {
-            display: block;
-        }
-
-        /* アニメーション */
-        @keyframes slideDown {
-            from { transform: translate(-50%, -100%); opacity: 0; }
-            to { transform: translate(-50%, 0); opacity: 1; }
-        }
-
-        @keyframes slideUp {
-            from { transform: translate(-50%, 0); opacity: 1; }
-            to { transform: translate(-50%, -100%); opacity: 0; }
-        }
-
-        /* スマホ対応の最適化 */
+        /* スマホ対応 */
         @media (max-width: 768px) {
             body {
                 padding: 5px;
@@ -693,29 +571,12 @@
                 font-size: 1.8em;
             }
             
-            .header .subtitle {
-                font-size: 1em;
-            }
-            
-            .header .description {
-                font-size: 0.9em;
-            }
-            
             .main-content {
                 padding: 15px;
             }
             
             .question-card {
                 padding: 25px 20px;
-            }
-            
-            .question-text {
-                font-size: 1.2em;
-            }
-            
-            .option {
-                padding: 16px 18px;
-                font-size: 0.95em;
             }
             
             .navigation {
@@ -729,36 +590,31 @@
                 padding: 16px 30px;
             }
             
-            .score-display {
-                font-size: 3.2em;
+            .fortune-display {
+                font-size: 2.8em;
                 min-width: auto;
                 padding: 20px;
             }
-            
-            .improvement-amount {
-                font-size: 1.6em;
-            }
 
-            .ai-analysis-button {
+            .fortune-analysis-button {
                 width: 100%;
                 max-width: none;
                 padding: 16px 35px;
                 font-size: 1.2em;
             }
 
-            .cta-button {
-                width: 100%;
-                min-width: auto;
-                margin: 8px 0;
+            .share-buttons {
+                flex-direction: column;
+                align-items: center;
             }
 
-            .loading-step {
-                font-size: 0.9em;
-                padding: 12px 18px;
+            .share-button {
+                width: 100%;
+                max-width: 250px;
+                justify-content: center;
             }
         }
 
-        /* 画面読み上げソフト対応 */
         .sr-only {
             position: absolute;
             width: 1px;
@@ -776,350 +632,166 @@
     <div class="container">
         <header class="header">
             <div class="header-content">
-                <h1>🤖 AI活用度診断 v2.0</h1>
-                <div class="subtitle">3分で判明するあなたの会社の「真の実力」</div>
+                <h1>🔮 占い適性診断</h1>
+                <div class="subtitle">3分で判明。あなたにピッタリの占い手法</div>
                 <div class="description">
-                    1,200社の実績データを基に、貴社のAI活用ポテンシャルを客観的に数値化。
-                    セキュリティ強化版・データ永続化対応の最新システムです。
+                    性格・価値観・学習スタイルから、最も相性の良い占い手法を診断します。
+                    タロット、占星術、手相、数秘術、易経、オラクルカードの中からあなたに最適なものをご提案。
                 </div>
             </div>
         </header>
 
-        <div class="offline-indicator" id="offline-indicator">
-            ⚠️ オフラインモード
-        </div>
-
         <main class="main-content">
             <div class="progress-container">
                 <div class="progress-info">
-                    <span class="progress-text" id="progress-text">質問1 / 10</span>
-                    <span class="progress-text" id="completion-rate">完了率: 10%</span>
+                    <span class="progress-text" id="progress-text">質問1 / 8</span>
+                    <span class="progress-text" id="completion-rate">完了率: 12%</span>
                 </div>
-                <div class="progress-bar">
+                <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="12">
                     <div class="progress-fill" id="progress-fill"></div>
                 </div>
             </div>
 
             <div class="question-container" id="question-container">
-                <div class="question-text" id="loading-message">AI診断システムを初期化中...</div>
+                <div class="question-text" id="loading-message">🔮 占い診断システムを初期化中...</div>
             </div>
 
-            <nav class="navigation">
-                <button class="nav-button prev-button" id="prev-button" onclick="diagnosisSystem.previousQuestion()" disabled aria-label="前の質問に戻る">
+            <nav class="navigation" role="navigation" aria-label="診断ナビゲーション">
+                <button class="nav-button prev-button" id="prev-button" onclick="fortuneDiagnosis.previousQuestion()" disabled aria-label="前の質問に戻る">
                     ← 前の質問に戻る
                 </button>
-                <button class="nav-button next-button" id="next-button" onclick="diagnosisSystem.nextQuestion()" disabled aria-label="次の質問へ進む">
+                <button class="nav-button next-button" id="next-button" onclick="fortuneDiagnosis.nextQuestion()" disabled aria-label="次の質問へ進む">
                     次の質問へ →
                 </button>
             </nav>
 
-            <button class="ai-analysis-button" id="ai-analysis-button" onclick="diagnosisSystem.startAIAnalysis()" style="display: none;" aria-label="AI分析を開始">
-                🤖 AI詳細分析を開始
+            <button class="fortune-analysis-button" id="fortune-analysis-button" onclick="fortuneDiagnosis.startFortuneAnalysis()" style="display: none;" aria-label="詳細分析を開始">
+                🔮 詳細分析を開始
             </button>
 
-            <div class="loading-container" id="loading-container">
-                <h2>🤖 AI専門分析実行中...</h2>
+            <div class="loading-container" id="loading-container" aria-live="polite">
+                <h2>🔮 占い適性分析実行中...</h2>
                 <div class="loading-step" id="step1">
-                    <span>🔍 1,200社のベンチマークデータと照合中...</span>
-                    <span class="spinner">⏳</span>
+                    <span>🔍 性格・価値観パターンを分析中...</span>
+                    <span class="spinner" aria-hidden="true">⏳</span>
                 </div>
                 <div class="loading-step" id="step2">
-                    <span>📊 AI活用課題と改善ポイントを特定中...</span>
-                    <span class="spinner">⏳</span>
+                    <span>📊 6つの占い手法との相性を算出中...</span>
+                    <span class="spinner" aria-hidden="true">⏳</span>
                 </div>
                 <div class="loading-step" id="step3">
-                    <span>🎯 最適なAI導入戦略を生成中...</span>
-                    <span class="spinner">⏳</span>
+                    <span>🎯 最適な受け方を特定中...</span>
+                    <span class="spinner" aria-hidden="true">⏳</span>
                 </div>
                 <div class="loading-step" id="step4">
-                    <span>💰 ROI・投資効果を精密算出中...</span>
-                    <span class="spinner">⏳</span>
+                    <span>💡 個別アドバイスを生成中...</span>
+                    <span class="spinner" aria-hidden="true">⏳</span>
                 </div>
                 <div class="loading-step" id="step5">
-                    <span>📋 個別カスタマイズレポートを完成中...</span>
-                    <span class="spinner">⏳</span>
+                    <span>📋 カスタマイズレポートを完成中...</span>
+                    <span class="spinner" aria-hidden="true">⏳</span>
                 </div>
             </div>
 
-            <div class="results-card" id="results-card">
-                <h2>📊 AI活用度診断結果</h2>
-                <div class="score-display" id="final-score">0点</div>
-                <div class="improvement-amount" id="final-amount">年間改善効果: 0万円</div>
-                <div class="score-analysis" id="score-message">
-                    <h3>🎯 AI活用ポテンシャル評価</h3>
-                    <p id="position-message">分析メッセージ</p>
-                    <h3>🚀 推奨アクションプラン</h3>
-                    <p id="action-message">推奨アクション</p>
+            <div class="results-card" id="results-card" role="region" aria-label="診断結果">
+                <h2>🎯 占い適性診断結果</h2>
+                <div class="fortune-display" id="final-fortune" aria-label="診断結果">🌟 タロットカード</div>
+                <div class="fortune-description" id="fortune-description">
+                    あなたは直感的で想像力豊か。タロットの象徴的なメッセージから深い洞察を受け取れるタイプです。
+                </div>
+                <div class="fortune-details" id="fortune-details">
+                    <!-- 詳細が動的に挿入される -->
+                </div>
+                
+                <div class="share-buttons">
+                    <button class="share-button share-twitter" onclick="shareResult('twitter')">
+                        🐦 Twitter で共有
+                    </button>
+                    <button class="share-button share-line" onclick="shareResult('line')">
+                        💬 LINE で共有
+                    </button>
+                    <button class="share-button share-facebook" onclick="shareResult('facebook')">
+                        📘 Facebook で共有
+                    </button>
                 </div>
             </div>
 
-            <div class="ai-analysis-card" id="ai-analysis-section">
+            <div class="ai-analysis-card" id="ai-analysis-section" role="region" aria-label="詳細分析結果">
                 <div id="analysis-content"></div>
             </div>
 
             <div class="cta-section">
-                <h2>🚀 無料AI活用戦略相談</h2>
-                <p>この診断結果を基に、貴社専用のAI活用ロードマップを無料で作成いたします。</p>
-                <p>60分の個別相談で、具体的な導入計画と投資対効果を詳細設計。</p>
-                <a href="mailto:ai-consulting@business.com?subject=AI活用診断結果の相談&body=診断結果を基にAI活用戦略の相談を希望します。" class="cta-button">
-                    📧 無料個別相談を申し込む
+                <h2>🔮 LINE で占い情報をお届け</h2>
+                <p>今日の運勢や占い豆知識を毎日配信中！</p>
+                <p>あなたに最適な占い手法の詳しい活用方法も。</p>
+                <a href="https://line.me/R/ti/p/@your-line-id" class="cta-button">
+                    💬 LINE友達登録（無料）
                 </a>
             </div>
         </main>
     </div>
 
     <!-- 質問データの読み込み -->
-    <script src="fixed_questions_config.js"></script>
+    <script src="fortune_questions_config.js"></script>
     
     <script>
-        class DiagnosisSystem {
+        class FortuneDiagnosisSystem {
             constructor() {
                 this.currentQuestion = 0;
                 this.answers = [];
-                this.totalScore = 0;
-                this.totalImprovement = 0;
+                this.fortunes = {}; // 各占い手法のスコア
                 this.questionData = null;
                 this.startTime = new Date();
-                this.sessionId = null;
-                this.debugMode = true;
-                this.retryCount = 0;
-                this.maxRetries = 3;
                 
-                if (this.debugMode) {
-                    console.log('🚀 AI活用診断システム v2.0 初期化開始');
-                    console.log('⏰ 開始時刻:', this.startTime.toISOString());
-                }
+                this.debugMode = false; // 本番では false
                 
-                // セキュリティ: セッションID生成
-                this.initializeSession();
+                this.log('🔮 占い適性診断システム初期化開始');
+                this.log('⏰ 開始時刻:', this.startTime.toISOString());
                 
-                // データ永続化: 自動保存機能を有効化
-                this.enableAutoSave();
-                
-                // データ永続化: 前回のセッションをチェック
-                this.checkPreviousSession();
-                
-                // オフライン検出
-                this.setupOfflineDetection();
-                
-                // 質問データの読み込み待ち
                 this.waitForQuestionData();
             }
 
-            // セッション管理
-            initializeSession() {
-                this.sessionId = this.getSessionId();
+            log(...args) {
                 if (this.debugMode) {
-                    console.log('🔐 セッションID:', this.sessionId);
+                    console.log(...args);
                 }
-            }
-
-            getSessionId() {
-                let sessionId = sessionStorage.getItem('diagnosis_session_id');
-                if (!sessionId) {
-                    sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-                    sessionStorage.setItem('diagnosis_session_id', sessionId);
-                }
-                return sessionId;
-            }
-
-            // CSRFトークン生成
-            generateRequestToken() {
-                const array = new Uint8Array(32);
-                crypto.getRandomValues(array);
-                return btoa(String.fromCharCode(...array));
-            }
-
-            // オフライン検出
-            setupOfflineDetection() {
-                window.addEventListener('online', () => {
-                    document.getElementById('offline-indicator').classList.remove('active');
-                    this.showTemporaryMessage('インターネット接続が復旧しました', 'success');
-                });
-
-                window.addEventListener('offline', () => {
-                    document.getElementById('offline-indicator').classList.add('active');
-                    this.showTemporaryMessage('インターネット接続が切断されました', 'warning');
-                });
-            }
-
-            // 自動保存機能
-            enableAutoSave() {
-                window.addEventListener('beforeunload', () => {
-                    this.saveCurrentProgress();
-                });
-
-                // 30秒ごとに自動保存
-                setInterval(() => {
-                    if (this.answers.length > 0) {
-                        this.saveCurrentProgress();
-                    }
-                }, 30000);
-            }
-
-            // 現在の進捗を保存
-            saveCurrentProgress() {
-                const progressData = {
-                    currentQuestion: this.currentQuestion,
-                    answers: this.answers,
-                    totalScore: this.totalScore,
-                    totalImprovement: this.totalImprovement,
-                    timestamp: new Date().toISOString(),
-                    sessionId: this.sessionId,
-                    version: '2.0'
-                };
-                
-                try {
-                    localStorage.setItem('diagnosis_progress', JSON.stringify(progressData));
-                    
-                    if (this.debugMode) {
-                        console.log('💾 進捗を自動保存:', progressData);
-                    }
-                } catch (e) {
-                    console.error('保存エラー:', e);
-                }
-            }
-
-            // 前回のセッションをチェック
-            checkPreviousSession() {
-                try {
-                    const savedProgress = localStorage.getItem('diagnosis_progress');
-                    
-                    if (savedProgress) {
-                        const data = JSON.parse(savedProgress);
-                        const hoursSince = (Date.now() - new Date(data.timestamp)) / (1000 * 60 * 60);
-                        
-                        // 24時間以内なら復元オプションを表示
-                        if (hoursSince < 24 && data.answers && data.answers.length > 0) {
-                            this.showResumeDialog(data);
-                        } else {
-                            // 古いデータは削除
-                            localStorage.removeItem('diagnosis_progress');
-                        }
-                    }
-                } catch (e) {
-                    console.error('復元チェックエラー:', e);
-                    localStorage.removeItem('diagnosis_progress');
-                }
-            }
-
-            // 復元ダイアログ表示
-            showResumeDialog(data) {
-                const minutesAgo = Math.floor((Date.now() - new Date(data.timestamp)) / (1000 * 60));
-                const timeText = minutesAgo < 60 ? `${minutesAgo}分前` : `${Math.floor(minutesAgo/60)}時間前`;
-                
-                const dialog = document.createElement('div');
-                dialog.className = 'resume-dialog';
-                dialog.innerHTML = `
-                    <div class="resume-dialog-overlay"></div>
-                    <div class="resume-dialog-content">
-                        <h3 class="resume-dialog-title">📝 前回の診断を再開しますか？</h3>
-                        <p class="resume-dialog-text">
-                            ${timeText}の診断（質問${data.currentQuestion + 1}/10）が保存されています。
-                        </p>
-                        <div class="resume-dialog-buttons">
-                            <button class="resume-dialog-button primary" onclick="diagnosisSystem.resumeSession()">
-                                続きから再開
-                            </button>
-                            <button class="resume-dialog-button secondary" onclick="diagnosisSystem.startNewSession()">
-                                新しく始める
-                            </button>
-                        </div>
-                    </div>
-                `;
-                
-                document.body.appendChild(dialog);
-            }
-
-            // セッション再開
-            resumeSession() {
-                try {
-                    const savedProgress = localStorage.getItem('diagnosis_progress');
-                    if (savedProgress) {
-                        const data = JSON.parse(savedProgress);
-                        
-                        this.currentQuestion = data.currentQuestion;
-                        this.answers = data.answers;
-                        this.totalScore = data.totalScore;
-                        this.totalImprovement = data.totalImprovement;
-                        this.sessionId = data.sessionId;
-                        
-                        // ダイアログを削除
-                        document.querySelector('.resume-dialog')?.remove();
-                        
-                        // 質問を表示
-                        this.showQuestion();
-                        this.updateProgress();
-                        this.updateNavigation();
-                        
-                        this.showTemporaryMessage('前回の診断を再開しました', 'success');
-                        
-                        console.log('✅ セッション再開:', data);
-                    }
-                } catch (e) {
-                    console.error('セッション再開エラー:', e);
-                    this.startNewSession();
-                }
-            }
-
-            // 新規セッション開始
-            startNewSession() {
-                localStorage.removeItem('diagnosis_progress');
-                document.querySelector('.resume-dialog')?.remove();
-                
-                // 通常の初期化を続行
-                this.showQuestion();
-                this.updateProgress();
-                this.updateNavigation();
-                
-                this.showTemporaryMessage('新しい診断を開始します', 'info');
-            }
-
-            // 一時メッセージ表示
-            showTemporaryMessage(message, type = 'info') {
-                const messageDiv = document.createElement('div');
-                messageDiv.className = `temporary-message ${type}`;
-                messageDiv.textContent = message;
-                
-                document.body.appendChild(messageDiv);
-                
-                setTimeout(() => {
-                    messageDiv.style.animation = 'slideUp 0.3s ease';
-                    setTimeout(() => messageDiv.remove(), 300);
-                }, 5000);
             }
 
             waitForQuestionData() {
                 const checkData = () => {
                     if (typeof window.QUESTION_DATA !== 'undefined' && window.QUESTION_DATA.length > 0) {
-                        if (this.debugMode) {
-                            console.log('✅ 質問データ読み込み成功:', window.QUESTION_DATA.length, '問');
-                        }
+                        this.log('✅ 質問データ読み込み成功:', window.QUESTION_DATA.length, '問');
                         
                         this.questionData = window.QUESTION_DATA;
+                        this.initializeFortunes();
                         this.initializeDiagnosis();
                     } else {
-                        if (this.debugMode) {
-                            console.log('⏳ 質問データ読み込み待機中...');
-                        }
+                        this.log('⏳ 質問データ読み込み待機中...');
                         setTimeout(checkData, 100);
                     }
                 };
                 checkData();
             }
 
+            initializeFortunes() {
+                // 各占い手法のスコアを初期化
+                this.fortunes = {
+                    tarot: 0,
+                    astrology: 0,
+                    palmistry: 0,
+                    numerology: 0,
+                    iching: 0,
+                    oracle: 0
+                };
+            }
+
             initializeDiagnosis() {
                 try {
-                    // 既に復元されている場合はスキップ
-                    if (this.answers.length === 0) {
-                        this.showQuestion();
-                        this.updateProgress();
-                        this.updateNavigation();
-                    }
+                    this.showQuestion();
+                    this.updateProgress();
+                    this.updateNavigation();
                     
-                    if (this.debugMode) {
-                        console.log('✅ AI診断システム初期化完了');
-                    }
+                    this.log('✅ 占い診断システム初期化完了');
                 } catch (error) {
                     console.error('💥 初期化エラー:', error);
                     this.showError('システムの初期化に失敗しました。ページを再読み込みしてください。');
@@ -1129,7 +801,7 @@
             showError(message) {
                 const container = document.getElementById('question-container');
                 container.innerHTML = `
-                    <div class="error-message">
+                    <div class="error-message" role="alert">
                         <h3>⚠️ システムエラー</h3>
                         <p>${message}</p>
                         <button onclick="location.reload()" class="cta-button" style="margin-top: 20px;">
@@ -1152,14 +824,14 @@
                     <div class="question-card">
                         <div class="question-category">${question.category}</div>
                         <div class="question-text">${question.text}</div>
-                        <div class="options-container">
+                        <div class="options-container" role="radiogroup" aria-labelledby="question-text">
                             ${question.options.map((option, index) => `
-                                <div class="option" data-index="${index}" onclick="diagnosisSystem.selectOption(${index})" role="button" tabindex="0" aria-label="選択肢 ${index + 1}: ${option}">
+                                <div class="option" data-index="${index}" onclick="fortuneDiagnosis.selectOption(${index})" role="button" tabindex="0" aria-label="選択肢 ${index + 1}: ${option}">
                                     ${option}
                                 </div>
                             `).join('')}
                         </div>
-                        <div class="integrated-feedback" id="feedback-${this.currentQuestion}">
+                        <div class="integrated-feedback" id="feedback-${this.currentQuestion}" aria-live="polite">
                             <div class="feedback-title"></div>
                             <div class="feedback-content"></div>
                         </div>
@@ -1171,7 +843,6 @@
                     this.selectOption(this.answers[this.currentQuestion].selectedIndex, false);
                 }
 
-                // キーボード対応
                 this.addKeyboardSupport();
             }
 
@@ -1188,10 +859,11 @@
             }
 
             selectOption(optionIndex, animate = true) {
-                // 前の選択をクリア
-                document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+                document.querySelectorAll('.option').forEach(opt => {
+                    opt.classList.remove('selected');
+                    opt.setAttribute('aria-selected', 'false');
+                });
                 
-                // 新しい選択をマーク
                 const selectedOption = document.querySelector(`[data-index="${optionIndex}"]`);
                 if (selectedOption) {
                     selectedOption.classList.add('selected');
@@ -1199,22 +871,18 @@
                 }
 
                 const question = this.questionData[this.currentQuestion];
-                const score = question.scores[optionIndex];
-                const amount = question.amounts[optionIndex];
                 const feedback = question.feedbacks[optionIndex];
 
                 // 回答を保存
                 this.answers[this.currentQuestion] = {
                     selectedIndex: optionIndex,
-                    score: score,
-                    amount: amount,
                     timestamp: new Date()
                 };
 
-                // 自動保存を実行
-                this.saveCurrentProgress();
+                // スコア計算（占い手法別）
+                this.calculateFortuneScores(this.currentQuestion, optionIndex);
 
-                // 統合フィードバックを表示
+                // フィードバック表示
                 const feedbackCard = document.getElementById(`feedback-${this.currentQuestion}`);
                 const feedbackTitle = feedbackCard.querySelector('.feedback-title');
                 const feedbackContent = feedbackCard.querySelector('.feedback-content');
@@ -1223,38 +891,85 @@
                 feedbackContent.textContent = feedback.content;
                 feedbackCard.style.display = 'block';
 
-                // 累計を更新
-                this.updateTotals();
                 this.updateNavigation();
 
-                if (this.debugMode) {
-                    console.log(`Q${this.currentQuestion + 1} 回答:`, {
-                        option: optionIndex,
-                        score: score,
-                        amount: amount,
-                        totalScore: this.totalScore,
-                        totalImprovement: this.totalImprovement
-                    });
-                }
+                this.log(`Q${this.currentQuestion + 1} 回答:`, {
+                    option: optionIndex,
+                    fortunes: this.fortunes
+                });
             }
 
-            updateTotals() {
-                this.totalScore = 0;
-                this.totalImprovement = 0;
-
-                this.answers.forEach(answer => {
-                    if (answer !== undefined) {
-                        this.totalScore += answer.score;
-                        this.totalImprovement += answer.amount;
+            calculateFortuneScores(questionIndex, optionIndex) {
+                // 各質問の回答に基づいて占い手法のスコアを更新
+                const scoringRules = {
+                    0: { // Q1: 意思決定スタイル
+                        0: { astrology: 3, numerology: 3 }, // 論理的分析
+                        1: { tarot: 4, oracle: 3 }, // 直感重視
+                        2: { palmistry: 3, iching: 2 }, // 相談重視
+                        3: { iching: 3, numerology: 2 } // 慎重思考
+                    },
+                    1: { // Q2: ストレス解消
+                        0: { palmistry: 3, numerology: 2 }, // 体を動かす
+                        1: { tarot: 4, oracle: 3 }, // 創作活動
+                        2: { palmistry: 3, astrology: 2 }, // 人と話す
+                        3: { iching: 4, oracle: 3 } // 一人で静かに
+                    },
+                    2: { // Q3: 未来観
+                        0: { oracle: 3, astrology: 3 }, // ワクワク
+                        1: { tarot: 4, astrology: 2 }, // 興味深いが不安
+                        2: { iching: 3, palmistry: 2 }, // 心配・不安
+                        3: { oracle: 2, palmistry: 2 } // あまり考えたくない
+                    },
+                    3: { // Q4: 学習スタイル
+                        0: { astrology: 4, numerology: 3 }, // 体系的理論
+                        1: { tarot: 4, palmistry: 3 }, // 実践しながら
+                        2: { palmistry: 3, astrology: 2 }, // 人から教わる
+                        3: { iching: 3, numerology: 2 } // マイペース
+                    },
+                    4: { // Q5: 価値観
+                        0: { astrology: 3, numerology: 2 }, // 成長・向上
+                        1: { tarot: 3, oracle: 2 }, // 愛・調和
+                        2: { iching: 3, astrology: 2 }, // 安定・安心
+                        3: { tarot: 4, oracle: 3 } // 自由・創造
+                    },
+                    5: { // Q6: 人間関係
+                        0: { tarot: 4, astrology: 2 }, // 深く理解
+                        1: { oracle: 3, palmistry: 2 }, // 楽しく過ごす
+                        2: { palmistry: 3, iching: 2 }, // 支え合う
+                        3: { astrology: 3, numerology: 2 } // 尊重
+                    },
+                    6: { // Q7: 問題解決志向
+                        0: { palmistry: 3, numerology: 2 }, // 具体的アドバイス
+                        1: { oracle: 4, tarot: 2 }, // 心の支え
+                        2: { tarot: 4, astrology: 3 }, // 分析・理解
+                        3: { iching: 4, oracle: 2 } // 受容・流れ
+                    },
+                    7: { // Q8: 運命観
+                        0: { palmistry: 3, numerology: 2 }, // 自分で切り開く
+                        1: { astrology: 3, tarot: 2 }, // バランス思考
+                        2: { tarot: 4, oracle: 4 }, // 運命感受
+                        3: { iching: 4, astrology: 2 } // 運命受容
                     }
-                });
+                };
+
+                const questionScoring = scoringRules[questionIndex];
+                if (questionScoring && questionScoring[optionIndex]) {
+                    Object.keys(questionScoring[optionIndex]).forEach(fortuneType => {
+                        this.fortunes[fortuneType] += questionScoring[optionIndex][fortuneType];
+                    });
+                }
             }
 
             updateProgress() {
                 const progress = ((this.currentQuestion + 1) / this.questionData.length) * 100;
                 const completionRate = Math.round(progress);
                 
-                document.getElementById('progress-fill').style.width = `${progress}%`;
+                const progressFill = document.getElementById('progress-fill');
+                const progressBar = progressFill.parentElement;
+                
+                progressFill.style.width = `${progress}%`;
+                progressBar.setAttribute('aria-valuenow', completionRate);
+                
                 document.getElementById('progress-text').textContent = `質問${this.currentQuestion + 1} / ${this.questionData.length}`;
                 document.getElementById('completion-rate').textContent = `完了率: ${completionRate}%`;
             }
@@ -1266,13 +981,12 @@
                 prevButton.disabled = this.currentQuestion === 0;
                 nextButton.disabled = this.answers[this.currentQuestion] === undefined;
 
-                // 最後の質問の場合
                 if (this.currentQuestion === this.questionData.length - 1 && this.answers[this.currentQuestion] !== undefined) {
                     nextButton.style.display = 'none';
-                    document.getElementById('ai-analysis-button').style.display = 'block';
+                    document.getElementById('fortune-analysis-button').style.display = 'block';
                 } else {
                     nextButton.style.display = 'inline-block';
-                    document.getElementById('ai-analysis-button').style.display = 'none';
+                    document.getElementById('fortune-analysis-button').style.display = 'none';
                 }
             }
 
@@ -1297,117 +1011,83 @@
             }
 
             showResults() {
-                // ナビゲーションを非表示
                 document.querySelector('.navigation').style.display = 'none';
-                
-                // AI分析ボタンを表示
-                document.getElementById('ai-analysis-button').style.display = 'block';
-                
-                // 質問コンテナを非表示
+                document.getElementById('fortune-analysis-button').style.display = 'block';
                 document.getElementById('question-container').style.display = 'none';
                 
-                // 結果を表示
-                this.displayFinalResults();
-                
-                // 診断履歴を保存
-                this.saveDiagnosisHistory();
+                this.displayFortuneResults();
             }
 
-            displayFinalResults() {
+            displayFortuneResults() {
+                const topFortune = this.getTopFortune();
+                const fortuneData = window.FORTUNE_TYPES[topFortune];
+                
                 const resultsCard = document.getElementById('results-card');
-                const finalScore = document.getElementById('final-score');
-                const finalAmount = document.getElementById('final-amount');
-                const positionMessage = document.getElementById('position-message');
-                const actionMessage = document.getElementById('action-message');
+                const fortuneDisplay = document.getElementById('final-fortune');
+                const fortuneDescription = document.getElementById('fortune-description');
+                const fortuneDetails = document.getElementById('fortune-details');
 
-                finalScore.textContent = `${this.totalScore}点`;
-                finalAmount.textContent = `年間改善効果: ${this.totalImprovement}万円`;
+                fortuneDisplay.textContent = `${fortuneData.emoji} ${fortuneData.name}`;
+                fortuneDescription.textContent = fortuneData.description;
 
-                // スコアに基づくメッセージ
-                let position, action;
-                if (this.totalScore >= 70) {
-                    position = "🚨 AI活用による大幅な改善余地あり（上位15%）- 戦略的AI導入により劇的な効率化が期待できます";
-                    action = "即座にAI活用戦略の策定を開始し、段階的なAI導入を推進することを強く推奨します";
-                } else if (this.totalScore >= 50) {
-                    position = "⚡ AI活用による改善余地あり（上位35%）- 適切なAI導入により大きな効果が見込めます";
-                    action = "AI活用の具体的な検討を開始し、優先度の高い業務領域からAI導入を進めることを推奨します";
-                } else if (this.totalScore >= 30) {
-                    position = "📈 AI活用の一定の効果（平均レベル）- 戦略的なAI活用により競争優位性を獲得できます";
-                    action = "AI活用の情報収集と小規模な実証実験から始め、段階的にAI活用を拡大することを推奨します";
-                } else {
-                    position = "✨ 効率的な運営状況（上位20%）- 先進的なAI活用により更なる競争優位性を確立できます";
-                    action = "現在の効率性を維持しつつ、最新のAI技術活用で業界リーダーシップを強化することを推奨します";
-                }
-
-                positionMessage.textContent = position;
-                actionMessage.textContent = action;
+                fortuneDetails.innerHTML = `
+                    <h3>💡 この占いを受けるメリット</h3>
+                    <ul>
+                        ${fortuneData.benefits.map(benefit => `<li>${benefit}</li>`).join('')}
+                    </ul>
+                    
+                    <h3>🎯 どんな時に受けると良いか</h3>
+                    <ul>
+                        ${fortuneData.whenToConsult.map(situation => `<li>${situation}</li>`).join('')}
+                    </ul>
+                    
+                    <h3>🔮 効果的な受け方</h3>
+                    <ul>
+                        ${fortuneData.howToReceive.map(method => `<li>${method}</li>`).join('')}
+                    </ul>
+                `;
                 
                 resultsCard.style.display = 'block';
 
-                if (this.debugMode) {
-                    console.log('📊 最終結果:', {
-                        score: this.totalScore,
-                        improvement: this.totalImprovement,
-                        duration: new Date() - this.startTime
-                    });
-                }
+                this.log('🎯 診断結果:', {
+                    topFortune: topFortune,
+                    scores: this.fortunes,
+                    duration: new Date() - this.startTime
+                });
             }
 
-            // 診断履歴を保存
-            saveDiagnosisHistory() {
-                const result = {
-                    id: 'result_' + Date.now(),
-                    timestamp: new Date().toISOString(),
-                    score: this.totalScore,
-                    improvement: this.totalImprovement,
-                    answers: this.answers,
-                    duration: new Date() - this.startTime,
-                    sessionId: this.sessionId
-                };
+            getTopFortune() {
+                let maxScore = 0;
+                let topFortune = 'tarot';
                 
-                try {
-                    // 履歴を保存（最大10件）
-                    let history = JSON.parse(localStorage.getItem('diagnosis_history') || '[]');
-                    history.unshift(result);
-                    history = history.slice(0, 10);
-                    localStorage.setItem('diagnosis_history', JSON.stringify(history));
-                    
-                    // 現在の進捗はクリア
-                    localStorage.removeItem('diagnosis_progress');
-                    
-                    console.log('📊 診断結果を履歴に保存:', result);
-                } catch (e) {
-                    console.error('履歴保存エラー:', e);
-                }
+                Object.keys(this.fortunes).forEach(fortuneType => {
+                    if (this.fortunes[fortuneType] > maxScore) {
+                        maxScore = this.fortunes[fortuneType];
+                        topFortune = fortuneType;
+                    }
+                });
                 
-                return result;
+                return topFortune;
             }
 
-            async startAIAnalysis() {
-                // ボタンを非表示
-                document.getElementById('ai-analysis-button').style.display = 'none';
+            async startFortuneAnalysis() {
+                document.getElementById('fortune-analysis-button').style.display = 'none';
                 
-                // ローディング表示
                 const loadingContainer = document.getElementById('loading-container');
                 loadingContainer.style.display = 'block';
                 
-                if (this.debugMode) {
-                    console.log('🤖 AI分析開始');
-                }
+                this.log('🔮 詳細分析開始');
                 
-                // ステップごとのローディング演出
                 await this.animateLoadingSteps();
                 
-                // AI分析を実行
                 try {
-                    const analysisResult = await this.callAIAnalysis();
-                    this.displayAIAnalysis(analysisResult);
+                    const analysisResult = await this.callFortuneAnalysis();
+                    this.displayFortuneAnalysis(analysisResult);
                 } catch (error) {
-                    console.error('AI分析エラー:', error);
-                    this.displayOfflineAnalysis();
+                    console.error('占い分析エラー:', error);
+                    this.displayFallbackAnalysis();
                 }
                 
-                // ローディングを非表示
                 loadingContainer.style.display = 'none';
             }
 
@@ -1427,306 +1107,135 @@
                 }
             }
 
-            // セキュリティ強化版API呼び出し
-            async callAIAnalysis() {
-                this.retryCount = 0;
+            async callFortuneAnalysis() {
+                const topFortune = this.getTopFortune();
                 
-                while (this.retryCount < this.maxRetries) {
-                    try {
-                        const controller = new AbortController();
-                        const timeoutId = setTimeout(() => controller.abort(), 30000);
-                        
-                        const response = await fetch('/api/analyze', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-Request-Token': this.generateRequestToken(),
-                                'X-Session-Id': this.sessionId
-                            },
-                            body: JSON.stringify({
-                                answers: this.answers,
-                                totalScore: this.totalScore,
-                                totalImprovement: this.totalImprovement,
-                                timestamp: new Date().toISOString(),
-                                userAgent: navigator.userAgent
-                            }),
-                            signal: controller.signal
-                        });
-                        
-                        clearTimeout(timeoutId);
+                const response = await fetch('/api/fortune-analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        answers: this.answers,
+                        fortunes: this.fortunes,
+                        topFortune: topFortune
+                    })
+                });
 
-                        // レート制限チェック
-                        if (response.status === 429) {
-                            const retryAfter = parseInt(response.headers.get('Retry-After') || '60');
-                            console.log(`レート制限: ${retryAfter}秒後に再試行`);
-                            
-                            this.showTemporaryMessage(
-                                `サーバーが混雑しています。${retryAfter}秒後に自動的に再試行します...`,
-                                'warning'
-                            );
-                            
-                            await new Promise(resolve => setTimeout(resolve, retryAfter * 1000));
-                            this.retryCount++;
-                            continue;
-                        }
-
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! status: ${response.status}`);
-                        }
-
-                        const data = await response.json();
-                        if (!data.success) {
-                            throw new Error(data.error || 'AI分析に失敗しました');
-                        }
-
-                        return data.analysis;
-                        
-                    } catch (error) {
-                        console.error(`API呼び出しエラー (試行 ${this.retryCount + 1}/${this.maxRetries}):`, error);
-                        this.retryCount++;
-                        
-                        if (this.retryCount >= this.maxRetries) {
-                            // オフライン分析に切り替え
-                            console.log('オフライン分析モードに切り替え');
-                            throw error;
-                        }
-                        
-                        // 次の試行まで待機（指数バックオフ）
-                        const waitTime = Math.min(1000 * Math.pow(2, this.retryCount), 10000);
-                        this.showTemporaryMessage(
-                            `接続エラー: ${waitTime/1000}秒後に再試行します...`,
-                            'info'
-                        );
-                        await new Promise(resolve => setTimeout(resolve, waitTime));
-                    }
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
+
+                const data = await response.json();
+                if (!data.success) {
+                    throw new Error(data.error || '占い分析に失敗しました');
+                }
+
+                return data.analysis;
             }
 
-            displayAIAnalysis(analysis) {
+            displayFortuneAnalysis(analysis) {
                 const analysisSection = document.getElementById('ai-analysis-section');
                 const analysisContent = document.getElementById('analysis-content');
                 
                 analysisContent.innerHTML = analysis;
                 analysisSection.style.display = 'block';
 
-                if (this.debugMode) {
-                    console.log('✅ AI分析結果表示完了');
-                }
+                this.log('✅ 占い分析結果表示完了');
             }
 
-            // オフライン分析表示
-            displayOfflineAnalysis() {
+            displayFallbackAnalysis() {
+                const topFortune = this.getTopFortune();
+                const fortuneData = window.FORTUNE_TYPES[topFortune];
+                
                 const analysisSection = document.getElementById('ai-analysis-section');
                 const analysisContent = document.getElementById('analysis-content');
                 
-                analysisContent.innerHTML = this.generateOfflineAnalysis();
-                analysisSection.style.display = 'block';
-                
-                this.showTemporaryMessage('オフラインモードで簡易分析を表示しています', 'warning');
-            }
-
-            // オフライン分析生成
-            generateOfflineAnalysis() {
-                console.log('🔄 オフライン分析モードで結果生成');
-                
                 const analysisHTML = `
-                    <div class="ai-analysis">
-                        <div style="background: #fff3cd; color: #856404; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-                            <strong>⚠️ オフラインモード</strong><br>
-                            ネットワーク接続の問題により、簡易分析結果を表示しています。
-                            完全な分析レポートをご希望の場合は、後ほど再度お試しください。
-                        </div>
+                    <div class="fortune-analysis">
+                        <h3>🔮 詳細分析レポート</h3>
                         
-                        <h3>🤖 AI活用度診断結果（簡易版）</h3>
-                        
-                        <div class="highlight-box">
+                        <div style="background: linear-gradient(135deg, #e8f4f8 0%, #d1ecf1 100%); padding: 25px; border-radius: 12px; margin: 25px 0; border-left: 5px solid #00b894;">
                             <h4>📊 診断結果サマリー</h4>
-                            <p><strong>AI活用改善スコア：${this.totalScore}点/100点</strong></p>
-                            <p><strong>推定改善効果：${this.totalImprovement}万円規模/年</strong></p>
-                            <p>${this.getOfflineScoreMessage()}</p>
+                            <p><strong>あなたに最適な占い：${fortuneData.name}</strong></p>
+                            <p><strong>相性度：${this.fortunes[topFortune]}/32ポイント</strong></p>
+                            <p>あなたの性格・価値観から、${fortuneData.name}を受けることで最も良いアドバイスを得られることが判明しました。</p>
                         </div>
                         
-                        <h4>🎯 一般的な改善ポイント</h4>
+                        <h4>🔮 なぜこの占いを受けると良いのか</h4>
+                        <p>${fortuneData.description}</p>
+                        <p>あなたの回答パターンから、この占い手法があなたの悩みや課題解決に最も適していることがわかります。</p>
+                        
+                        <h4>💡 この占いを受けるメリット</h4>
                         <ul>
-                            ${this.getOfflineRecommendations()}
+                            ${fortuneData.benefits.map(benefit => `<li>${benefit}</li>`).join('')}
                         </ul>
                         
-                        <h4>💡 今すぐできる改善アクション</h4>
-                        <ol>
-                            <li>ChatGPT/Claude等の無料版で業務効率化を試す</li>
-                            <li>定型業務の自動化候補をリストアップ</li>
-                            <li>社内でAI活用事例を共有する場を設ける</li>
-                            <li>小規模なPoC（概念実証）から開始</li>
-                        </ol>
+                        <h4>🎯 どんな時に受けると良いか</h4>
+                        <ul>
+                            ${fortuneData.whenToConsult.map(situation => `<li>${situation}</li>`).join('')}
+                        </ul>
                         
-                        <div style="background: #d4edda; color: #155724; padding: 20px; border-radius: 10px; margin-top: 20px;">
-                            <h4>📞 詳細な分析をご希望の場合</h4>
-                            <p>ネットワーク接続を確認後、「AI詳細分析を再実行」ボタンをクリックしてください。</p>
-                            <button onclick="diagnosisSystem.retryAIAnalysis()" style="
-                                background: #28a745;
-                                color: white;
-                                border: none;
-                                padding: 10px 20px;
-                                border-radius: 5px;
-                                cursor: pointer;
-                                margin-top: 10px;
-                                font-weight: bold;
-                            ">
-                                🔄 AI詳細分析を再実行
-                            </button>
+                        <h4>🔍 効果的な受け方</h4>
+                        <ul>
+                            ${fortuneData.howToReceive.map(method => `<li>${method}</li>`).join('')}
+                        </ul>
+                        
+                        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 25px; border-radius: 15px; margin: 25px 0; text-align: center;">
+                            <h4>🎁 LINE で占い情報配信中</h4>
+                            <p style="margin: 15px 0;">毎日の運勢や${fortuneData.name}の効果的な受け方を配信しています。</p>
+                            <p><strong>特典：</strong>あなた専用の占い活用ガイドを無料プレゼント！</p>
                         </div>
                     </div>
                 `;
                 
-                return analysisHTML;
-            }
+                analysisContent.innerHTML = analysisHTML;
+                analysisSection.style.display = 'block';
 
-            // スコアに基づくメッセージ
-            getOfflineScoreMessage() {
-                if (this.totalScore >= 70) {
-                    return "AI活用による大幅な業務改善の余地があります。早急な対策が推奨されます。";
-                } else if (this.totalScore >= 50) {
-                    return "AI活用により一定の改善効果が期待できます。段階的な導入を検討してください。";
-                } else if (this.totalScore >= 30) {
-                    return "現状でも一定の効率性がありますが、AI活用により更なる向上が可能です。";
-                } else {
-                    return "既に効率的な運営をされています。先進的なAI活用で競争優位性を強化できます。";
-                }
-            }
-
-            // オフライン推奨事項
-            getOfflineRecommendations() {
-                const recommendations = [];
-                
-                // 回答に基づいた推奨事項を生成
-                this.answers.forEach((answer, index) => {
-                    if (answer && answer.score >= 7) {
-                        const category = this.questionData[index].category;
-                        if (category === "AI活用現状") {
-                            recommendations.push("<li>AI導入の基礎研修から開始することを推奨</li>");
-                        } else if (category === "業務効率性") {
-                            recommendations.push("<li>定型業務の自動化による時間削減が可能</li>");
-                        } else if (category === "データ活用度") {
-                            recommendations.push("<li>データ分析基盤の構築により意思決定を高速化</li>");
-                        }
-                    }
-                });
-                
-                // デフォルトの推奨事項
-                if (recommendations.length === 0) {
-                    recommendations.push("<li>現状分析と改善ポイントの特定</li>");
-                    recommendations.push("<li>小規模なAI活用実験の開始</li>");
-                    recommendations.push("<li>成功事例の収集と社内共有</li>");
-                }
-                
-                return recommendations.join('');
-            }
-
-            // AI分析の再実行
-            async retryAIAnalysis() {
-                console.log('🔄 AI分析を再実行');
-                
-                // ローディング表示
-                const analysisContent = document.getElementById('analysis-content');
-                analysisContent.innerHTML = '<div class="loading-spinner"></div> AI分析を再実行中...';
-                
-                try {
-                    const analysis = await this.callAIAnalysis();
-                    this.displayAIAnalysis(analysis);
-                    this.showTemporaryMessage('AI分析が完了しました', 'success');
-                } catch (error) {
-                    console.error('再実行も失敗:', error);
-                    analysisContent.innerHTML = this.generateOfflineAnalysis();
-                    this.showTemporaryMessage('オフライン分析モードで表示しています', 'warning');
-                }
+                this.log('📋 フォールバック分析表示完了');
             }
         }
 
-        // デバッグ用のグローバル関数
-        window.debugAI = {
-            testAPI: async function() {
-                try {
-                    const response = await fetch('/api/analyze', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            answers: [{score: 5, amount: 100}],
-                            totalScore: 5,
-                            totalImprovement: 100
-                        })
-                    });
-                    const data = await response.json();
-                    console.log('API テスト結果:', data);
-                    return data;
-                } catch (error) {
-                    console.error('API テストエラー:', error);
-                    return error;
-                }
-            },
+        // 結果共有機能
+        function shareResult(platform) {
+            const topFortune = fortuneDiagnosis.getTopFortune();
+            const fortuneData = window.FORTUNE_TYPES[topFortune];
             
-            showCurrentData: function() {
-                if (window.diagnosisSystem && window.diagnosisSystem.questionData) {
-                    console.log('現在の質問データ:', window.diagnosisSystem.questionData);
-                    window.diagnosisSystem.questionData.forEach((q, i) => {
-                        console.log(`Q${i+1}: ${q.text.substring(0, 60)}...`);
-                    });
-                } else {
-                    console.log('質問データが読み込まれていません');
-                }
-            },
-
-            skipToResults: function() {
-                if (window.diagnosisSystem) {
-                    // ダミーデータで回答を埋める
-                    for (let i = 0; i < window.diagnosisSystem.questionData.length; i++) {
-                        window.diagnosisSystem.answers[i] = {
-                            selectedIndex: 2,
-                            score: 5,
-                            amount: 80,
-                            timestamp: new Date()
-                        };
-                    }
-                    window.diagnosisSystem.updateTotals();
-                    window.diagnosisSystem.showResults();
-                    console.log('🚀 結果画面にスキップしました');
-                }
-            },
+            const shareData = {
+                title: `私に最適な占いは「${fortuneData.name}」でした！`,
+                text: `🔮 占い適性診断で自分にピッタリの占い手法を発見！\n\n${fortuneData.emoji} ${fortuneData.name}\n\nあなたも診断してみませんか？`,
+                url: window.location.href
+            };
             
-            clearStorage: function() {
-                localStorage.removeItem('diagnosis_progress');
-                localStorage.removeItem('diagnosis_history');
-                sessionStorage.removeItem('diagnosis_session_id');
-                console.log('🗑️ ストレージをクリアしました');
-            },
+            const shareTexts = {
+                twitter: `${shareData.text}\n\n${shareData.url}\n\n#占い診断 #占い適性`,
+                line: `${shareData.text}\n${shareData.url}`,
+                facebook: shareData.url
+            };
             
-            showHistory: function() {
-                const history = JSON.parse(localStorage.getItem('diagnosis_history') || '[]');
-                console.log('📊 診断履歴:', history);
-                history.forEach((item, index) => {
-                    console.log(`${index + 1}. ${new Date(item.timestamp).toLocaleString()} - スコア: ${item.score}点, 改善効果: ${item.improvement}万円`);
-                });
-            }
-        };
+            const shareUrls = {
+                twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareTexts.twitter)}`,
+                line: `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(shareData.url)}&text=${encodeURIComponent(shareTexts.line)}`,
+                facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareData.url)}`
+            };
+            
+            window.open(shareUrls[platform], '_blank', 'width=600,height=400');
+        }
 
         // システム初期化
-        let diagnosisSystem;
+        let fortuneDiagnosis;
         
-        // DOM読み込み完了を待って初期化
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => {
-                diagnosisSystem = new DiagnosisSystem();
-            });
-        } else {
-            diagnosisSystem = new DiagnosisSystem();
+        function initializeSystem() {
+            fortuneDiagnosis = new FortuneDiagnosisSystem();
         }
 
-        // オンライン/オフライン状態の初期チェック
-        if (!navigator.onLine) {
-            document.getElementById('offline-indicator').classList.add('active');
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeSystem);
+        } else {
+            initializeSystem();
         }
-        
-        console.log('🎉 AI活用診断システム v2.0 読み込み完了');
-        console.log('💡 デバッグコマンド: debugAI.showHistory(), debugAI.skipToResults(), debugAI.clearStorage()');
+
+        console.log('🎉 占い適性診断システム読み込み完了（修正版）');
     </script>
 </body>
 </html>

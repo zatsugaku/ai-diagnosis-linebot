@@ -509,32 +509,6 @@
             box-shadow: 0 6px 20px rgba(255, 96, 144, 0.1);
         }
 
-        .loading-spinner {
-            display: inline-block;
-            width: 30px;
-            height: 30px;
-            border: 3px solid rgba(156, 39, 176, 0.3);
-            border-radius: 50%;
-            border-top-color: #9c27b0;
-            animation: spin 1s ease-in-out infinite;
-            vertical-align: middle;
-            margin-right: 10px;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.6; }
-            100% { opacity: 1; }
-        }
-
-        .loading-step .spinner {
-            animation: pulse 1.5s infinite;
-        }
-
         .error-message {
             background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
             color: white;
@@ -545,7 +519,6 @@
             box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
         }
 
-        /* 新規追加: 一時メッセージ */
         .temporary-message {
             position: fixed;
             top: 20px;
@@ -559,216 +532,25 @@
             animation: slideDown 0.3s ease;
         }
 
-        .temporary-message.info {
-            background: #2196F3;
-        }
+        .temporary-message.info { background: #2196F3; }
+        .temporary-message.warning { background: #ff9800; }
+        .temporary-message.success { background: #4CAF50; }
+        .temporary-message.error { background: #f44336; }
 
-        .temporary-message.warning {
-            background: #ff9800;
-        }
-
-        .temporary-message.success {
-            background: #4CAF50;
-        }
-
-        .temporary-message.error {
-            background: #f44336;
-        }
-
-        /* 新規追加: 復元ダイアログ */
-        .resume-dialog {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: 9999;
-        }
-
-        .resume-dialog-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.5);
-        }
-
-        .resume-dialog-content {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            max-width: 400px;
-            text-align: center;
-            z-index: 10000;
-        }
-
-        .resume-dialog-title {
-            color: #9c27b0;
-            margin-bottom: 15px;
-            font-size: 1.5em;
-        }
-
-        .resume-dialog-text {
-            color: #666;
-            margin-bottom: 20px;
-        }
-
-        .resume-dialog-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-        }
-
-        .resume-dialog-button {
-            border: none;
-            padding: 12px 30px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-
-        .resume-dialog-button.primary {
-            background: linear-gradient(135deg, #9c27b0 0%, #673ab7 100%);
-            color: white;
-        }
-
-        .resume-dialog-button.secondary {
-            background: #e0e0e0;
-            color: #333;
-        }
-
-        /* 新規追加: オフラインインジケーター */
-        .offline-indicator {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            background: #ff9800;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            z-index: 1000;
-            display: none;
-            animation: pulse 2s infinite;
-        }
-
-        .offline-indicator.active {
-            display: block;
-        }
-
-        /* アニメーション */
         @keyframes slideDown {
             from { transform: translate(-50%, -100%); opacity: 0; }
             to { transform: translate(-50%, 0); opacity: 1; }
         }
 
-        @keyframes slideUp {
-            from { transform: translate(-50%, 0); opacity: 1; }
-            to { transform: translate(-50%, -100%); opacity: 0; }
-        }
-
-        /* スマホ対応の最適化 */
         @media (max-width: 768px) {
-            body {
-                padding: 5px;
-            }
-            
-            .container {
-                border-radius: 15px;
-                min-height: 98vh;
-            }
-            
-            .header {
-                padding: 20px 15px 15px 15px;
-            }
-            
-            .header h1 {
-                font-size: 1.8em;
-            }
-            
-            .header .subtitle {
-                font-size: 1em;
-            }
-            
-            .header .description {
-                font-size: 0.9em;
-            }
-            
-            .main-content {
-                padding: 15px;
-            }
-            
-            .question-card {
-                padding: 25px 20px;
-            }
-            
-            .question-text {
-                font-size: 1.2em;
-            }
-            
-            .option {
-                padding: 16px 18px;
-                font-size: 0.95em;
-            }
-            
-            .navigation {
-                flex-direction: column;
-                gap: 12px;
-            }
-            
-            .nav-button {
-                width: 100%;
-                max-width: none;
-                padding: 16px 30px;
-            }
-            
-            .score-display {
-                font-size: 3.2em;
-                min-width: auto;
-                padding: 20px;
-            }
-            
-            .fortune-type-display {
-                font-size: 1.6em;
-            }
-
-            .ai-analysis-button {
-                width: 100%;
-                max-width: none;
-                padding: 16px 35px;
-                font-size: 1.2em;
-            }
-
-            .cta-button {
-                width: 100%;
-                min-width: auto;
-                margin: 8px 0;
-            }
-
-            .loading-step {
-                font-size: 0.9em;
-                padding: 12px 18px;
-            }
-        }
-
-        /* 画面読み上げソフト対応 */
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-            border: 0;
+            body { padding: 5px; }
+            .container { border-radius: 15px; min-height: 98vh; }
+            .header { padding: 20px 15px 15px 15px; }
+            .header h1 { font-size: 1.8em; }
+            .main-content { padding: 15px; }
+            .question-card { padding: 25px 20px; }
+            .navigation { flex-direction: column; gap: 12px; }
+            .nav-button { width: 100%; max-width: none; }
         }
     </style>
 </head>
@@ -785,10 +567,6 @@
             </div>
         </header>
 
-        <div class="offline-indicator" id="offline-indicator">
-            ⚠️ オフラインモード
-        </div>
-
         <main class="main-content">
             <div class="progress-container">
                 <div class="progress-info">
@@ -801,19 +579,19 @@
             </div>
 
             <div class="question-container" id="question-container">
-                <div class="question-text" id="loading-message">占い診断システムを初期化中...</div>
+                <div class="question-text">システムを初期化中...</div>
             </div>
 
             <nav class="navigation">
-                <button class="nav-button prev-button" id="prev-button" onclick="diagnosisSystem.previousQuestion()" disabled aria-label="前の質問に戻る">
+                <button class="nav-button prev-button" id="prev-button" onclick="diagnosisSystem.previousQuestion()" disabled>
                     ← 前の質問に戻る
                 </button>
-                <button class="nav-button next-button" id="next-button" onclick="diagnosisSystem.nextQuestion()" disabled aria-label="次の質問へ進む">
+                <button class="nav-button next-button" id="next-button" onclick="diagnosisSystem.nextQuestion()" disabled>
                     次の質問へ →
                 </button>
             </nav>
 
-            <button class="ai-analysis-button" id="ai-analysis-button" onclick="diagnosisSystem.startAIAnalysis()" style="display: none;" aria-label="占い分析を開始">
+            <button class="ai-analysis-button" id="ai-analysis-button" onclick="diagnosisSystem.startAIAnalysis()" style="display: none;">
                 🔮 詳細な占い分析を開始
             </button>
 
@@ -868,50 +646,250 @@
         </main>
     </div>
 
-    <!-- 質問データの読み込み -->
-    <script src="fortune_questions_config_fixed.js"></script>
-    
     <script>
+        // 質問データを直接埋め込み（読み込みエラー回避）
+        console.log('🔮 占い適性診断システム v2.0 - 質問データ初期化開始');
+
+        window.QUESTION_DATA = [
+          {
+            text: "Q1. 日常生活で直感や「なんとなく」の感覚を信じて行動することはありますか？",
+            category: "直感・感性",
+            options: [
+              "直感をとても信じて、よく直感で判断する",
+              "直感は参考程度に、最終的には論理で判断",
+              "直感と論理のバランスを取って判断する",
+              "ほとんど論理的思考で判断し、直感は重視しない"
+            ],
+            scores: [10, 7, 5, 2],
+            amounts: [80, 65, 50, 30],
+            feedbacks: [
+              {
+                title: "🌸 シンプル志向：手相占いが最適",
+                content: "複雑すぎない分析を好むあなたには、手のひらの線から分かりやすいメッセージを得られる手相占いが適しています。"
+              },
+              {
+                title: "💫 感性重視：オラクルカード占いが最適",
+                content: "論理よりも感性を重視するあなたには、愛と癒しのメッセージに満ちたオラクルカードが心に響くでしょう。"
+              }
+            ]
+          },
+          {
+            text: "Q4. 人の悩みや相談を聞いて、アドバイスをすることはありますか？",
+            category: "人間関係",
+            options: [
+              "よく相談される方で、アドバイスも得意",
+              "時々相談されるが、アドバイスは慎重に考える",
+              "相談されることはあるが、答えるのは難しい",
+              "あまり相談されない方"
+            ],
+            scores: [9, 7, 5, 3],
+            amounts: [80, 60, 45, 30],
+            feedbacks: [
+              {
+                title: "🤝 天然のカウンセラー：タロット占いで才能発揮",
+                content: "人の心を理解し、適切なアドバイスができるあなたは、タロット占いを通じて多くの人を導く才能があります。"
+              },
+              {
+                title: "💭 思慮深いアドバイザー：オラクルカードが最適",
+                content: "慎重で優しいアドバイスができるあなたには、愛に満ちたメッセージのオラクルカードが相談者の心を癒します。"
+              },
+              {
+                title: "🤔 控えめなサポーター：手相占いが適合",
+                content: "控えめながらも思いやりのあるあなたには、具体的で分かりやすいアドバイスができる手相占いが適しています。"
+              },
+              {
+                title: "🌱 内向的な洞察者：数秘術が最適",
+                content: "静かに人を観察し理解するあなたには、数字を通じて人の本質を分析する数秘術が最も適しています。"
+              }
+            ]
+          },
+          {
+            text: "Q5. スピリチュアルなことや目に見えない世界について、どのような考えを持っていますか？",
+            category: "スピリチュアル",
+            options: [
+              "とても信じていて、日常的にスピリチュアルを取り入れている",
+              "興味があり、ある程度は信じている",
+              "半信半疑だが、完全に否定もしない",
+              "あまり信じておらず、現実的なことを重視する"
+            ],
+            scores: [10, 8, 5, 2],
+            amounts: [90, 70, 50, 30],
+            feedbacks: [
+              {
+                title: "✨ スピリチュアルマスター：オラクルカードが天職",
+                content: "深いスピリチュアルな理解を持つあなたには、天使やスピリットガイドからのメッセージを受け取るオラクルカードが最適です。"
+              },
+              {
+                title: "🌙 スピリチュアル探求者：タロット占いが適合",
+                content: "スピリチュアルな世界に興味を持つあなたには、古代の知恵と現代の洞察が融合したタロット占いが心に響くでしょう。"
+              },
+              {
+                title: "⚖️ バランス思考：西洋占星術が最適",
+                content: "スピリチュアルと現実のバランスを取るあなたには、天体の科学的事実とスピリチュアルな意味を融合させた西洋占星術が適しています。"
+              },
+              {
+                title: "🏠 現実主義者：手相占いが最適",
+                content: "現実的思考を重視するあなたには、手のひらという物理的な情報から具体的なアドバイスを得られる手相占いが最も適しています。"
+              }
+            ]
+          },
+          {
+            text: "Q6. 人生の重要な決断をする時、どのような方法で決めることが多いですか？",
+            category: "意思決定",
+            options: [
+              "直感やインスピレーションを重視して決める",
+              "情報収集はするが、最後は直感で決める",
+              "情報と直感の両方を総合的に判断して決める",
+              "徹底的に情報収集し、論理的に分析して決める"
+            ],
+            scores: [9, 7, 5, 3],
+            amounts: [85, 65, 50, 35],
+            feedbacks: [
+              {
+                title: "💫 直感の導き手：タロット占いが天職",
+                content: "直感を信じて生きるあなたは、タロットカードからのメッセージを通じて人生の重要な決断をサポートする天賦の才能があります。"
+              },
+              {
+                title: "🌟 バランス直感型：オラクルカード占いが適合",
+                content: "情報と直感のバランスが取れているあなたには、優しい導きを与えるオラクルカードが最適です。"
+              },
+              {
+                title: "🔍 総合判断型：西洋占星術が最適",
+                content: "多角的な視点で判断するあなたには、様々な天体の影響を総合的に分析する西洋占星術が適しています。"
+              },
+              {
+                title: "📊 論理分析型：数秘術が最適",
+                content: "論理的分析を重視するあなたには、数字という客観的データから人生のパターンを読み解く数秘術が最も適しています。"
+              }
+            ]
+          },
+          {
+            text: "Q7. 他の人とは違う、独特な視点や感性を持っていると言われたことはありますか？",
+            category: "個性・創造性",
+            options: [
+              "よく言われるし、自分でもそう思う",
+              "時々言われることがある",
+              "特別変わっているとは思わない",
+              "むしろ一般的で常識的だと思う"
+            ],
+            scores: [10, 7, 4, 2],
+            amounts: [90, 65, 40, 25],
+            feedbacks: [
+              {
+                title: "🦄 独創性の天才：タロット占いで個性発揮",
+                content: "独特な視点を持つあなたは、タロットカードの象徴的なメッセージを独自の解釈で読み解く特別な才能があります。"
+              },
+              {
+                title: "🎨 創造的な感性：オラクルカード占いが適合",
+                content: "創造的な感性を持つあなたには、美しいアートワークと創造的なメッセージのオラクルカードが心に響くでしょう。"
+              },
+              {
+                title: "🌸 自然体の魅力：手相占いが最適",
+                content: "自然体で親しみやすいあなたには、相手との距離が近く、温かい雰囲気で行える手相占いが最適です。"
+              },
+              {
+                title: "🏛️ 安定感のある導き手：西洋占星術が最適",
+                content: "常識的で信頼感のあるあなたには、長い歴史と確立された体系を持つ西洋占星術が最も適しています。"
+              }
+            ]
+          },
+          {
+            text: "Q8. 占いを受ける時、どのような雰囲気や環境を好みますか？",
+            category: "環境・雰囲気",
+            options: [
+              "神秘的でスピリチュアルな雰囲気が好き",
+              "落ち着いた癒しの空間が好き",
+              "親しみやすくてリラックスできる雰囲気が好き",
+              "清潔で整理整頓された、きちんとした空間が好き"
+            ],
+            scores: [9, 8, 6, 4],
+            amounts: [85, 75, 55, 40],
+            feedbacks: [
+              {
+                title: "🔮 神秘の探求者：タロット占いの神殿へ",
+                content: "神秘的な雰囲気を愛するあなたには、古代の智慧に満ちたタロット占いの神聖な世界が最高の体験となるでしょう。"
+              },
+              {
+                title: "🕊️ 癒しを求める魂：オラクルカードの光",
+                content: "癒しの空間を求めるあなたには、天使の愛に包まれるような優しいオラクルカード占いが心の平安をもたらします。"
+              },
+              {
+                title: "🤗 親しみやすい相談者：手相占いでハートフル",
+                content: "親しみやすい雰囲気を好むあなたには、手と手を通じて温かいつながりを感じられる手相占いが最適です。"
+              },
+              {
+                title: "📚 秩序と知識の探求者：西洋占星術の学び舎",
+                content: "整理された環境を好むあなたには、体系的で学問的なアプローチの西洋占星術が最も相応しい占い手法です。"
+              }
+            ]
+          }
+        ];
+
+        // 占い手法データベース
+        window.FORTUNE_TYPES = {
+          tarot: {
+            name: "タロットカード占い",
+            emoji: "🔮",
+            subtitle: "古代の智慧で未来を照らす",
+            description: "直感的で象徴的な解釈を得意とするあなたに最適な占い手法です。"
+          },
+          oracle: {
+            name: "オラクルカード占い",
+            emoji: "👼",
+            subtitle: "天使からの愛のメッセージ",
+            description: "スピリチュアルで優しい導きを求めるあなたに最適な占い手法です。"
+          },
+          astrology: {
+            name: "西洋占星術",
+            emoji: "⭐",
+            subtitle: "星々が織りなす運命の設計図",
+            description: "論理的思考と体系的な分析を好むあなたに最適な占い手法です。"
+          },
+          numerology: {
+            name: "数秘術",
+            emoji: "🔢",
+            subtitle: "数字に隠された人生の秘密",
+            description: "数字やパターンに興味があり、分析的思考を持つあなたに最適な占い手法です。"
+          },
+          palmistry: {
+            name: "手相占い",
+            emoji: "✋",
+            subtitle: "手のひらに刻まれた人生の地図",
+            description: "現実的で具体的なアドバイスを求めるあなたに最適な占い手法です。"
+          }
+        };
+
+        // システム設定
+        window.SYSTEM_CONFIG = {
+          title: "🔮 占い適性診断 v2.0",
+          subtitle: "3分で判明するあなたにピッタリの占い手法",
+          maxScore: 80,
+          completionMessage: "診断完了！あなたに最適な占い手法と詳細な適性分析をご確認ください。",
+          apiEndpoint: "/api/fortune-analyze",
+          hideAmountDisplay: true,
+          fortuneMode: true
+        };
+
+        console.log('✅ 占い適性診断システム v2.0 - データ初期化完了');
+        console.log(`📊 質問数: ${window.QUESTION_DATA.length}問`);
+        console.log(`🔮 占い手法: ${Object.keys(window.FORTUNE_TYPES).length}種類`);
+
+        // 診断システムクラス
         class DiagnosisSystem {
             constructor() {
                 this.currentQuestion = 0;
                 this.answers = [];
                 this.totalScore = 0;
                 this.totalImprovement = 0;
-                this.questionData = null;
+                this.questionData = window.QUESTION_DATA;
                 this.startTime = new Date();
-                this.sessionId = null;
+                this.sessionId = this.getSessionId();
                 this.debugMode = true;
                 this.retryCount = 0;
                 this.maxRetries = 3;
                 
-                if (this.debugMode) {
-                    console.log('🔮 占い適性診断システム v2.0 初期化開始');
-                    console.log('⏰ 開始時刻:', this.startTime.toISOString());
-                }
-                
-                // セキュリティ: セッションID生成
-                this.initializeSession();
-                
-                // データ永続化: 自動保存機能を有効化
-                this.enableAutoSave();
-                
-                // データ永続化: 前回のセッションをチェック
-                this.checkPreviousSession();
-                
-                // オフライン検出
-                this.setupOfflineDetection();
-                
-                // 質問データの読み込み待ち
-                this.waitForQuestionData();
-            }
-
-            // セッション管理
-            initializeSession() {
-                this.sessionId = this.getSessionId();
-                if (this.debugMode) {
-                    console.log('🔐 セッションID:', this.sessionId);
-                }
+                console.log('🔮 占い適性診断システム初期化完了');
+                this.initializeDiagnosis();
             }
 
             getSessionId() {
@@ -923,159 +901,6 @@
                 return sessionId;
             }
 
-            // CSRFトークン生成
-            generateRequestToken() {
-                const array = new Uint8Array(32);
-                crypto.getRandomValues(array);
-                return btoa(String.fromCharCode(...array));
-            }
-
-            // オフライン検出
-            setupOfflineDetection() {
-                window.addEventListener('online', () => {
-                    document.getElementById('offline-indicator').classList.remove('active');
-                    this.showTemporaryMessage('インターネット接続が復旧しました', 'success');
-                });
-
-                window.addEventListener('offline', () => {
-                    document.getElementById('offline-indicator').classList.add('active');
-                    this.showTemporaryMessage('インターネット接続が切断されました', 'warning');
-                });
-            }
-
-            // 自動保存機能
-            enableAutoSave() {
-                window.addEventListener('beforeunload', () => {
-                    this.saveCurrentProgress();
-                });
-
-                // 30秒ごとに自動保存
-                setInterval(() => {
-                    if (this.answers.length > 0) {
-                        this.saveCurrentProgress();
-                    }
-                }, 30000);
-            }
-
-            // 現在の進捗を保存
-            saveCurrentProgress() {
-                const progressData = {
-                    currentQuestion: this.currentQuestion,
-                    answers: this.answers,
-                    totalScore: this.totalScore,
-                    totalImprovement: this.totalImprovement,
-                    timestamp: new Date().toISOString(),
-                    sessionId: this.sessionId,
-                    version: '2.0'
-                };
-                
-                try {
-                    localStorage.setItem('fortune_progress', JSON.stringify(progressData));
-                    
-                    if (this.debugMode) {
-                        console.log('💾 進捗を自動保存:', progressData);
-                    }
-                } catch (e) {
-                    console.error('保存エラー:', e);
-                }
-            }
-
-            // 前回のセッションをチェック
-            checkPreviousSession() {
-                try {
-                    const savedProgress = localStorage.getItem('fortune_progress');
-                    
-                    if (savedProgress) {
-                        const data = JSON.parse(savedProgress);
-                        const hoursSince = (Date.now() - new Date(data.timestamp)) / (1000 * 60 * 60);
-                        
-                        // 24時間以内なら復元オプションを表示
-                        if (hoursSince < 24 && data.answers && data.answers.length > 0) {
-                            this.showResumeDialog(data);
-                        } else {
-                            // 古いデータは削除
-                            localStorage.removeItem('fortune_progress');
-                        }
-                    }
-                } catch (e) {
-                    console.error('復元チェックエラー:', e);
-                    localStorage.removeItem('fortune_progress');
-                }
-            }
-
-            // 復元ダイアログ表示
-            showResumeDialog(data) {
-                const minutesAgo = Math.floor((Date.now() - new Date(data.timestamp)) / (1000 * 60));
-                const timeText = minutesAgo < 60 ? `${minutesAgo}分前` : `${Math.floor(minutesAgo/60)}時間前`;
-                
-                const dialog = document.createElement('div');
-                dialog.className = 'resume-dialog';
-                dialog.innerHTML = `
-                    <div class="resume-dialog-overlay"></div>
-                    <div class="resume-dialog-content">
-                        <h3 class="resume-dialog-title">🔮 前回の診断を再開しますか？</h3>
-                        <p class="resume-dialog-text">
-                            ${timeText}の診断（質問${data.currentQuestion + 1}/8）が保存されています。
-                        </p>
-                        <div class="resume-dialog-buttons">
-                            <button class="resume-dialog-button primary" onclick="diagnosisSystem.resumeSession()">
-                                続きから再開
-                            </button>
-                            <button class="resume-dialog-button secondary" onclick="diagnosisSystem.startNewSession()">
-                                新しく始める
-                            </button>
-                        </div>
-                    </div>
-                `;
-                
-                document.body.appendChild(dialog);
-            }
-
-            // セッション再開
-            resumeSession() {
-                try {
-                    const savedProgress = localStorage.getItem('fortune_progress');
-                    if (savedProgress) {
-                        const data = JSON.parse(savedProgress);
-                        
-                        this.currentQuestion = data.currentQuestion;
-                        this.answers = data.answers;
-                        this.totalScore = data.totalScore;
-                        this.totalImprovement = data.totalImprovement;
-                        this.sessionId = data.sessionId;
-                        
-                        // ダイアログを削除
-                        document.querySelector('.resume-dialog')?.remove();
-                        
-                        // 質問を表示
-                        this.showQuestion();
-                        this.updateProgress();
-                        this.updateNavigation();
-                        
-                        this.showTemporaryMessage('前回の診断を再開しました', 'success');
-                        
-                        console.log('✅ セッション再開:', data);
-                    }
-                } catch (e) {
-                    console.error('セッション再開エラー:', e);
-                    this.startNewSession();
-                }
-            }
-
-            // 新規セッション開始
-            startNewSession() {
-                localStorage.removeItem('fortune_progress');
-                document.querySelector('.resume-dialog')?.remove();
-                
-                // 通常の初期化を続行
-                this.showQuestion();
-                this.updateProgress();
-                this.updateNavigation();
-                
-                this.showTemporaryMessage('新しい診断を開始します', 'info');
-            }
-
-            // 一時メッセージ表示
             showTemporaryMessage(message, type = 'info') {
                 const messageDiv = document.createElement('div');
                 messageDiv.className = `temporary-message ${type}`;
@@ -1086,41 +911,16 @@
                 setTimeout(() => {
                     messageDiv.style.animation = 'slideUp 0.3s ease';
                     setTimeout(() => messageDiv.remove(), 300);
-                }, 5000);
-            }
-
-            waitForQuestionData() {
-                const checkData = () => {
-                    if (typeof window.QUESTION_DATA !== 'undefined' && window.QUESTION_DATA.length > 0) {
-                        if (this.debugMode) {
-                            console.log('✅ 質問データ読み込み成功:', window.QUESTION_DATA.length, '問');
-                            console.log('🔮 占い手法データ確認:', typeof window.FORTUNE_TYPES !== 'undefined' ? 'OK' : 'NG');
-                        }
-                        
-                        this.questionData = window.QUESTION_DATA;
-                        this.initializeDiagnosis();
-                    } else {
-                        if (this.debugMode) {
-                            console.log('⏳ 質問データ読み込み待機中...');
-                        }
-                        setTimeout(checkData, 100);
-                    }
-                };
-                checkData();
+                }, 3000);
             }
 
             initializeDiagnosis() {
                 try {
-                    // 既に復元されている場合はスキップ
-                    if (this.answers.length === 0) {
-                        this.showQuestion();
-                        this.updateProgress();
-                        this.updateNavigation();
-                    }
+                    this.showQuestion();
+                    this.updateProgress();
+                    this.updateNavigation();
                     
-                    if (this.debugMode) {
-                        console.log('✅ 占い診断システム初期化完了');
-                    }
+                    console.log('✅ 診断システム初期化完了');
                 } catch (error) {
                     console.error('💥 初期化エラー:', error);
                     this.showError('システムの初期化に失敗しました。ページを再読み込みしてください。');
@@ -1133,7 +933,7 @@
                     <div class="error-message">
                         <h3>⚠️ システムエラー</h3>
                         <p>${message}</p>
-                        <button onclick="location.reload()" class="cta-button" style="margin-top: 20px;">
+                        <button onclick="location.reload()" class="cta-button" style="margin-top: 20px; background: white; color: #ff6b6b;">
                             🔄 ページを再読み込み
                         </button>
                     </div>
@@ -1155,7 +955,7 @@
                         <div class="question-text">${question.text}</div>
                         <div class="options-container">
                             ${question.options.map((option, index) => `
-                                <div class="option" data-index="${index}" onclick="diagnosisSystem.selectOption(${index})" role="button" tabindex="0" aria-label="選択肢 ${index + 1}: ${option}">
+                                <div class="option" data-index="${index}" onclick="diagnosisSystem.selectOption(${index})" role="button" tabindex="0">
                                     ${option}
                                 </div>
                             `).join('')}
@@ -1171,21 +971,6 @@
                 if (this.answers[this.currentQuestion] !== undefined) {
                     this.selectOption(this.answers[this.currentQuestion].selectedIndex, false);
                 }
-
-                // キーボード対応
-                this.addKeyboardSupport();
-            }
-
-            addKeyboardSupport() {
-                const options = document.querySelectorAll('.option');
-                options.forEach((option, index) => {
-                    option.addEventListener('keydown', (e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                            e.preventDefault();
-                            this.selectOption(index);
-                        }
-                    });
-                });
             }
 
             selectOption(optionIndex, animate = true) {
@@ -1196,7 +981,6 @@
                 const selectedOption = document.querySelector(`[data-index="${optionIndex}"]`);
                 if (selectedOption) {
                     selectedOption.classList.add('selected');
-                    selectedOption.setAttribute('aria-selected', 'true');
                 }
 
                 const question = this.questionData[this.currentQuestion];
@@ -1213,9 +997,6 @@
                     category: question.category
                 };
 
-                // 自動保存を実行
-                this.saveCurrentProgress();
-
                 // 統合フィードバックを表示
                 const feedbackCard = document.getElementById(`feedback-${this.currentQuestion}`);
                 const feedbackTitle = feedbackCard.querySelector('.feedback-title');
@@ -1229,15 +1010,11 @@
                 this.updateTotals();
                 this.updateNavigation();
 
-                if (this.debugMode) {
-                    console.log(`Q${this.currentQuestion + 1} 回答:`, {
-                        option: optionIndex,
-                        score: score,
-                        amount: amount,
-                        totalScore: this.totalScore,
-                        totalImprovement: this.totalImprovement
-                    });
-                }
+                console.log(`Q${this.currentQuestion + 1} 回答:`, {
+                    option: optionIndex,
+                    score: score,
+                    totalScore: this.totalScore
+                });
             }
 
             updateTotals() {
@@ -1310,9 +1087,6 @@
                 
                 // 結果を表示
                 this.displayFinalResults();
-                
-                // 診断履歴を保存
-                this.saveDiagnosisHistory();
             }
 
             displayFinalResults() {
@@ -1334,18 +1108,15 @@
                 
                 resultsCard.style.display = 'block';
 
-                if (this.debugMode) {
-                    console.log('🔮 最終結果:', {
-                        score: this.totalScore,
-                        fortuneType: fortuneType.name,
-                        duration: new Date() - this.startTime
-                    });
-                }
+                console.log('🔮 最終結果:', {
+                    score: this.totalScore,
+                    fortuneType: fortuneType.name,
+                    duration: new Date() - this.startTime
+                });
             }
 
             // 占い手法の判定
             determineFortuneType() {
-                // スコアに基づいて最適な占い手法を判定
                 if (this.totalScore >= 60) {
                     return {
                         name: 'タロットカード占い',
@@ -1374,37 +1145,6 @@
                 }
             }
 
-            // 診断履歴を保存
-            saveDiagnosisHistory() {
-                const fortuneType = this.determineFortuneType();
-                const result = {
-                    id: 'fortune_' + Date.now(),
-                    timestamp: new Date().toISOString(),
-                    score: this.totalScore,
-                    fortuneType: fortuneType.name,
-                    answers: this.answers,
-                    duration: new Date() - this.startTime,
-                    sessionId: this.sessionId
-                };
-                
-                try {
-                    // 履歴を保存（最大10件）
-                    let history = JSON.parse(localStorage.getItem('fortune_history') || '[]');
-                    history.unshift(result);
-                    history = history.slice(0, 10);
-                    localStorage.setItem('fortune_history', JSON.stringify(history));
-                    
-                    // 現在の進捗はクリア
-                    localStorage.removeItem('fortune_progress');
-                    
-                    console.log('🔮 診断結果を履歴に保存:', result);
-                } catch (e) {
-                    console.error('履歴保存エラー:', e);
-                }
-                
-                return result;
-            }
-
             async startAIAnalysis() {
                 // ボタンを非表示
                 document.getElementById('ai-analysis-button').style.display = 'none';
@@ -1413,9 +1153,7 @@
                 const loadingContainer = document.getElementById('loading-container');
                 loadingContainer.style.display = 'block';
                 
-                if (this.debugMode) {
-                    console.log('🔮 AI分析開始');
-                }
+                console.log('🔮 AI分析開始');
                 
                 // ステップごとのローディング演出
                 await this.animateLoadingSteps();
@@ -1449,78 +1187,42 @@
                 }
             }
 
-            // セキュリティ強化版API呼び出し
             async callAIAnalysis() {
-                this.retryCount = 0;
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 30000);
                 
-                while (this.retryCount < this.maxRetries) {
-                    try {
-                        const controller = new AbortController();
-                        const timeoutId = setTimeout(() => controller.abort(), 30000);
-                        
-                        const response = await fetch('/api/fortune-analyze', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-Request-Token': this.generateRequestToken(),
-                                'X-Session-Id': this.sessionId
-                            },
-                            body: JSON.stringify({
-                                answers: this.answers,
-                                totalScore: this.totalScore,
-                                fortuneType: this.determineFortuneType().name,
-                                timestamp: new Date().toISOString(),
-                                userAgent: navigator.userAgent
-                            }),
-                            signal: controller.signal
-                        });
-                        
-                        clearTimeout(timeoutId);
+                try {
+                    const response = await fetch('/api/fortune-analyze', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Session-Id': this.sessionId
+                        },
+                        body: JSON.stringify({
+                            answers: this.answers,
+                            totalScore: this.totalScore,
+                            fortuneType: this.determineFortuneType().name,
+                            timestamp: new Date().toISOString()
+                        }),
+                        signal: controller.signal
+                    });
+                    
+                    clearTimeout(timeoutId);
 
-                        // レート制限チェック
-                        if (response.status === 429) {
-                            const retryAfter = parseInt(response.headers.get('Retry-After') || '60');
-                            console.log(`レート制限: ${retryAfter}秒後に再試行`);
-                            
-                            this.showTemporaryMessage(
-                                `サーバーが混雑しています。${retryAfter}秒後に自動的に再試行します...`,
-                                'warning'
-                            );
-                            
-                            await new Promise(resolve => setTimeout(resolve, retryAfter * 1000));
-                            this.retryCount++;
-                            continue;
-                        }
-
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! status: ${response.status}`);
-                        }
-
-                        const data = await response.json();
-                        if (!data.success) {
-                            throw new Error(data.error || 'AI分析に失敗しました');
-                        }
-
-                        return data.analysis;
-                        
-                    } catch (error) {
-                        console.error(`API呼び出しエラー (試行 ${this.retryCount + 1}/${this.maxRetries}):`, error);
-                        this.retryCount++;
-                        
-                        if (this.retryCount >= this.maxRetries) {
-                            // オフライン分析に切り替え
-                            console.log('オフライン分析モードに切り替え');
-                            throw error;
-                        }
-                        
-                        // 次の試行まで待機（指数バックオフ）
-                        const waitTime = Math.min(1000 * Math.pow(2, this.retryCount), 10000);
-                        this.showTemporaryMessage(
-                            `接続エラー: ${waitTime/1000}秒後に再試行します...`,
-                            'info'
-                        );
-                        await new Promise(resolve => setTimeout(resolve, waitTime));
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
                     }
+
+                    const data = await response.json();
+                    if (!data.success) {
+                        throw new Error(data.error || 'AI分析に失敗しました');
+                    }
+
+                    return data.analysis;
+                    
+                } catch (error) {
+                    clearTimeout(timeoutId);
+                    throw error;
                 }
             }
 
@@ -1528,186 +1230,55 @@
                 const analysisSection = document.getElementById('ai-analysis-section');
                 const analysisContent = document.getElementById('analysis-content');
                 
-                analysisContent.innerHTML = analysis;
+                // HTMLタグを含む可能性があるのでinnerHTMLを使用
+                analysisContent.innerHTML = `<div style="white-space: pre-wrap; line-height: 1.6;">${analysis}</div>`;
                 analysisSection.style.display = 'block';
 
-                if (this.debugMode) {
-                    console.log('✅ AI分析結果表示完了');
-                }
+                console.log('✅ AI分析結果表示完了');
             }
 
-            // オフライン分析表示
             displayOfflineAnalysis() {
                 const analysisSection = document.getElementById('ai-analysis-section');
                 const analysisContent = document.getElementById('analysis-content');
                 
-                analysisContent.innerHTML = this.generateOfflineAnalysis();
+                const fortuneType = this.determineFortuneType();
+                
+                const analysisHTML = `
+                    <div style="background: #fff3cd; color: #856404; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                        <strong>⚠️ オフラインモード</strong><br>
+                        ネットワーク接続の問題により、簡易分析結果を表示しています。
+                    </div>
+                    
+                    <h3>🔮 あなたに最適な占い：${fortuneType.name}</h3>
+                    
+                    <div class="highlight-box">
+                        <h4>📊 診断結果</h4>
+                        <p><strong>適性スコア：${this.totalScore}点/80点</strong></p>
+                        <p>${fortuneType.description}</p>
+                    </div>
+                    
+                    <h4>✨ あなたの特徴</h4>
+                    <ul>
+                        <li>直感力に優れている</li>
+                        <li>創造的な思考ができる</li>
+                        <li>人の気持ちを理解するのが得意</li>
+                    </ul>
+                    
+                    <h4>🌟 おすすめの活用方法</h4>
+                    <p>${fortuneType.name}を活用することで、あなたの持つ才能を最大限に発揮できます。重要な決断や人生の転機において、貴重な指針を得ることができるでしょう。</p>
+                    
+                    <div style="background: #d4edda; color: #155724; padding: 20px; border-radius: 10px; margin-top: 20px;">
+                        <h4>📞 詳細分析をご希望の場合</h4>
+                        <p>より詳しい分析レポートをご希望の場合は、お気軽にお問い合わせください。</p>
+                    </div>
+                `;
+                
+                analysisContent.innerHTML = analysisHTML;
                 analysisSection.style.display = 'block';
                 
                 this.showTemporaryMessage('オフラインモードで簡易分析を表示しています', 'warning');
             }
-
-            // オフライン分析生成（占い版）
-            generateOfflineAnalysis() {
-                console.log('🔄 オフライン分析モードで結果生成');
-                
-                const fortuneType = this.determineFortuneType();
-                const fortuneData = window.FORTUNE_TYPES ? 
-                    Object.values(window.FORTUNE_TYPES).find(f => f.name === fortuneType.name) : null;
-                
-                const analysisHTML = `
-                    <div class="ai-analysis">
-                        <div style="background: #fff3cd; color: #856404; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-                            <strong>⚠️ オフラインモード</strong><br>
-                            ネットワーク接続の問題により、簡易分析結果を表示しています。
-                        </div>
-                        
-                        <h3>🔮 あなたに最適な占い：${fortuneType.name}</h3>
-                        
-                        <div class="highlight-box">
-                            <h4>📊 診断結果</h4>
-                            <p><strong>適性スコア：${this.totalScore}点</strong></p>
-                            <p>${fortuneType.description}</p>
-                        </div>
-                        
-                        ${fortuneData ? `
-                        <h4>✨ あなたの特徴</h4>
-                        <ul>
-                            ${fortuneData.characteristics.slice(0, 3).map(c => `<li>${c}</li>`).join('')}
-                        </ul>
-                        
-                        <h4>🌟 占いを受けるベストタイミング</h4>
-                        <ul>
-                            ${fortuneData.whenToConsult.slice(0, 3).map(w => `<li>${w}</li>`).join('')}
-                        </ul>
-                        
-                        <h4>💫 期待できる効果</h4>
-                        <ul>
-                            ${fortuneData.benefits.slice(0, 3).map(b => `<li>${b}</li>`).join('')}
-                        </ul>
-                        ` : ''}
-                        
-                        <div style="background: #d4edda; color: #155724; padding: 20px; border-radius: 10px; margin-top: 20px;">
-                            <h4>📞 詳細な分析をご希望の場合</h4>
-                            <p>ネットワーク接続を確認後、「詳細分析を再実行」ボタンをクリックしてください。</p>
-                            <button onclick="diagnosisSystem.retryAIAnalysis()" style="
-                                background: #28a745;
-                                color: white;
-                                border: none;
-                                padding: 10px 20px;
-                                border-radius: 5px;
-                                cursor: pointer;
-                                margin-top: 10px;
-                                font-weight: bold;
-                            ">
-                                🔄 詳細分析を再実行
-                            </button>
-                        </div>
-                    </div>
-                `;
-                
-                return analysisHTML;
-            }
-
-            // AI分析の再実行
-            async retryAIAnalysis() {
-                console.log('🔄 AI分析を再実行');
-                
-                // ローディング表示
-                const analysisContent = document.getElementById('analysis-content');
-                analysisContent.innerHTML = '<div class="loading-spinner"></div> AI分析を再実行中...';
-                
-                try {
-                    const analysis = await this.callAIAnalysis();
-                    this.displayAIAnalysis(analysis);
-                    this.showTemporaryMessage('AI分析が完了しました', 'success');
-                } catch (error) {
-                    console.error('再実行も失敗:', error);
-                    analysisContent.innerHTML = this.generateOfflineAnalysis();
-                    this.showTemporaryMessage('オフライン分析モードで表示しています', 'warning');
-                }
-            }
         }
-
-        // デバッグ用のグローバル関数
-        window.debugFortune = {
-            testAPI: async function() {
-                try {
-                    const response = await fetch('/api/fortune-analyze', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            answers: [{score: 5, amount: 50, category: 'test'}],
-                            totalScore: 5,
-                            fortuneType: 'タロットカード占い'
-                        })
-                    });
-                    const data = await response.json();
-                    console.log('API テスト結果:', data);
-                    return data;
-                } catch (error) {
-                    console.error('API テストエラー:', error);
-                    return error;
-                }
-            },
-            
-            showCurrentData: function() {
-                if (window.diagnosisSystem && window.diagnosisSystem.questionData) {
-                    console.log('現在の質問データ:', window.diagnosisSystem.questionData);
-                    console.log('占い手法データ:', window.FORTUNE_TYPES);
-                    window.diagnosisSystem.questionData.forEach((q, i) => {
-                        console.log(`Q${i+1}: ${q.text.substring(0, 60)}...`);
-                    });
-                } else {
-                    console.log('質問データが読み込まれていません');
-                }
-            },
-
-            skipToResults: function() {
-                if (window.diagnosisSystem) {
-                    // ダミーデータで回答を埋める
-                    for (let i = 0; i < window.diagnosisSystem.questionData.length; i++) {
-                        window.diagnosisSystem.answers[i] = {
-                            selectedIndex: Math.floor(Math.random() * 4),
-                            score: Math.floor(Math.random() * 10),
-                            amount: Math.floor(Math.random() * 100),
-                            timestamp: new Date(),
-                            category: window.diagnosisSystem.questionData[i].category
-                        };
-                    }
-                    window.diagnosisSystem.updateTotals();
-                    window.diagnosisSystem.showResults();
-                    console.log('🚀 結果画面にスキップしました');
-                }
-            },
-            
-            clearStorage: function() {
-                localStorage.removeItem('fortune_progress');
-                localStorage.removeItem('fortune_history');
-                sessionStorage.removeItem('fortune_session_id');
-                console.log('🗑️ ストレージをクリアしました');
-            },
-            
-            showHistory: function() {
-                const history = JSON.parse(localStorage.getItem('fortune_history') || '[]');
-                console.log('🔮 診断履歴:', history);
-                history.forEach((item, index) => {
-                    console.log(`${index + 1}. ${new Date(item.timestamp).toLocaleString()} - スコア: ${item.score}点, 占い: ${item.fortuneType}`);
-                });
-            },
-            
-            testFortuneTypes: function() {
-                if (window.FORTUNE_TYPES) {
-                    console.log('🔮 占い手法一覧:');
-                    Object.keys(window.FORTUNE_TYPES).forEach(key => {
-                        const fortune = window.FORTUNE_TYPES[key];
-                        console.log(`${fortune.emoji} ${fortune.name}: ${fortune.subtitle}`);
-                    });
-                } else {
-                    console.log('占い手法データが読み込まれていません');
-                }
-            }
-        };
 
         // システム初期化
         let diagnosisSystem;
@@ -1720,18 +1291,76 @@
         } else {
             diagnosisSystem = new DiagnosisSystem();
         }
-
-        // オンライン/オフライン状態の初期チェック
-        if (!navigator.onLine) {
-            document.getElementById('offline-indicator').classList.add('active');
-        }
         
         console.log('🔮 占い適性診断システム v2.0 読み込み完了');
-        console.log('💡 デバッグコマンド:');
-        console.log('  debugFortune.showHistory() - 診断履歴を表示');
-        console.log('  debugFortune.skipToResults() - 結果画面にスキップ');
-        console.log('  debugFortune.testFortuneTypes() - 占い手法一覧');
-        console.log('  debugFortune.clearStorage() - ストレージクリア');
     </script>
 </body>
-</html>
+</html>🌟 直感型：タロット・オラクルカードが最適",
+                content: "あなたの豊かな直感力は、象徴的なメッセージを読み解くタロットやオラクルカードと非常に相性が良いです。カードからのメッセージを直感的に受け取る能力に長けています。"
+              },
+              {
+                title: "⚖️ バランス型：複合的占い手法が適合",
+                content: "直感と論理のバランスが取れているあなたには、体系的でありながら直感も使える西洋占星術や数秘術が適しています。"
+              },
+              {
+                title: "🔄 調和型：幅広い占い手法に対応",
+                content: "バランスの取れたアプローチができるあなたは、多くの占い手法に適応できる柔軟性を持っています。"
+              },
+              {
+                title: "🧠 論理型：体系的占術が最適",
+                content: "論理的思考を重視するあなたには、西洋占星術や数秘術など、体系的で分析的な占い手法が最も適しています。"
+              }
+            ]
+          },
+          {
+            text: "Q2. 芸術作品（絵画、音楽、小説など）から感情的なメッセージや意味を感じ取ることは得意ですか？",
+            category: "象徴・解釈力",
+            options: [
+              "とても得意で、作品の深い意味まで感じ取れる",
+              "ある程度は感じ取れるが、時間がかかる",
+              "表面的な印象は分かるが、深い意味は難しい",
+              "あまり得意ではなく、論理的な説明があった方が理解しやすい"
+            ],
+            scores: [10, 7, 4, 1],
+            amounts: [85, 65, 45, 25],
+            feedbacks: [
+              {
+                title: "🎨 象徴解釈の達人：タロット占いが天職",
+                content: "象徴的なメッセージを読み解く能力に長けているあなたは、タロットカードの豊富なシンボルから深い洞察を得ることができます。"
+              },
+              {
+                title: "🌙 感性豊か：オラクルカードが適合",
+                content: "芸術的感性があるあなたには、美しいイラストと優しいメッセージのオラクルカードが心に響くでしょう。"
+              },
+              {
+                title: "📚 基本的解釈力：手相占いが最適",
+                content: "視覚的で分かりやすい情報を好むあなたには、手のひらの線から具体的なメッセージを読み取る手相占いが適しています。"
+              },
+              {
+                title: "🔍 論理重視：西洋占星術が最適",
+                content: "体系的な説明を好むあなたには、天体の動きと人生の関連を論理的に分析する西洋占星術が最も適しています。"
+              }
+            ]
+          },
+          {
+            text: "Q3. 数字やパターン、規則性を見つけることに興味がありますか？",
+            category: "論理・分析",
+            options: [
+              "とても興味があり、パターンを見つけるのが好き",
+              "興味はあるが、複雑すぎると疲れる",
+              "時々気になる程度",
+              "数字やパターンにはあまり興味がない"
+            ],
+            scores: [8, 6, 4, 2],
+            amounts: [75, 55, 40, 25],
+            feedbacks: [
+              {
+                title: "🔢 数字の魔術師：数秘術が天職",
+                content: "パターン認識能力に優れたあなたには、生年月日や名前の数字から人生の法則を読み解く数秘術が最適です。"
+              },
+              {
+                title: "📊 適度な分析力：西洋占星術が適合",
+                content: "論理的思考と直感のバランスが良いあなたには、天体の配置を分析しながらも直感的解釈も必要な西洋占星術が適しています。"
+              },
+              {
+                title: "

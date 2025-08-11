@@ -648,7 +648,7 @@
 
     <script src="/business/fortune-diagnosis/fortune_questions_config.js"></script>
 <script>
-        // 質問データを直接埋め込み（読み込みエラー回避）
+        // 外部データ（fortune_questions_config.js）を読み込み済み前提
         console.log('🔮 占い適性診断システム v2.0 - 質問データ初期化開始');
 
         // 占い手法データベース
@@ -663,7 +663,12 @@
           fortuneMode: true
         };
 
-        console.log('✅ 占い適性診断システム v2.0 - データ初期化完了');
+        if (!window.QUESTION_DATA || !window.FORTUNE_TYPES) {
+    const container = document.getElementById('question-container');
+    container.innerHTML = '<div class="error-message"><h3>⚠️ データ読み込みエラー</h3><p>質問データの読み込みに失敗しました。ページを再読み込みするか、管理者に連絡してください。</p></div>';
+    throw new Error('QUESTION_DATA / FORTUNE_TYPES not loaded');
+}
+console.log('✅ 占い適性診断システム v2.0 - データ初期化完了');
         console.log(`📊 質問数: ${window.QUESTION_DATA.length}問`);
         console.log(`🔮 占い手法: ${Object.keys(window.FORTUNE_TYPES).length}種類`);
 

@@ -1,462 +1,1096 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>診断アプリ｜フォーチュン診断</title>
-  <style>
-    :root { --radius: 16px; }
-    * { box-sizing: border-box; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans JP", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif; margin: 0; background: #f7f7f8; color: #111; }
-    .container { max-width: 820px; margin: 28px auto; padding: 0 16px 56px; }
-    header { text-align: center; margin-bottom: 18px; }
-    h1 { font-size: 22px; margin: 0 0 6px; }
-    .sub { color: #666; font-size: 13px; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔮 占い適性診断 v2.0 - 3分で判明するあなたにピッタリの占い手法</title>
+    <meta name="description" content="タロット、占星術、手相など、あなたの性格や価値観から最適な占い手法を診断。1,000人の診断データに基づく精密な適性分析。">
+    <meta name="keywords" content="占い診断,占い適性,タロット,占星術,手相,数秘術,易経,オラクルカード">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    .card { background: #fff; border-radius: var(--radius); box-shadow: 0 4px 20px rgba(0,0,0,.06); padding: 18px; }
-    .hidden { display: none !important; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #9c27b0 0%, #673ab7 100%);
+            min-height: 100vh;
+            padding: 10px;
+        }
 
-    /* Progress */
-    .progress { display: flex; align-items: center; gap: 12px; margin: 14px 0 16px; }
-    .bar { position: relative; flex: 1; height: 8px; background: #eee; border-radius: 999px; overflow: hidden; }
-    .bar > i { position: absolute; inset: 0; width: 0%; background: #111; opacity: .12; }
-    .progress small { color: #555; }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            overflow: hidden;
+            min-height: 95vh;
+            display: flex;
+            flex-direction: column;
+        }
 
-    /* Question */
-    #question-card { margin-top: 10px; }
-    #question-text { font-size: 18px; font-weight: 600; line-height: 1.6; }
-    #options { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 14px; }
-    .opt { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 12px 14px; border-radius: 12px; border: 1px solid #e5e7eb; background: #fff; cursor: pointer; transition: transform .02s ease, border-color .12s ease; }
-    .opt:hover { border-color: #d1d5db; }
-    .opt:active { transform: translateY(1px); }
-    .opt span { pointer-events: none; }
+        .header {
+            background: linear-gradient(135deg, #9c27b0 0%, #673ab7 100%);
+            color: white;
+            text-align: center;
+            padding: 30px 30px 20px 30px;
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
 
-    /* Feedback */
-    .feedback { border: 1px dashed #e5e7eb; background: #fafafa; margin-top: 12px; }
-    .feedback .feedback-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
-    .feedback .feedback-content { font-size: 14px; color: #333; white-space: pre-wrap; }
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(255,255,255,0.1) 10px,
+                rgba(255,255,255,0.1) 20px
+            );
+            animation: backgroundMove 20s linear infinite;
+        }
 
-    /* Nav */
-    #nav { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; gap: 10px; }
-    .btn { padding: 10px 14px; border-radius: 12px; border: 1px solid #e5e7eb; background: #fff; cursor: pointer; font-weight: 600; }
-    .btn[disabled] { opacity: .4; cursor: not-allowed; }
-    .btn.primary { background: #111; color: #fff; border-color: #111; }
+        @keyframes backgroundMove {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
 
-    /* Style controls */
-    #style-controls { display: none; margin-top: 10px; text-align: center; }
-    #style-controls label { margin-right: 12px; }
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
 
-    /* Result */
-    #result { margin-top: 18px; }
-    #result h2 { font-size: 18px; margin: 0 0 8px; }
-    #ai-output { white-space: pre-wrap; line-height: 1.7; }
-    .row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-    .pill { font-size: 12px; padding: 4px 8px; background: #f0f0f2; border-radius: 999px; }
-    .muted { color: #666; }
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-weight: 700;
+        }
 
-    footer { text-align: center; color: #888; font-size: 12px; margin-top: 28px; }
-  </style>
+        .header .subtitle {
+            font-size: 1.1em;
+            opacity: 0.95;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .header .description {
+            font-size: 1em;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.4;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            justify-content: center;
+        }
+
+        .progress-container {
+            margin-bottom: 20px;
+            flex-shrink: 0;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .progress-text {
+            font-size: 1em;
+            font-weight: 600;
+            color: #9c27b0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(90deg, #e9ecef 0%, #f8f9fa 100%);
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #9c27b0 0%, #673ab7 100%);
+            width: 0%;
+            transition: width 0.8s ease;
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: progressShine 2s infinite;
+        }
+
+        @keyframes progressShine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .question-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 0;
+        }
+
+        .question-card {
+            background: linear-gradient(135deg, #faf0ff 0%, #f3e7ff 100%);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(156, 39, 176, 0.15);
+            border: 2px solid rgba(156, 39, 176, 0.1);
+            position: relative;
+            overflow: hidden;
+            animation: slideInFromBottom 0.6s ease-out;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        @keyframes slideInFromBottom {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .question-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #9c27b0 0%, #673ab7 100%);
+        }
+
+        .question-category {
+            background: linear-gradient(90deg, #9c27b0 0%, #673ab7 100%);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            display: inline-block;
+            margin-bottom: 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .question-text {
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: #2d3436;
+            line-height: 1.4;
+        }
+
+        .options-container {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .option {
+            background: white;
+            border: 2px solid #e0d4ff;
+            border-radius: 12px;
+            padding: 18px 22px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            font-size: 1em;
+            position: relative;
+            overflow: hidden;
+            font-weight: 500;
+        }
+
+        .option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(156, 39, 176, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .option:hover {
+            border-color: #9c27b0;
+            background: #faf0ff;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(156, 39, 176, 0.2);
+        }
+
+        .option:hover::before {
+            left: 100%;
+        }
+
+        .option.selected {
+            border-color: #9c27b0;
+            background: linear-gradient(135deg, #9c27b0 0%, #673ab7 100%);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(156, 39, 176, 0.4);
+        }
+
+        .integrated-feedback {
+            background: linear-gradient(135deg, #ff6090 0%, #ff4757 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            display: none;
+            box-shadow: 0 8px 25px rgba(255, 71, 87, 0.3);
+            border: 2px solid rgba(255,255,255,0.2);
+            animation: slideInFromRight 0.5s ease-out;
+        }
+
+        @keyframes slideInFromRight {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .feedback-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feedback-content {
+            font-size: 1em;
+            line-height: 1.5;
+            opacity: 0.95;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            gap: 15px;
+            flex-shrink: 0;
+        }
+
+        .nav-button {
+            padding: 15px 35px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            flex: 1;
+            max-width: 200px;
+        }
+
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .prev-button {
+            background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+            color: white;
+        }
+
+        .prev-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(149, 165, 166, 0.4);
+        }
+
+        .next-button {
+            background: linear-gradient(135deg, #ff6090 0%, #ff4757 100%);
+            color: white;
+        }
+
+        .next-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 71, 87, 0.4);
+        }
+
+        .ai-analysis-button {
+            background: linear-gradient(135deg, #ffd700 0%, #ffb700 100%);
+            color: #333;
+            border: none;
+            padding: 18px 45px;
+            border-radius: 25px;
+            font-size: 1.3em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 20px auto;
+            display: block;
+            box-shadow: 0 10px 30px rgba(255, 183, 0, 0.3);
+            width: 100%;
+            max-width: 350px;
+        }
+
+        .ai-analysis-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(255, 183, 0, 0.4);
+        }
+
+        .loading-container {
+            text-align: center;
+            margin: 30px 0;
+            display: none;
+            background: linear-gradient(135deg, #faf0ff 0%, #f3e7ff 100%);
+            padding: 30px;
+            border-radius: 20px;
+            border: 2px solid rgba(156, 39, 176, 0.1);
+        }
+
+        .loading-container h2 {
+            color: #9c27b0;
+            margin-bottom: 25px;
+            font-size: 1.8em;
+        }
+
+        .loading-step {
+            padding: 15px 25px;
+            margin: 12px 0;
+            border-radius: 10px;
+            background: white;
+            transition: all 0.4s ease;
+            border: 1px solid #e0d4ff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.95em;
+        }
+
+        .loading-step.active {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            border-left: 4px solid #fdcb6e;
+            transform: translateX(10px);
+        }
+
+        .loading-step.completed {
+            background: linear-gradient(135deg, #d4edda 0%, #a8e6cf 100%);
+            border-left: 4px solid #00b894;
+            transform: translateX(5px);
+        }
+
+        .results-card {
+            background: linear-gradient(135deg, #ff6090 0%, #ff4757 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 25px;
+            text-align: center;
+            margin-top: 30px;
+            display: none;
+            box-shadow: 0 20px 45px rgba(255, 71, 87, 0.3);
+            border: 3px solid rgba(255,255,255,0.2);
+            animation: slideInFromBottom 0.8s ease-out;
+        }
+
+        .score-display {
+            font-size: 4.5em;
+            font-weight: bold;
+            margin: 25px 0;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            background: rgba(255,255,255,0.2);
+            border-radius: 20px;
+            padding: 25px;
+            display: inline-block;
+            min-width: 250px;
+        }
+
+        .fortune-type-display {
+            font-size: 2.2em;
+            margin: 25px 0;
+            padding: 18px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 15px;
+            font-weight: 600;
+        }
+
+        .score-analysis {
+            background: rgba(255,255,255,0.1);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+            text-align: left;
+        }
+
+        .ai-analysis-card {
+            margin-top: 30px;
+            background: linear-gradient(135deg, #faf0ff 0%, #f3e7ff 100%);
+            border-radius: 20px;
+            padding: 35px;
+            display: none;
+            border: 2px solid #9c27b0;
+            box-shadow: 0 12px 30px rgba(156, 39, 176, 0.1);
+            animation: slideInFromBottom 0.8s ease-out;
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, #9c27b0 0%, #673ab7 100%);
+            color: white;
+            padding: 35px;
+            border-radius: 20px;
+            text-align: center;
+            margin-top: 30px;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .cta-section h2 {
+            margin-bottom: 18px;
+            font-size: 2em;
+        }
+
+        .cta-section p {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            opacity: 0.95;
+        }
+
+        .cta-button {
+            background: white;
+            color: #9c27b0;
+            padding: 18px 40px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 15px 10px;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 8px 25px rgba(255,255,255,0.2);
+            min-width: 220px;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(255,255,255,0.3);
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #fef5ff 0%, #fcebff 100%);
+            padding: 25px;
+            border-radius: 12px;
+            margin: 25px 0;
+            border-left: 5px solid #ff6090;
+            box-shadow: 0 6px 20px rgba(255, 96, 144, 0.1);
+        }
+
+        .error-message {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 25px 0;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+        }
+
+        .temporary-message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 15px 25px;
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 10000;
+            animation: slideDown 0.3s ease;
+        }
+
+        .temporary-message.info { background: #2196F3; }
+        .temporary-message.warning { background: #ff9800; }
+        .temporary-message.success { background: #4CAF50; }
+        .temporary-message.error { background: #f44336; }
+
+        @keyframes slideDown {
+            from { transform: translate(-50%, -100%); opacity: 0; }
+            to { transform: translate(-50%, 0); opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 5px; }
+            .container { border-radius: 15px; min-height: 98vh; }
+            .header { padding: 20px 15px 15px 15px; }
+            .header h1 { font-size: 1.8em; }
+            .main-content { padding: 15px; }
+            .question-card { padding: 25px 20px; }
+            .navigation { flex-direction: column; gap: 12px; }
+            .nav-button { width: 100%; max-width: none; }
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>フォーチュン診断</h1>
-      <div class="sub">8問に答えるだけで、あなたのタイプをAIが分析します。</div>
-    </header>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <h1>🔮 占い適性診断 v2.0</h1>
+                <div class="subtitle">3分で判明するあなたにピッタリの占い手法</div>
+                <div class="description">
+                    タロット、占星術、手相など、あなたの性格や価値観から最適な占い手法を診断。
+                    1,000人の診断データに基づく精密な適性分析システムです。
+                </div>
+            </div>
+        </header>
 
-    <div id="app" class="card">
-      <div class="progress">
-        <small id="progress-text" aria-live="polite">準備中…</small>
-        <div class="bar" aria-hidden="true"><i id="bar-fill"></i></div>
-      </div>
+        <main class="main-content">
+            <div class="progress-container">
+                <div class="progress-info">
+                    <span class="progress-text" id="progress-text">質問1 / 8</span>
+                    <span class="progress-text" id="completion-rate">完了率: 12%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+            </div>
 
-      <div id="question-card" class="card" style="padding:16px;">
-        <div id="question-text">読み込み中…</div>
-        <div id="options" aria-live="polite"></div>
-        <div id="feedback" class="card feedback hidden">
-          <div class="feedback-title"></div>
-          <div class="feedback-content"></div>
-        </div>
-      </div>
+            <div class="question-container" id="question-container">
+                <div class="question-text">システムを初期化中...</div>
+            </div>
 
-      <div id="nav">
-        <button id="prev" class="btn" type="button">← 前へ</button>
-        <div class="row">
-          <button id="analyze" class="btn primary" type="button">AIに分析してもらう</button>
-          <button id="next" class="btn" type="button">次へ →</button>
-        </div>
-      </div>
+            <nav class="navigation">
+                <button class="nav-button prev-button" id="prev-button" onclick="diagnosisSystem.previousQuestion()" disabled>
+                    ← 前の質問に戻る
+                </button>
+                <button class="nav-button next-button" id="next-button" onclick="diagnosisSystem.nextQuestion()" disabled>
+                    次の質問へ →
+                </button>
+            </nav>
 
-      <!-- 文量/絵文字コントロール（最終問に到達後に表示） -->
-      <div id="style-controls">
-        <label>文量：
-          <select id="verbosity">
-            <option value="short">短め</option>
-            <option value="standard" selected>標準</option>
-            <option value="long">詳しめ</option>
-          </select>
-        </label>
-        <label><input type="checkbox" id="emoji" checked> 絵文字あり</label>
-      </div>
+            <button class="ai-analysis-button" id="ai-analysis-button" onclick="diagnosisSystem.startAIAnalysis()" style="display: none;">
+                🔮 詳細な占い分析を開始
+            </button>
 
-      <section id="result" class="hidden">
-        <h2>診断結果</h2>
-        <div class="row" style="margin-bottom:6px;">
-          <span id="result-type" class="pill"></span>
-          <span id="result-score" class="pill"></span>
-        </div>
-        <div id="ai-output" class="card" style="padding:14px;"></div>
-        <div class="row" style="margin-top:12px;">
-          <button id="copy" class="btn" type="button">結果をコピー</button>
-          <button id="restart" class="btn" type="button">もう一度診断</button>
-        </div>
-      </section>
+            <div class="loading-container" id="loading-container">
+                <h2>🔮 占い適性分析中...</h2>
+                <div class="loading-step" id="step1">
+                    <span>🌟 あなたの性格パターンを分析中...</span>
+                    <span class="spinner">⏳</span>
+                </div>
+                <div class="loading-step" id="step2">
+                    <span>☯️ 価値観と占い手法の相性を計算中...</span>
+                    <span class="spinner">⏳</span>
+                </div>
+                <div class="loading-step" id="step3">
+                    <span>🎴 最適な占い手法を特定中...</span>
+                    <span class="spinner">⏳</span>
+                </div>
+                <div class="loading-step" id="step4">
+                    <span>✨ パーソナライズされたアドバイスを生成中...</span>
+                    <span class="spinner">⏳</span>
+                </div>
+                <div class="loading-step" id="step5">
+                    <span>📋 詳細レポートを完成中...</span>
+                    <span class="spinner">⏳</span>
+                </div>
+            </div>
+
+            <div class="results-card" id="results-card">
+                <h2>🔮 占い適性診断結果</h2>
+                <div class="score-display" id="final-score">0点</div>
+                <div class="fortune-type-display" id="fortune-type">占い手法判定中...</div>
+                <div class="score-analysis" id="score-message">
+                    <h3>🎯 あなたの占い適性</h3>
+                    <p id="position-message">分析メッセージ</p>
+                    <h3>🌟 推奨される占い活用法</h3>
+                    <p id="action-message">推奨アクション</p>
+                </div>
+            </div>
+
+            <div class="ai-analysis-card" id="ai-analysis-section">
+                <div id="analysis-content"></div>
+            </div>
+
+            <div class="cta-section">
+                <h2>🔮 無料占い体験セッション</h2>
+                <p>診断結果を基に、あなたに最適な占い師をご紹介します。</p>
+                <p>初回30分の体験セッションを無料でご提供。</p>
+                <a href="mailto:fortune@example.com?subject=占い適性診断結果のご相談&body=診断結果を基に占い体験を希望します。" class="cta-button">
+                    📧 無料体験を申し込む
+                </a>
+            </div>
+        </main>
     </div>
 
-    <footer>© 2025 Fortune Diagnosis</footer>
-  </div>
+    <script src="/business/fortune-diagnosis/fortune_questions_config.js"></script>
+<script>
+        // 外部データ（fortune_questions_config.js）を読み込み済み前提
+        console.log('🔮 占い適性診断システム v2.0 - 質問データ初期化開始');
 
-  <!-- 外部設定（質問/タイプ定義） -->
-  <script src="/business/fortune-diagnosis/fortune_questions_config.js"></script>
-
-  <!-- メインスクリプト -->
-  <script>
-    'use strict';
-
-    /** ユーティリティ **/
-    const $ = (sel) => document.querySelector(sel);
-    const create = (tag, props = {}, ...children) => {
-      const el = document.createElement(tag);
-      Object.entries(props).forEach(([k, v]) => {
-        if (k === 'class') el.className = v;
-        else if (k === 'dataset') Object.assign(el.dataset, v);
-        else if (k in el) el[k] = v; else el.setAttribute(k, v);
-      });
-      for (const child of children) {
-        if (child == null) continue;
-        if (typeof child === 'string' || typeof child === 'number') el.appendChild(document.createTextNode(String(child)));
-        else el.appendChild(child);
-      }
-      return el;
-    };
-
-    const sessionId = (() =>
-      (crypto?.randomUUID?.() || Math.random().toString(36).slice(2)) + '-' + Date.now())();
-
-    /** 質問/タイプ設定の検証 **/
-    function ensureConfigLoaded() {
-      const qData = (window.QUESTION_DATA || window.FORTUNE_QUESTION_DATA || []);
-      if (!Array.isArray(qData) || qData.length === 0) {
-        throw new Error('質問データ（QUESTION_DATA）が読み込まれていません。外部JSのパスを確認してください。');
-      }
-      const types = (window.FORTUNE_TYPES || []);
-      if (!Array.isArray(types) || types.length === 0) {
-        console.warn('FORTUNE_TYPES が見つかりません。スコア帯→タイプの割当はデフォルト挙動になります。');
-      }
-      return { qData, types };
-    }
-
-    /** スコア帯からタイプを決定（柔軟対応） **/
-    function determineType(totalScore, types) {
-      if (!Array.isArray(types) || types.length === 0) {
-        return { name: 'タイプA', description: '', min: -Infinity, max: Infinity };
-      }
-      const norm = types.map(t => {
-        const min = (Number.isFinite(t.min) ? t.min : (Number.isFinite(t.minScore) ? t.minScore : -Infinity));
-        const max = (Number.isFinite(t.max) ? t.max : (Number.isFinite(t.maxScore) ? t.maxScore : Infinity));
-        return { ...t, min, max };
-      });
-      const inRange = norm.find(t => totalScore >= t.min && totalScore <= t.max);
-      if (inRange) return inRange;
-      // 近いmin/maxで決定
-      let best = norm[0], bestDist = Infinity;
-      for (const t of norm) {
-        const dist = (totalScore < t.min) ? (t.min - totalScore) : (totalScore - t.max);
-        if (dist < bestDist) { best = t; bestDist = dist; }
-      }
-      return best;
-    }
-
-    class DiagnosisSystem {
-      constructor(config) {
-        this.questionData = config.qData;
-        this.types = config.types;
-        this.currentQuestion = 0;
-        this.answers = []; // index配列
-        this.totalScore = 0;
-        this.sessionId = sessionId;
-
-        // UI要素
-        this.progressText = $('#progress-text');
-        this.barFill = $('#bar-fill');
-        this.qText = $('#question-text');
-        this.optionsEl = $('#options');
-        this.feedbackEl = $('#feedback');
-        this.feedbackTitle = this.feedbackEl.querySelector('.feedback-title');
-        this.feedbackContent = this.feedbackEl.querySelector('.feedback-content');
-        this.prevBtn = $('#prev');
-        this.nextBtn = $('#next');
-        this.analyzeBtn = $('#analyze');
-        this.styleControls = $('#style-controls');
-        this.verbosityEl = $('#verbosity');
-        this.emojiEl = $('#emoji');
-        this.resultSec = $('#result');
-        this.resultType = $('#result-type');
-        this.resultScore = $('#result-score');
-        this.aiOutput = $('#ai-output');
-        this.copyBtn = $('#copy');
-        this.restartBtn = $('#restart');
-
-        this.bind();
-        this.render();
-      }
-
-      bind() {
-        this.prevBtn.addEventListener('click', () => this.goto(this.currentQuestion - 1));
-        this.nextBtn.addEventListener('click', () => this.goto(this.currentQuestion + 1));
-        this.analyzeBtn.addEventListener('click', () => this.onAnalyze());
-        this.copyBtn.addEventListener('click', () => this.copyResult());
-        this.restartBtn.addEventListener('click', () => this.restart());
-      }
-
-      restart() {
-        this.currentQuestion = 0;
-        this.answers = [];
-        this.totalScore = 0;
-        this.resultSec.classList.add('hidden');
-        this.styleControls.style.display = 'none';
-        this.render();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-
-      goto(index) {
-        if (index < 0 || index >= this.questionData.length) return;
-        this.currentQuestion = index;
-        this.render();
-      }
-
-      render() {
-        const q = this.questionData[this.currentQuestion];
-        // 進捗
-        const total = this.questionData.length;
-        const answeredCount = this.answers.filter(v => v !== undefined).length;
-        this.progressText.textContent = `質問 ${this.currentQuestion + 1} / ${total}`;
-        const fillPct = Math.max(0, Math.min(100, Math.round((answeredCount / total) * 100)));
-        this.barFill.style.width = fillPct + '%';
-
-        // 質問文
-        this.qText.textContent = (q && (q.text ?? q.title ?? '質問'));
-
-        // 選択肢描画（XSS対策: textContentで挿入）
-        this.optionsEl.replaceChildren();
-        const opts = Array.isArray(q?.options) ? q.options : [];
-        opts.forEach((label, idx) => {
-          const btn = create('button', { class: 'opt', type: 'button', dataset: { idx } },
-            create('span', {}, String(label))
-          );
-          btn.addEventListener('click', () => this.selectOption(idx));
-          this.optionsEl.appendChild(btn);
-        });
-
-        // 既存回答の強調（あれば）
-        const selected = this.answers[this.currentQuestion];
-        if (Number.isInteger(selected)) {
-          const b = this.optionsEl.querySelector(`.opt[data-idx="${selected}"]`);
-          if (b) b.style.borderColor = '#111';
-        }
-
-        // 直近の統合フィードバック表示（該当時）
-        this.updateFeedback();
-
-        // ナビの更新
-        this.updateNavigation();
-      }
-
-      updateFeedback() {
-        const q = this.questionData[this.currentQuestion];
-        const selected = this.answers[this.currentQuestion];
-        const fb = Array.isArray(q?.feedbacks) && Number.isInteger(selected) ? q.feedbacks[selected] : null;
-        if (fb && (fb.title || fb.content)) {
-          this.feedbackTitle.textContent = fb.title || '';
-          this.feedbackContent.textContent = fb.content || '';
-          this.feedbackEl.classList.remove('hidden');
-        } else {
-          this.feedbackEl.classList.add('hidden');
-        }
-      }
-
-      updateNavigation() {
-        const total = this.questionData.length;
-        const atFirst = this.currentQuestion === 0;
-        const atLast = this.currentQuestion === total - 1;
-        const answered = Number.isInteger(this.answers[this.currentQuestion]);
-
-        this.prevBtn.disabled = atFirst;
-        this.nextBtn.disabled = atLast || !answered;
-        this.analyzeBtn.disabled = !(atLast && answered);
-
-        // 最終問に回答済み → スタイルコントロールを表示
-        this.styleControls.style.display = (atLast && answered) ? 'block' : 'none';
-      }
-
-      selectOption(optionIndex) {
-        const q = this.questionData[this.currentQuestion];
-        const amounts = Array.isArray(q?.amounts) ? q.amounts : [];
-        const amount = Number.isFinite(amounts[optionIndex]) ? Number(amounts[optionIndex]) : 0;
-
-        // 以前の選択を差し戻す（再選択時の合計調整）
-        const prev = this.answers[this.currentQuestion];
-        if (Number.isFinite(prev)) {
-          const prevAmt = Number.isFinite(amounts[prev]) ? Number(amounts[prev]) : 0;
-          this.totalScore -= prevAmt;
-        }
-
-        this.answers[this.currentQuestion] = optionIndex;
-        this.totalScore += amount;
-
-        // 見た目更新
-        this.optionsEl.querySelectorAll('.opt').forEach(el => el.style.borderColor = '#e5e7eb');
-        const picked = this.optionsEl.querySelector(`.opt[data-idx="${optionIndex}"]`);
-        if (picked) picked.style.borderColor = '#111';
-
-        // フィードバック
-        this.updateFeedback();
-
-        // すぐに次へ（UX: 任意。固定にしたい場合はコメントアウト）
-        if (this.currentQuestion < this.questionData.length - 1) {
-          this.goto(this.currentQuestion + 1);
-        } else {
-          this.updateNavigation();
-        }
-      }
-
-      determineFortuneType() {
-        return determineType(this.totalScore, this.types);
-      }
-
-      async onAnalyze() {
-        this.analyzeBtn.disabled = true;
-        this.analyzeBtn.textContent = '分析中…';
-        try {
-          const analysis = await this.callAIAnalysis();
-          this.showResult(analysis);
-        } catch (err) {
-          console.error(err);
-          const fallback = this.displayOfflineAnalysis();
-          this.showResult(fallback, true);
-        } finally {
-          this.analyzeBtn.textContent = 'AIに分析してもらう';
-          this.updateNavigation();
-        }
-      }
-
-      async callAIAnalysis() {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 30000);
-
-        const verbosity = this.verbosityEl ? this.verbosityEl.value : 'standard';
-        const emoji = this.emojiEl ? !!this.emojiEl.checked : true;
-        const fType = this.determineFortuneType();
-
-        const payload = {
-          answers: this.answers,
-          totalScore: this.totalScore,
-          fortuneType: fType?.name || '',
-          timestamp: new Date().toISOString(),
-          options: { verbosity, emoji }
+        // 占い手法データベース
+        // システム設定
+        window.SYSTEM_CONFIG = {
+          title: "🔮 占い適性診断 v2.0",
+          subtitle: "3分で判明するあなたにピッタリの占い手法",
+          maxScore: 80,
+          completionMessage: "診断完了！あなたに最適な占い手法と詳細な適性分析をご確認ください。",
+          apiEndpoint: "/api/fortune-analyze",
+          hideAmountDisplay: true,
+          fortuneMode: true
         };
 
-        const res = await fetch('/api/fortune-analyze', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'X-Session-Id': this.sessionId },
-          body: JSON.stringify(payload),
-          signal: controller.signal
-        });
-        clearTimeout(timeoutId);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
-        if (!data || data.success === false) throw new Error(data?.error || 'AI分析失敗');
-        return data.analysis;
-      }
+        if (!window.QUESTION_DATA || !window.FORTUNE_TYPES) {
+    const container = document.getElementById('question-container');
+    container.innerHTML = '<div class="error-message"><h3>⚠️ データ読み込みエラー</h3><p>質問データの読み込みに失敗しました。ページを再読み込みするか、管理者に連絡してください。</p></div>';
+    throw new Error('QUESTION_DATA / FORTUNE_TYPES not loaded');
+}
+console.log('✅ 占い適性診断システム v2.0 - データ初期化完了');
+        console.log(`📊 質問数: ${window.QUESTION_DATA.length}問`);
+        console.log(`🔮 占い手法: ${Object.keys(window.FORTUNE_TYPES).length}種類`);
 
-      displayOfflineAnalysis() {
-        const type = this.determineFortuneType();
-        const emoji = this.emojiEl ? !!this.emojiEl.checked : true;
-        const face = emoji ? '🔮' : '';
-        const lines = [];
-        lines.push(`${face} オフライン簡易分析`);
-        lines.push(`タイプ: ${type?.name ?? 'N/A'}`);
-        lines.push(`スコア: ${this.totalScore}`);
-        if (type?.description) lines.push(`特徴: ${type.description}`);
-        lines.push('');
-        lines.push('※ ネットワークエラーのため、簡易版の結果です。通信環境をご確認のうえ再実行してください。');
-        return lines.join('
-');
-      }
+        // 診断システムクラス
+        class DiagnosisSystem {
+            constructor() {
+                this.currentQuestion = 0;
+                this.answers = [];
+                this.totalScore = 0;
+                this.totalImprovement = 0;
+                this.questionData = window.QUESTION_DATA;
+                this.startTime = new Date();
+                this.sessionId = this.getSessionId();
+                this.debugMode = true;
+                this.retryCount = 0;
+                this.maxRetries = 3;
+                
+                console.log('🔮 占い適性診断システム初期化完了');
+                this.initializeDiagnosis();
+            }
 
-      showResult(analysis, isFallback = false) {
-        const type = this.determineFortuneType();
-        this.resultType.textContent = `タイプ: ${type?.name ?? 'N/A'}`;
-        this.resultScore.textContent = `スコア: ${this.totalScore}`;
+            getSessionId() {
+                let sessionId = sessionStorage.getItem('fortune_session_id');
+                if (!sessionId) {
+                    sessionId = 'fortune_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                    sessionStorage.setItem('fortune_session_id', sessionId);
+                }
+                return sessionId;
+            }
 
-        // analysis は string / object の両対応
-        let text = '';
-        if (typeof analysis === 'string') {
-          text = analysis;
-        } else if (analysis && typeof analysis === 'object') {
-          const parts = [];
-          if (analysis.title) parts.push(`【${analysis.title}】`);
-          if (analysis.summary) parts.push(String(analysis.summary));
-          if (Array.isArray(analysis.points)) {
-            parts.push('', ...analysis.points.map((p, i) => `${i + 1}. ${p}`));
-          }
-          if (analysis.advice) {
-            parts.push('', `アドバイス: ${analysis.advice}`);
-          }
-          text = parts.join('\n');
-        } else {
-          text = String(analysis ?? '');
+            showTemporaryMessage(message, type = 'info') {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `temporary-message ${type}`;
+                messageDiv.textContent = message;
+                
+                document.body.appendChild(messageDiv);
+                
+                setTimeout(() => {
+                    messageDiv.style.animation = 'slideUp 0.3s ease';
+                    setTimeout(() => messageDiv.remove(), 300);
+                }, 3000);
+            }
+
+            initializeDiagnosis() {
+                try {
+                    this.showQuestion();
+                    this.updateProgress();
+                    this.updateNavigation();
+                    
+                    console.log('✅ 診断システム初期化完了');
+                } catch (error) {
+                    console.error('💥 初期化エラー:', error);
+                    this.showError('システムの初期化に失敗しました。ページを再読み込みしてください。');
+                }
+            }
+
+            showError(message) {
+                const container = document.getElementById('question-container');
+                container.innerHTML = `
+                    <div class="error-message">
+                        <h3>⚠️ システムエラー</h3>
+                        <p>${message}</p>
+                        <button onclick="location.reload()" class="cta-button" style="margin-top: 20px; background: white; color: #ff6b6b;">
+                            🔄 ページを再読み込み
+                        </button>
+                    </div>
+                `;
+            }
+
+            showQuestion() {
+                if (!this.questionData || this.currentQuestion >= this.questionData.length) {
+                    this.showResults();
+                    return;
+                }
+
+                const question = this.questionData[this.currentQuestion];
+                const container = document.getElementById('question-container');
+                
+                container.innerHTML = `
+                    <div class="question-card">
+                        <div class="question-category">${question.category}</div>
+                        <div class="question-text">${question.text}</div>
+                        <div class="options-container">
+                            ${question.options.map((option, index) => `
+                                <div class="option" data-index="${index}" onclick="diagnosisSystem.selectOption(${index})" role="button" tabindex="0">
+                                    ${option}
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="integrated-feedback" id="feedback-${this.currentQuestion}">
+                            <div class="feedback-title"></div>
+                            <div class="feedback-content"></div>
+                        </div>
+                    </div>
+                `;
+
+                // 既に回答がある場合は選択状態を復元
+                if (this.answers[this.currentQuestion] !== undefined) {
+                    this.selectOption(this.answers[this.currentQuestion].selectedIndex, false);
+                }
+            }
+
+            selectOption(optionIndex, animate = true) {
+                // 前の選択をクリア
+                document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+                
+                // 新しい選択をマーク
+                const selectedOption = document.querySelector(`[data-index="${optionIndex}"]`);
+                if (selectedOption) {
+                    selectedOption.classList.add('selected');
+                }
+
+                const question = this.questionData[this.currentQuestion];
+                const score = question.scores[optionIndex];
+                const amount = question.amounts[optionIndex];
+                const feedback = question.feedbacks[optionIndex];
+
+                // 回答を保存
+                this.answers[this.currentQuestion] = {
+                    selectedIndex: optionIndex,
+                    score: score,
+                    amount: amount,
+                    timestamp: new Date(),
+                    category: question.category
+                };
+
+                // 統合フィードバックを表示
+                const feedbackCard = document.getElementById(`feedback-${this.currentQuestion}`);
+                const feedbackTitle = feedbackCard.querySelector('.feedback-title');
+                const feedbackContent = feedbackCard.querySelector('.feedback-content');
+                
+                feedbackTitle.textContent = feedback.title;
+                feedbackContent.textContent = feedback.content;
+                feedbackCard.style.display = 'block';
+
+                // 累計を更新
+                this.updateTotals();
+                this.updateNavigation();
+
+                console.log(`Q${this.currentQuestion + 1} 回答:`, {
+                    option: optionIndex,
+                    score: score,
+                    totalScore: this.totalScore
+                });
+            }
+
+            updateTotals() {
+                this.totalScore = 0;
+                this.totalImprovement = 0;
+
+                this.answers.forEach(answer => {
+                    if (answer !== undefined) {
+                        this.totalScore += answer.score;
+                        this.totalImprovement += answer.amount;
+                    }
+                });
+            }
+
+            updateProgress() {
+                const progress = ((this.currentQuestion + 1) / this.questionData.length) * 100;
+                const completionRate = Math.round(progress);
+                
+                document.getElementById('progress-fill').style.width = `${progress}%`;
+                document.getElementById('progress-text').textContent = `質問${this.currentQuestion + 1} / ${this.questionData.length}`;
+                document.getElementById('completion-rate').textContent = `完了率: ${completionRate}%`;
+            }
+
+            updateNavigation() {
+                const prevButton = document.getElementById('prev-button');
+                const nextButton = document.getElementById('next-button');
+
+                prevButton.disabled = this.currentQuestion === 0;
+                nextButton.disabled = this.answers[this.currentQuestion] === undefined;
+
+                // 最後の質問の場合
+                if (this.currentQuestion === this.questionData.length - 1 && this.answers[this.currentQuestion] !== undefined) {
+                    nextButton.style.display = 'none';
+                    document.getElementById('ai-analysis-button').style.display = 'block';
+                } else {
+                    nextButton.style.display = 'inline-block';
+                    document.getElementById('ai-analysis-button').style.display = 'none';
+                }
+            }
+
+            previousQuestion() {
+                if (this.currentQuestion > 0) {
+                    this.currentQuestion--;
+                    this.showQuestion();
+                    this.updateProgress();
+                    this.updateNavigation();
+                }
+            }
+
+            nextQuestion() {
+                if (this.currentQuestion < this.questionData.length - 1) {
+                    this.currentQuestion++;
+                    this.showQuestion();
+                    this.updateProgress();
+                    this.updateNavigation();
+                } else {
+                    this.showResults();
+                }
+            }
+
+            showResults() {
+                // ナビゲーションを非表示
+                document.querySelector('.navigation').style.display = 'none';
+                
+                // AI分析ボタンを表示
+                document.getElementById('ai-analysis-button').style.display = 'block';
+                
+                // 質問コンテナを非表示
+                document.getElementById('question-container').style.display = 'none';
+                
+                // 結果を表示
+                this.displayFinalResults();
+            }
+
+            displayFinalResults() {
+                const resultsCard = document.getElementById('results-card');
+                const finalScore = document.getElementById('final-score');
+                const fortuneTypeDisplay = document.getElementById('fortune-type');
+                const positionMessage = document.getElementById('position-message');
+                const actionMessage = document.getElementById('action-message');
+
+                // 最適な占い手法を判定
+                const fortuneType = this.determineFortuneType();
+                
+                finalScore.textContent = `${this.totalScore}点`;
+                fortuneTypeDisplay.textContent = fortuneType.name;
+
+                // 占い適性に基づくメッセージ
+                positionMessage.textContent = fortuneType.description;
+                actionMessage.textContent = `${fortuneType.name}を活用することで、あなたの直感と洞察力を最大限に活かせます。`;
+                
+                resultsCard.style.display = 'block';
+
+                console.log('🔮 最終結果:', {
+                    score: this.totalScore,
+                    fortuneType: fortuneType.name,
+                    duration: new Date() - this.startTime
+                });
+            }
+
+            // 占い手法の判定
+            determineFortuneType() {
+                if (this.totalScore >= 60) {
+                    return {
+                        name: 'タロットカード占い',
+                        description: '直感的で想像力豊かなあなたには、タロットカードの象徴的なメッセージが最も響きます。'
+                    };
+                } else if (this.totalScore >= 45) {
+                    return {
+                        name: 'オラクルカード',
+                        description: 'スピリチュアルで創造的なあなたには、愛と癒しのオラクルカードが最適です。'
+                    };
+                } else if (this.totalScore >= 35) {
+                    return {
+                        name: '西洋占星術',
+                        description: '論理的思考が得意なあなたには、体系的な占星術の分析が適しています。'
+                    };
+                } else if (this.totalScore >= 25) {
+                    return {
+                        name: '数秘術',
+                        description: 'パターン認識が得意なあなたには、数字の神秘を解き明かす数秘術がぴったりです。'
+                    };
+                } else {
+                    return {
+                        name: '手相占い',
+                        description: '現実的で実用的なあなたには、具体的なアドバイスが得られる手相占いが最適です。'
+                    };
+                }
+            }
+
+            async startAIAnalysis() {
+                // ボタンを非表示
+                document.getElementById('ai-analysis-button').style.display = 'none';
+                
+                // ローディング表示
+                const loadingContainer = document.getElementById('loading-container');
+                loadingContainer.style.display = 'block';
+                
+                console.log('🔮 AI分析開始');
+                
+                // ステップごとのローディング演出
+                await this.animateLoadingSteps();
+                
+                // AI分析を実行
+                try {
+                    const analysisResult = await this.callAIAnalysis();
+                    this.displayAIAnalysis(analysisResult);
+                } catch (error) {
+                    console.error('AI分析エラー:', error);
+                    this.displayOfflineAnalysis();
+                }
+                
+                // ローディングを非表示
+                loadingContainer.style.display = 'none';
+            }
+
+            async animateLoadingSteps() {
+                const steps = ['step1', 'step2', 'step3', 'step4', 'step5'];
+                const durations = [1500, 2000, 1500, 1500, 1000];
+                
+                for (let i = 0; i < steps.length; i++) {
+                    const step = document.getElementById(steps[i]);
+                    step.classList.add('active');
+                    
+                    await new Promise(resolve => setTimeout(resolve, durations[i]));
+                    
+                    step.classList.remove('active');
+                    step.classList.add('completed');
+                    step.querySelector('.spinner').textContent = '✅';
+                }
+            }
+
+            async callAIAnalysis() {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 30000);
+                
+                try {
+                    const response = await fetch('/api/fortune-analyze', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Session-Id': this.sessionId
+                        },
+                        body: JSON.stringify({
+                            answers: this.answers,
+                            totalScore: this.totalScore,
+                            fortuneType: this.determineFortuneType().name,
+                            timestamp: new Date().toISOString()
+                        }),
+                        signal: controller.signal
+                    });
+                    
+                    clearTimeout(timeoutId);
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    if (!data.success) {
+                        throw new Error(data.error || 'AI分析に失敗しました');
+                    }
+
+                    return data.analysis;
+                    
+                } catch (error) {
+                    clearTimeout(timeoutId);
+                    throw error;
+                }
+            }
+
+            displayAIAnalysis(analysis) {
+                const analysisSection = document.getElementById('ai-analysis-section');
+                const analysisContent = document.getElementById('analysis-content');
+                
+                // HTMLタグを含む可能性があるのでinnerHTMLを使用
+                analysisContent.innerHTML = `<div style="white-space: pre-wrap; line-height: 1.6;">${analysis}</div>`;
+                analysisSection.style.display = 'block';
+
+                console.log('✅ AI分析結果表示完了');
+            }
+
+            displayOfflineAnalysis() {
+                const analysisSection = document.getElementById('ai-analysis-section');
+                const analysisContent = document.getElementById('analysis-content');
+                
+                const fortuneType = this.determineFortuneType();
+                
+                const analysisHTML = `
+                    <div style="background: #fff3cd; color: #856404; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                        <strong>⚠️ オフラインモード</strong><br>
+                        ネットワーク接続の問題により、簡易分析結果を表示しています。
+                    </div>
+                    
+                    <h3>🔮 あなたに最適な占い：${fortuneType.name}</h3>
+                    
+                    <div class="highlight-box">
+                        <h4>📊 診断結果</h4>
+                        <p><strong>適性スコア：${this.totalScore}点/80点</strong></p>
+                        <p>${fortuneType.description}</p>
+                    </div>
+                    
+                    <h4>✨ あなたの特徴</h4>
+                    <ul>
+                        <li>直感力に優れている</li>
+                        <li>創造的な思考ができる</li>
+                        <li>人の気持ちを理解するのが得意</li>
+                    </ul>
+                    
+                    <h4>🌟 おすすめの活用方法</h4>
+                    <p>${fortuneType.name}を活用することで、あなたの持つ才能を最大限に発揮できます。重要な決断や人生の転機において、貴重な指針を得ることができるでしょう。</p>
+                    
+                    <div style="background: #d4edda; color: #155724; padding: 20px; border-radius: 10px; margin-top: 20px;">
+                        <h4>📞 詳細分析をご希望の場合</h4>
+                        <p>より詳しい分析レポートをご希望の場合は、お気軽にお問い合わせください。</p>
+                    </div>
+                `;
+                
+                analysisContent.innerHTML = analysisHTML;
+                analysisSection.style.display = 'block';
+                
+                this.showTemporaryMessage('オフラインモードで簡易分析を表示しています', 'warning');
+            }
         }
 
-        this.aiOutput.textContent = text;
-        this.resultSec.classList.remove('hidden');
-        if (isFallback) this.resultSec.classList.add('fallback');
-        this.resultSec.scrollIntoView({ behavior: 'smooth' });
-      }
-
-      copyResult() {
-        const text = this.aiOutput.textContent || '';
-        if (!text) return;
-        navigator.clipboard?.writeText(text).then(() => {
-          this.copyBtn.textContent = 'コピーしました';
-          setTimeout(() => (this.copyBtn.textContent = '結果をコピー'), 1200);
-        }).catch(() => {
-          // 非対応ブラウザ
-          const textarea = create('textarea', { style: 'position:fixed;left:-9999px;top:-9999px;' }, text);
-          document.body.appendChild(textarea);
-          textarea.select();
-          document.execCommand('copy');
-          textarea.remove();
-        });
-      }
-    }
-
-    // 起動
-    (function bootstrap() {
-      try {
-        const config = ensureConfigLoaded();
-        window.__app = new DiagnosisSystem(config);
-      } catch (e) {
-        console.error(e);
-        const app = $('#app');
-        app.replaceChildren(
-          create('div', { class: 'card', style: 'background:#fff3f3;color:#b00020;' },
-            create('div', { style: 'font-weight:700;margin-bottom:6px;' }, '起動エラー'),
-            create('div', {}, String(e.message || e))
-          )
-        );
-      }
-    })();
-  </script>
+        // システム初期化
+        let diagnosisSystem;
+        
+        // DOM読み込み完了を待って初期化
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                diagnosisSystem = new DiagnosisSystem();
+            });
+        } else {
+            diagnosisSystem = new DiagnosisSystem();
+        }
+        
+        console.log('🔮 占い適性診断システム v2.0 読み込み完了');
+    </script>
 </body>
 </html>

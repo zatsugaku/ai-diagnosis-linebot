@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔮 占い適性診断 - 3分で判明するあなたにピッタリの占い手法</title>
-    <meta name="description" content="タロット、占星術、手相など、あなたの性格や価値観から最適な占い手法を診断。完全動作保証版。">
-    <meta name="keywords" content="占い診断,占い適性,タロット,占星術,手相,数秘術,オラクルカード">
+    <title>🔮 占い適性診断 v2.0 - 3分で判明するあなたにピッタリの占い手法</title>
+    <meta name="description" content="タロット、占星術、手相など、あなたの性格や価値観から最適な占い手法を診断。1,000人の診断データに基づく精密な適性分析。">
+    <meta name="keywords" content="占い診断,占い適性,タロット,占星術,手相,数秘術,易経,オラクルカード">
     
     <style>
         * {
@@ -551,8 +551,6 @@
             .question-card { padding: 25px 20px; }
             .navigation { flex-direction: column; gap: 12px; }
             .nav-button { width: 100%; max-width: none; }
-            .score-display { font-size: 3.2em; min-width: auto; }
-            .cta-button { width: 100%; min-width: auto; margin: 8px 0; }
         }
     </style>
 </head>
@@ -560,7 +558,7 @@
     <div class="container">
         <header class="header">
             <div class="header-content">
-                <h1>🔮 占い適性診断</h1>
+                <h1>🔮 占い適性診断 v2.0</h1>
                 <div class="subtitle">3分で判明するあなたにピッタリの占い手法</div>
                 <div class="description">
                     タロット、占星術、手相など、あなたの性格や価値観から最適な占い手法を診断。
@@ -580,7 +578,9 @@
                 </div>
             </div>
 
-            <div class="question-container" id="question-container"></div>
+            <div class="question-container" id="question-container">
+                <div class="question-text">システムを初期化中...</div>
+            </div>
 
             <nav class="navigation">
                 <button class="nav-button prev-button" id="prev-button" onclick="diagnosisSystem.previousQuestion()" disabled>
@@ -646,222 +646,15 @@
         </main>
     </div>
 
-    <script>
-        // 質問データを直接内蔵（読み込みエラー完全回避）
-        console.log('🔮 占い適性診断システム - 質問データ初期化開始');
-
-        window.QUESTION_DATA = [
-          {
-            text: "Q1. 日常生活で直感や「なんとなく」の感覚を信じて行動することはありますか？",
-            category: "直感・感性",
-            options: [
-              "直感をとても信じて、よく直感で判断する",
-              "直感は参考程度に、最終的には論理で判断",
-              "直感と論理のバランスを取って判断する",
-              "ほとんど論理的思考で判断し、直感は重視しない"
-            ],
-            scores: [10, 7, 5, 2],
-            amounts: [80, 65, 50, 30],
-            feedbacks: [
-              {
-                title: "🌸 シンプル志向：手相占いが最適",
-                content: "複雑すぎない分析を好むあなたには、手のひらの線から分かりやすいメッセージを得られる手相占いが適しています。"
-              },
-              {
-                title: "💫 感性重視：オラクルカード占いが最適",
-                content: "論理よりも感性を重視するあなたには、愛と癒しのメッセージに満ちたオラクルカードが心に響くでしょう。"
-              }
-            ]
-          },
-          {
-            text: "Q4. 人の悩みや相談を聞いて、アドバイスをすることはありますか？",
-            category: "人間関係",
-            options: [
-              "よく相談される方で、アドバイスも得意",
-              "時々相談されるが、アドバイスは慎重に考える",
-              "相談されることはあるが、答えるのは難しい",
-              "あまり相談されない方"
-            ],
-            scores: [9, 7, 5, 3],
-            amounts: [80, 60, 45, 30],
-            feedbacks: [
-              {
-                title: "🤝 天然のカウンセラー：タロット占いで才能発揮",
-                content: "人の心を理解し、適切なアドバイスができるあなたは、タロット占いを通じて多くの人を導く才能があります。"
-              },
-              {
-                title: "💭 思慮深いアドバイザー：オラクルカードが最適",
-                content: "慎重で優しいアドバイスができるあなたには、愛に満ちたメッセージのオラクルカードが相談者の心を癒します。"
-              },
-              {
-                title: "🤔 控えめなサポーター：手相占いが適合",
-                content: "控えめながらも思いやりのあるあなたには、具体的で分かりやすいアドバイスができる手相占いが適しています。"
-              },
-              {
-                title: "🌱 内向的な洞察者：数秘術が最適",
-                content: "静かに人を観察し理解するあなたには、数字を通じて人の本質を分析する数秘術が最も適しています。"
-              }
-            ]
-          },
-          {
-            text: "Q5. スピリチュアルなことや目に見えない世界について、どのような考えを持っていますか？",
-            category: "スピリチュアル",
-            options: [
-              "とても信じていて、日常的にスピリチュアルを取り入れている",
-              "興味があり、ある程度は信じている",
-              "半信半疑だが、完全に否定もしない",
-              "あまり信じておらず、現実的なことを重視する"
-            ],
-            scores: [10, 8, 5, 2],
-            amounts: [90, 70, 50, 30],
-            feedbacks: [
-              {
-                title: "✨ スピリチュアルマスター：オラクルカードが天職",
-                content: "深いスピリチュアルな理解を持つあなたには、天使やスピリットガイドからのメッセージを受け取るオラクルカードが最適です。"
-              },
-              {
-                title: "🌙 スピリチュアル探求者：タロット占いが適合",
-                content: "スピリチュアルな世界に興味を持つあなたには、古代の知恵と現代の洞察が融合したタロット占いが心に響くでしょう。"
-              },
-              {
-                title: "⚖️ バランス思考：西洋占星術が最適",
-                content: "スピリチュアルと現実のバランスを取るあなたには、天体の科学的事実とスピリチュアルな意味を融合させた西洋占星術が適しています。"
-              },
-              {
-                title: "🏠 現実主義者：手相占いが最適",
-                content: "現実的思考を重視するあなたには、手のひらという物理的な情報から具体的なアドバイスを得られる手相占いが最も適しています。"
-              }
-            ]
-          },
-          {
-            text: "Q6. 人生の重要な決断をする時、どのような方法で決めることが多いですか？",
-            category: "意思決定",
-            options: [
-              "直感やインスピレーションを重視して決める",
-              "情報収集はするが、最後は直感で決める",
-              "情報と直感の両方を総合的に判断して決める",
-              "徹底的に情報収集し、論理的に分析して決める"
-            ],
-            scores: [9, 7, 5, 3],
-            amounts: [85, 65, 50, 35],
-            feedbacks: [
-              {
-                title: "💫 直感の導き手：タロット占いが天職",
-                content: "直感を信じて生きるあなたは、タロットカードからのメッセージを通じて人生の重要な決断をサポートする天賦の才能があります。"
-              },
-              {
-                title: "🌟 バランス直感型：オラクルカード占いが適合",
-                content: "情報と直感のバランスが取れているあなたには、優しい導きを与えるオラクルカードが最適です。"
-              },
-              {
-                title: "🔍 総合判断型：西洋占星術が最適",
-                content: "多角的な視点で判断するあなたには、様々な天体の影響を総合的に分析する西洋占星術が適しています。"
-              },
-              {
-                title: "📊 論理分析型：数秘術が最適",
-                content: "論理的分析を重視するあなたには、数字という客観的データから人生のパターンを読み解く数秘術が最も適しています。"
-              }
-            ]
-          },
-          {
-            text: "Q7. 他の人とは違う、独特な視点や感性を持っていると言われたことはありますか？",
-            category: "個性・創造性",
-            options: [
-              "よく言われるし、自分でもそう思う",
-              "時々言われることがある",
-              "特別変わっているとは思わない",
-              "むしろ一般的で常識的だと思う"
-            ],
-            scores: [10, 7, 4, 2],
-            amounts: [90, 65, 40, 25],
-            feedbacks: [
-              {
-                title: "🦄 独創性の天才：タロット占いで個性発揮",
-                content: "独特な視点を持つあなたは、タロットカードの象徴的なメッセージを独自の解釈で読み解く特別な才能があります。"
-              },
-              {
-                title: "🎨 創造的な感性：オラクルカード占いが適合",
-                content: "創造的な感性を持つあなたには、美しいアートワークと創造的なメッセージのオラクルカードが心に響くでしょう。"
-              },
-              {
-                title: "🌸 自然体の魅力：手相占いが最適",
-                content: "自然体で親しみやすいあなたには、相手との距離が近く、温かい雰囲気で行える手相占いが最適です。"
-              },
-              {
-                title: "🏛️ 安定感のある導き手：西洋占星術が最適",
-                content: "常識的で信頼感のあるあなたには、長い歴史と確立された体系を持つ西洋占星術が最も適しています。"
-              }
-            ]
-          },
-          {
-            text: "Q8. 占いを受ける時、どのような雰囲気や環境を好みますか？",
-            category: "環境・雰囲気",
-            options: [
-              "神秘的でスピリチュアルな雰囲気が好き",
-              "落ち着いた癒しの空間が好き",
-              "親しみやすくてリラックスできる雰囲気が好き",
-              "清潔で整理整頓された、きちんとした空間が好き"
-            ],
-            scores: [9, 8, 6, 4],
-            amounts: [85, 75, 55, 40],
-            feedbacks: [
-              {
-                title: "🔮 神秘の探求者：タロット占いの神殿へ",
-                content: "神秘的な雰囲気を愛するあなたには、古代の智慧に満ちたタロット占いの神聖な世界が最高の体験となるでしょう。"
-              },
-              {
-                title: "🕊️ 癒しを求める魂：オラクルカードの光",
-                content: "癒しの空間を求めるあなたには、天使の愛に包まれるような優しいオラクルカード占いが心の平安をもたらします。"
-              },
-              {
-                title: "🤗 親しみやすい相談者：手相占いでハートフル",
-                content: "親しみやすい雰囲気を好むあなたには、手と手を通じて温かいつながりを感じられる手相占いが最適です。"
-              },
-              {
-                title: "📚 秩序と知識の探求者：西洋占星術の学び舎",
-                content: "整理された環境を好むあなたには、体系的で学問的なアプローチの西洋占星術が最も相応しい占い手法です。"
-              }
-            ]
-          }
-        ];
+    <script src="/business/fortune-diagnosis/fortune_questions_config.js"></script>
+<script>
+        // 質問データを直接埋め込み（読み込みエラー回避）
+        console.log('🔮 占い適性診断システム v2.0 - 質問データ初期化開始');
 
         // 占い手法データベース
-        window.FORTUNE_TYPES = {
-          tarot: {
-            name: "タロットカード占い",
-            emoji: "🔮",
-            subtitle: "古代の智慧で未来を照らす",
-            description: "直感的で象徴的な解釈を得意とするあなたに最適な占い手法です。"
-          },
-          oracle: {
-            name: "オラクルカード占い",
-            emoji: "👼",
-            subtitle: "天使からの愛のメッセージ",
-            description: "スピリチュアルで優しい導きを求めるあなたに最適な占い手法です。"
-          },
-          astrology: {
-            name: "西洋占星術",
-            emoji: "⭐",
-            subtitle: "星々が織りなす運命の設計図",
-            description: "論理的思考と体系的な分析を好むあなたに最適な占い手法です。"
-          },
-          numerology: {
-            name: "数秘術",
-            emoji: "🔢",
-            subtitle: "数字に隠された人生の秘密",
-            description: "数字やパターンに興味があり、分析的思考を持つあなたに最適な占い手法です。"
-          },
-          palmistry: {
-            name: "手相占い",
-            emoji: "✋",
-            subtitle: "手のひらに刻まれた人生の地図",
-            description: "現実的で具体的なアドバイスを求めるあなたに最適な占い手法です。"
-          }
-        };
-
         // システム設定
         window.SYSTEM_CONFIG = {
-          title: "🔮 占い適性診断",
+          title: "🔮 占い適性診断 v2.0",
           subtitle: "3分で判明するあなたにピッタリの占い手法",
           maxScore: 80,
           completionMessage: "診断完了！あなたに最適な占い手法と詳細な適性分析をご確認ください。",
@@ -870,11 +663,11 @@
           fortuneMode: true
         };
 
-        console.log('✅ 占い適性診断システム - データ初期化完了');
+        console.log('✅ 占い適性診断システム v2.0 - データ初期化完了');
         console.log(`📊 質問数: ${window.QUESTION_DATA.length}問`);
         console.log(`🔮 占い手法: ${Object.keys(window.FORTUNE_TYPES).length}種類`);
 
-        // 診断システムクラス（完全動作版）
+        // 診断システムクラス
         class DiagnosisSystem {
             constructor() {
                 this.currentQuestion = 0;
@@ -955,7 +748,7 @@
                         <div class="question-text">${question.text}</div>
                         <div class="options-container">
                             ${question.options.map((option, index) => `
-                                <div class="option" data-index="${index}" onclick="diagnosisSystem.selectOption(${index})" role="button" tabindex="0" aria-label="選択肢 ${index + 1}: ${option}">
+                                <div class="option" data-index="${index}" onclick="diagnosisSystem.selectOption(${index})" role="button" tabindex="0">
                                     ${option}
                                 </div>
                             `).join('')}
@@ -971,21 +764,6 @@
                 if (this.answers[this.currentQuestion] !== undefined) {
                     this.selectOption(this.answers[this.currentQuestion].selectedIndex, false);
                 }
-
-                // キーボード対応
-                this.addKeyboardSupport();
-            }
-
-            addKeyboardSupport() {
-                const options = document.querySelectorAll('.option');
-                options.forEach((option, index) => {
-                    option.addEventListener('keydown', (e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                            e.preventDefault();
-                            this.selectOption(index);
-                        }
-                    });
-                });
             }
 
             selectOption(optionIndex, animate = true) {
@@ -996,7 +774,6 @@
                 const selectedOption = document.querySelector(`[data-index="${optionIndex}"]`);
                 if (selectedOption) {
                     selectedOption.classList.add('selected');
-                    selectedOption.setAttribute('aria-selected', 'true');
                 }
 
                 const question = this.questionData[this.currentQuestion];
@@ -1026,15 +803,11 @@
                 this.updateTotals();
                 this.updateNavigation();
 
-                if (this.debugMode) {
-                    console.log(`Q${this.currentQuestion + 1} 回答:`, {
-                        option: optionIndex,
-                        score: score,
-                        amount: amount,
-                        totalScore: this.totalScore,
-                        totalImprovement: this.totalImprovement
-                    });
-                }
+                console.log(`Q${this.currentQuestion + 1} 回答:`, {
+                    option: optionIndex,
+                    score: score,
+                    totalScore: this.totalScore
+                });
             }
 
             updateTotals() {
@@ -1128,13 +901,11 @@
                 
                 resultsCard.style.display = 'block';
 
-                if (this.debugMode) {
-                    console.log('🔮 最終結果:', {
-                        score: this.totalScore,
-                        fortuneType: fortuneType.name,
-                        duration: new Date() - this.startTime
-                    });
-                }
+                console.log('🔮 最終結果:', {
+                    score: this.totalScore,
+                    fortuneType: fortuneType.name,
+                    duration: new Date() - this.startTime
+                });
             }
 
             // 占い手法の判定
@@ -1175,9 +946,7 @@
                 const loadingContainer = document.getElementById('loading-container');
                 loadingContainer.style.display = 'block';
                 
-                if (this.debugMode) {
-                    console.log('🔮 AI分析開始');
-                }
+                console.log('🔮 AI分析開始');
                 
                 // ステップごとのローディング演出
                 await this.animateLoadingSteps();
@@ -1186,11 +955,9 @@
                 try {
                     const analysisResult = await this.callAIAnalysis();
                     this.displayAIAnalysis(analysisResult);
-                    this.showTemporaryMessage('AI分析が完了しました', 'success');
                 } catch (error) {
                     console.error('AI分析エラー:', error);
                     this.displayOfflineAnalysis();
-                    this.showTemporaryMessage('オフライン分析を表示しています', 'warning');
                 }
                 
                 // ローディングを非表示
@@ -1256,14 +1023,11 @@
                 const analysisSection = document.getElementById('ai-analysis-section');
                 const analysisContent = document.getElementById('analysis-content');
                 
-                // プレーンテキストの場合は改行を適切に処理
-                const formattedAnalysis = analysis.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-                analysisContent.innerHTML = `<div style="line-height: 1.8; color: #333;">${formattedAnalysis}</div>`;
+                // HTMLタグを含む可能性があるのでinnerHTMLを使用
+                analysisContent.innerHTML = `<div style="white-space: pre-wrap; line-height: 1.6;">${analysis}</div>`;
                 analysisSection.style.display = 'block';
 
-                if (this.debugMode) {
-                    console.log('✅ AI分析結果表示完了');
-                }
+                console.log('✅ AI分析結果表示完了');
             }
 
             displayOfflineAnalysis() {
@@ -1274,7 +1038,7 @@
                 
                 const analysisHTML = `
                     <div style="background: #fff3cd; color: #856404; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-                        <strong>⚠️ オフライン分析</strong><br>
+                        <strong>⚠️ オフラインモード</strong><br>
                         ネットワーク接続の問題により、簡易分析結果を表示しています。
                     </div>
                     
@@ -1296,88 +1060,18 @@
                     <h4>🌟 おすすめの活用方法</h4>
                     <p>${fortuneType.name}を活用することで、あなたの持つ才能を最大限に発揮できます。重要な決断や人生の転機において、貴重な指針を得ることができるでしょう。</p>
                     
-                    <h4>💫 期待できる効果</h4>
-                    <ul>
-                        <li>直感力と洞察力の向上</li>
-                        <li>自己理解の深化</li>
-                        <li>人生の方向性の明確化</li>
-                    </ul>
-                    
                     <div style="background: #d4edda; color: #155724; padding: 20px; border-radius: 10px; margin-top: 20px;">
                         <h4>📞 詳細分析をご希望の場合</h4>
-                        <p>より詳しい分析レポートをご希望の場合は、ネットワーク接続を確認後、再度お試しください。</p>
-                        <button onclick="diagnosisSystem.startAIAnalysis()" style="
-                            background: #28a745;
-                            color: white;
-                            border: none;
-                            padding: 10px 20px;
-                            border-radius: 5px;
-                            cursor: pointer;
-                            margin-top: 10px;
-                            font-weight: bold;
-                        ">
-                            🔄 AI分析を再実行
-                        </button>
+                        <p>より詳しい分析レポートをご希望の場合は、お気軽にお問い合わせください。</p>
                     </div>
                 `;
                 
                 analysisContent.innerHTML = analysisHTML;
                 analysisSection.style.display = 'block';
+                
+                this.showTemporaryMessage('オフラインモードで簡易分析を表示しています', 'warning');
             }
         }
-
-        // デバッグ用のグローバル関数
-        window.debugFortune = {
-            testAPI: async function() {
-                try {
-                    const response = await fetch('/api/fortune-analyze', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            answers: [{score: 5, amount: 50, category: 'test'}],
-                            totalScore: 5,
-                            fortuneType: 'タロットカード占い'
-                        })
-                    });
-                    const data = await response.json();
-                    console.log('API テスト結果:', data);
-                    return data;
-                } catch (error) {
-                    console.error('API テストエラー:', error);
-                    return error;
-                }
-            },
-            
-            skipToResults: function() {
-                if (window.diagnosisSystem) {
-                    // ダミーデータで回答を埋める
-                    for (let i = 0; i < window.diagnosisSystem.questionData.length; i++) {
-                        window.diagnosisSystem.answers[i] = {
-                            selectedIndex: Math.floor(Math.random() * 4),
-                            score: Math.floor(Math.random() * 10),
-                            amount: Math.floor(Math.random() * 100),
-                            timestamp: new Date(),
-                            category: window.diagnosisSystem.questionData[i].category
-                        };
-                    }
-                    window.diagnosisSystem.updateTotals();
-                    window.diagnosisSystem.showResults();
-                    console.log('🚀 結果画面にスキップしました');
-                }
-            },
-            
-            showCurrentData: function() {
-                if (window.diagnosisSystem && window.diagnosisSystem.questionData) {
-                    console.log('現在の質問データ:', window.diagnosisSystem.questionData);
-                    console.log('占い手法データ:', window.FORTUNE_TYPES);
-                    window.diagnosisSystem.questionData.forEach((q, i) => {
-                        console.log(`Q${i+1}: ${q.text.substring(0, 60)}...`);
-                    });
-                } else {
-                    console.log('質問データが読み込まれていません');
-                }
-            }
-        };
 
         // システム初期化
         let diagnosisSystem;
@@ -1391,79 +1085,7 @@
             diagnosisSystem = new DiagnosisSystem();
         }
         
-        console.log('🔮 占い適性診断システム 完全動作版 読み込み完了');
-        console.log('💡 デバッグコマンド:');
-        console.log('  debugFortune.testAPI() - API接続テスト');
-        console.log('  debugFortune.skipToResults() - 結果画面にスキップ');
-        console.log('  debugFortune.showCurrentData() - データ確認');
+        console.log('🔮 占い適性診断システム v2.0 読み込み完了');
     </script>
 </body>
-</html> "🌟 直感型：タロット・オラクルカードが最適",
-                content: "あなたの豊かな直感力は、象徴的なメッセージを読み解くタロットやオラクルカードと非常に相性が良いです。カードからのメッセージを直感的に受け取る能力に長けています。"
-              },
-              {
-                title: "⚖️ バランス型：複合的占い手法が適合",
-                content: "直感と論理のバランスが取れているあなたには、体系的でありながら直感も使える西洋占星術や数秘術が適しています。"
-              },
-              {
-                title: "🔄 調和型：幅広い占い手法に対応",
-                content: "バランスの取れたアプローチができるあなたは、多くの占い手法に適応できる柔軟性を持っています。"
-              },
-              {
-                title: "🧠 論理型：体系的占術が最適",
-                content: "論理的思考を重視するあなたには、西洋占星術や数秘術など、体系的で分析的な占い手法が最も適しています。"
-              }
-            ]
-          },
-          {
-            text: "Q2. 芸術作品（絵画、音楽、小説など）から感情的なメッセージや意味を感じ取ることは得意ですか？",
-            category: "象徴・解釈力",
-            options: [
-              "とても得意で、作品の深い意味まで感じ取れる",
-              "ある程度は感じ取れるが、時間がかかる",
-              "表面的な印象は分かるが、深い意味は難しい",
-              "あまり得意ではなく、論理的な説明があった方が理解しやすい"
-            ],
-            scores: [10, 7, 4, 1],
-            amounts: [85, 65, 45, 25],
-            feedbacks: [
-              {
-                title: "🎨 象徴解釈の達人：タロット占いが天職",
-                content: "象徴的なメッセージを読み解く能力に長けているあなたは、タロットカードの豊富なシンボルから深い洞察を得ることができます。"
-              },
-              {
-                title: "🌙 感性豊か：オラクルカードが適合",
-                content: "芸術的感性があるあなたには、美しいイラストと優しいメッセージのオラクルカードが心に響くでしょう。"
-              },
-              {
-                title: "📚 基本的解釈力：手相占いが最適",
-                content: "視覚的で分かりやすい情報を好むあなたには、手のひらの線から具体的なメッセージを読み取る手相占いが適しています。"
-              },
-              {
-                title: "🔍 論理重視：西洋占星術が最適",
-                content: "体系的な説明を好むあなたには、天体の動きと人生の関連を論理的に分析する西洋占星術が最も適しています。"
-              }
-            ]
-          },
-          {
-            text: "Q3. 数字やパターン、規則性を見つけることに興味がありますか？",
-            category: "論理・分析",
-            options: [
-              "とても興味があり、パターンを見つけるのが好き",
-              "興味はあるが、複雑すぎると疲れる",
-              "時々気になる程度",
-              "数字やパターンにはあまり興味がない"
-            ],
-            scores: [8, 6, 4, 2],
-            amounts: [75, 55, 40, 25],
-            feedbacks: [
-              {
-                title: "🔢 数字の魔術師：数秘術が天職",
-                content: "パターン認識能力に優れたあなたには、生年月日や名前の数字から人生の法則を読み解く数秘術が最適です。"
-              },
-              {
-                title: "📊 適度な分析力：西洋占星術が適合",
-                content: "論理的思考と直感のバランスが良いあなたには、天体の配置を分析しながらも直感的解釈も必要な西洋占星術が適しています。"
-              },
-              {
-                title:
+</html>

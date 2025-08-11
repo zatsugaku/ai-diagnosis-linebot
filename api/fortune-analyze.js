@@ -85,7 +85,7 @@ export default async function handler(req, res) {
       });
     }
 
-    const { answers, totalScore, fortuneType, timestamp } = req.body;
+    const { answers, totalScore, fortuneType, timestamp, options = {} } = req.body;
     
     console.log('📊 Processing fortune analysis:', {
       score: totalScore,
@@ -153,7 +153,7 @@ export default async function handler(req, res) {
 
 // 本番対応リクエスト検証
 function validateFortuneRequest(req) {
-  const { answers, totalScore, fortuneType, timestamp } = req.body;
+  const { answers, totalScore, fortuneType, timestamp, options = {} } = req.body;
   
   // 基本データ検証
   if (!answers || !Array.isArray(answers) || answers.length === 0) {
@@ -254,6 +254,16 @@ async function generateProductionFortuneAnalysis(totalScore, fortuneType, answer
   const personalityTraits = analyzePersonalityTraits(answers);
   const fortuneLevel = getFortuneLevelDescription(totalScore);
   
+  
+  // ===== ユーザ設定（文量/絵文字） =====
+  const verbosity = options.verbosity || 'standard';   // 'short' | 'standard' | 'long'
+  const emoji = (options.emoji !== false);             // true | false
+  const lengthGuide =
+    verbosity === 'short'  ? '全体は120〜180字程度。要点のみ簡潔に。' :
+    verbosity === 'long'   ? '全体は500〜800字程度。根拠や活用例も詳しく。' :
+                             '全体は250〜400字程度。要点を押さえつつ適度に詳しく。';
+  const emojiGuide = emoji ? '適度に絵文字を使う。' : '絵文字は使わない。';
+  
   const systemPrompt = `あなたは占い適性診断の専門コンサルタントです。1,000人以上の診断経験を持ち、科学的根拠とスピリチュアルな洞察を組み合わせた分析を行います。
 
 # 分析ガイドライン
@@ -262,7 +272,7 @@ async function generateProductionFortuneAnalysis(totalScore, fortuneType, answer
 - バランスの取れた現実的な視点
 - 押し付けがましくない表現
 
-# 出力形式（HTMLタグなし、プレーンテキスト）
+## スタイル指示\n- ${lengthGuide}\n- ${emojiGuide}\n\n# 出力形式（HTMLタグなし、プレーンテキスト）
 以下の構造で出力してください：
 
 **🔮 あなたの占い適性：${fortuneType}**

@@ -1,1 +1,462 @@
-修正版 index.html を今すぐ出力
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>診断アプリ｜フォーチュン診断</title>
+  <style>
+    :root { --radius: 16px; }
+    * { box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans JP", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif; margin: 0; background: #f7f7f8; color: #111; }
+    .container { max-width: 820px; margin: 28px auto; padding: 0 16px 56px; }
+    header { text-align: center; margin-bottom: 18px; }
+    h1 { font-size: 22px; margin: 0 0 6px; }
+    .sub { color: #666; font-size: 13px; }
+
+    .card { background: #fff; border-radius: var(--radius); box-shadow: 0 4px 20px rgba(0,0,0,.06); padding: 18px; }
+    .hidden { display: none !important; }
+
+    /* Progress */
+    .progress { display: flex; align-items: center; gap: 12px; margin: 14px 0 16px; }
+    .bar { position: relative; flex: 1; height: 8px; background: #eee; border-radius: 999px; overflow: hidden; }
+    .bar > i { position: absolute; inset: 0; width: 0%; background: #111; opacity: .12; }
+    .progress small { color: #555; }
+
+    /* Question */
+    #question-card { margin-top: 10px; }
+    #question-text { font-size: 18px; font-weight: 600; line-height: 1.6; }
+    #options { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 14px; }
+    .opt { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 12px 14px; border-radius: 12px; border: 1px solid #e5e7eb; background: #fff; cursor: pointer; transition: transform .02s ease, border-color .12s ease; }
+    .opt:hover { border-color: #d1d5db; }
+    .opt:active { transform: translateY(1px); }
+    .opt span { pointer-events: none; }
+
+    /* Feedback */
+    .feedback { border: 1px dashed #e5e7eb; background: #fafafa; margin-top: 12px; }
+    .feedback .feedback-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+    .feedback .feedback-content { font-size: 14px; color: #333; white-space: pre-wrap; }
+
+    /* Nav */
+    #nav { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; gap: 10px; }
+    .btn { padding: 10px 14px; border-radius: 12px; border: 1px solid #e5e7eb; background: #fff; cursor: pointer; font-weight: 600; }
+    .btn[disabled] { opacity: .4; cursor: not-allowed; }
+    .btn.primary { background: #111; color: #fff; border-color: #111; }
+
+    /* Style controls */
+    #style-controls { display: none; margin-top: 10px; text-align: center; }
+    #style-controls label { margin-right: 12px; }
+
+    /* Result */
+    #result { margin-top: 18px; }
+    #result h2 { font-size: 18px; margin: 0 0 8px; }
+    #ai-output { white-space: pre-wrap; line-height: 1.7; }
+    .row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .pill { font-size: 12px; padding: 4px 8px; background: #f0f0f2; border-radius: 999px; }
+    .muted { color: #666; }
+
+    footer { text-align: center; color: #888; font-size: 12px; margin-top: 28px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>フォーチュン診断</h1>
+      <div class="sub">8問に答えるだけで、あなたのタイプをAIが分析します。</div>
+    </header>
+
+    <div id="app" class="card">
+      <div class="progress">
+        <small id="progress-text" aria-live="polite">準備中…</small>
+        <div class="bar" aria-hidden="true"><i id="bar-fill"></i></div>
+      </div>
+
+      <div id="question-card" class="card" style="padding:16px;">
+        <div id="question-text">読み込み中…</div>
+        <div id="options" aria-live="polite"></div>
+        <div id="feedback" class="card feedback hidden">
+          <div class="feedback-title"></div>
+          <div class="feedback-content"></div>
+        </div>
+      </div>
+
+      <div id="nav">
+        <button id="prev" class="btn" type="button">← 前へ</button>
+        <div class="row">
+          <button id="analyze" class="btn primary" type="button">AIに分析してもらう</button>
+          <button id="next" class="btn" type="button">次へ →</button>
+        </div>
+      </div>
+
+      <!-- 文量/絵文字コントロール（最終問に到達後に表示） -->
+      <div id="style-controls">
+        <label>文量：
+          <select id="verbosity">
+            <option value="short">短め</option>
+            <option value="standard" selected>標準</option>
+            <option value="long">詳しめ</option>
+          </select>
+        </label>
+        <label><input type="checkbox" id="emoji" checked> 絵文字あり</label>
+      </div>
+
+      <section id="result" class="hidden">
+        <h2>診断結果</h2>
+        <div class="row" style="margin-bottom:6px;">
+          <span id="result-type" class="pill"></span>
+          <span id="result-score" class="pill"></span>
+        </div>
+        <div id="ai-output" class="card" style="padding:14px;"></div>
+        <div class="row" style="margin-top:12px;">
+          <button id="copy" class="btn" type="button">結果をコピー</button>
+          <button id="restart" class="btn" type="button">もう一度診断</button>
+        </div>
+      </section>
+    </div>
+
+    <footer>© 2025 Fortune Diagnosis</footer>
+  </div>
+
+  <!-- 外部設定（質問/タイプ定義） -->
+  <script src="/business/fortune-diagnosis/fortune_questions_config.js"></script>
+
+  <!-- メインスクリプト -->
+  <script>
+    'use strict';
+
+    /** ユーティリティ **/
+    const $ = (sel) => document.querySelector(sel);
+    const create = (tag, props = {}, ...children) => {
+      const el = document.createElement(tag);
+      Object.entries(props).forEach(([k, v]) => {
+        if (k === 'class') el.className = v;
+        else if (k === 'dataset') Object.assign(el.dataset, v);
+        else if (k in el) el[k] = v; else el.setAttribute(k, v);
+      });
+      for (const child of children) {
+        if (child == null) continue;
+        if (typeof child === 'string' || typeof child === 'number') el.appendChild(document.createTextNode(String(child)));
+        else el.appendChild(child);
+      }
+      return el;
+    };
+
+    const sessionId = (() =>
+      (crypto?.randomUUID?.() || Math.random().toString(36).slice(2)) + '-' + Date.now())();
+
+    /** 質問/タイプ設定の検証 **/
+    function ensureConfigLoaded() {
+      const qData = (window.QUESTION_DATA || window.FORTUNE_QUESTION_DATA || []);
+      if (!Array.isArray(qData) || qData.length === 0) {
+        throw new Error('質問データ（QUESTION_DATA）が読み込まれていません。外部JSのパスを確認してください。');
+      }
+      const types = (window.FORTUNE_TYPES || []);
+      if (!Array.isArray(types) || types.length === 0) {
+        console.warn('FORTUNE_TYPES が見つかりません。スコア帯→タイプの割当はデフォルト挙動になります。');
+      }
+      return { qData, types };
+    }
+
+    /** スコア帯からタイプを決定（柔軟対応） **/
+    function determineType(totalScore, types) {
+      if (!Array.isArray(types) || types.length === 0) {
+        return { name: 'タイプA', description: '', min: -Infinity, max: Infinity };
+      }
+      const norm = types.map(t => {
+        const min = (Number.isFinite(t.min) ? t.min : (Number.isFinite(t.minScore) ? t.minScore : -Infinity));
+        const max = (Number.isFinite(t.max) ? t.max : (Number.isFinite(t.maxScore) ? t.maxScore : Infinity));
+        return { ...t, min, max };
+      });
+      const inRange = norm.find(t => totalScore >= t.min && totalScore <= t.max);
+      if (inRange) return inRange;
+      // 近いmin/maxで決定
+      let best = norm[0], bestDist = Infinity;
+      for (const t of norm) {
+        const dist = (totalScore < t.min) ? (t.min - totalScore) : (totalScore - t.max);
+        if (dist < bestDist) { best = t; bestDist = dist; }
+      }
+      return best;
+    }
+
+    class DiagnosisSystem {
+      constructor(config) {
+        this.questionData = config.qData;
+        this.types = config.types;
+        this.currentQuestion = 0;
+        this.answers = []; // index配列
+        this.totalScore = 0;
+        this.sessionId = sessionId;
+
+        // UI要素
+        this.progressText = $('#progress-text');
+        this.barFill = $('#bar-fill');
+        this.qText = $('#question-text');
+        this.optionsEl = $('#options');
+        this.feedbackEl = $('#feedback');
+        this.feedbackTitle = this.feedbackEl.querySelector('.feedback-title');
+        this.feedbackContent = this.feedbackEl.querySelector('.feedback-content');
+        this.prevBtn = $('#prev');
+        this.nextBtn = $('#next');
+        this.analyzeBtn = $('#analyze');
+        this.styleControls = $('#style-controls');
+        this.verbosityEl = $('#verbosity');
+        this.emojiEl = $('#emoji');
+        this.resultSec = $('#result');
+        this.resultType = $('#result-type');
+        this.resultScore = $('#result-score');
+        this.aiOutput = $('#ai-output');
+        this.copyBtn = $('#copy');
+        this.restartBtn = $('#restart');
+
+        this.bind();
+        this.render();
+      }
+
+      bind() {
+        this.prevBtn.addEventListener('click', () => this.goto(this.currentQuestion - 1));
+        this.nextBtn.addEventListener('click', () => this.goto(this.currentQuestion + 1));
+        this.analyzeBtn.addEventListener('click', () => this.onAnalyze());
+        this.copyBtn.addEventListener('click', () => this.copyResult());
+        this.restartBtn.addEventListener('click', () => this.restart());
+      }
+
+      restart() {
+        this.currentQuestion = 0;
+        this.answers = [];
+        this.totalScore = 0;
+        this.resultSec.classList.add('hidden');
+        this.styleControls.style.display = 'none';
+        this.render();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      goto(index) {
+        if (index < 0 || index >= this.questionData.length) return;
+        this.currentQuestion = index;
+        this.render();
+      }
+
+      render() {
+        const q = this.questionData[this.currentQuestion];
+        // 進捗
+        const total = this.questionData.length;
+        const answeredCount = this.answers.filter(v => v !== undefined).length;
+        this.progressText.textContent = `質問 ${this.currentQuestion + 1} / ${total}`;
+        const fillPct = Math.max(0, Math.min(100, Math.round((answeredCount / total) * 100)));
+        this.barFill.style.width = fillPct + '%';
+
+        // 質問文
+        this.qText.textContent = (q && (q.text ?? q.title ?? '質問'));
+
+        // 選択肢描画（XSS対策: textContentで挿入）
+        this.optionsEl.replaceChildren();
+        const opts = Array.isArray(q?.options) ? q.options : [];
+        opts.forEach((label, idx) => {
+          const btn = create('button', { class: 'opt', type: 'button', dataset: { idx } },
+            create('span', {}, String(label))
+          );
+          btn.addEventListener('click', () => this.selectOption(idx));
+          this.optionsEl.appendChild(btn);
+        });
+
+        // 既存回答の強調（あれば）
+        const selected = this.answers[this.currentQuestion];
+        if (Number.isInteger(selected)) {
+          const b = this.optionsEl.querySelector(`.opt[data-idx="${selected}"]`);
+          if (b) b.style.borderColor = '#111';
+        }
+
+        // 直近の統合フィードバック表示（該当時）
+        this.updateFeedback();
+
+        // ナビの更新
+        this.updateNavigation();
+      }
+
+      updateFeedback() {
+        const q = this.questionData[this.currentQuestion];
+        const selected = this.answers[this.currentQuestion];
+        const fb = Array.isArray(q?.feedbacks) && Number.isInteger(selected) ? q.feedbacks[selected] : null;
+        if (fb && (fb.title || fb.content)) {
+          this.feedbackTitle.textContent = fb.title || '';
+          this.feedbackContent.textContent = fb.content || '';
+          this.feedbackEl.classList.remove('hidden');
+        } else {
+          this.feedbackEl.classList.add('hidden');
+        }
+      }
+
+      updateNavigation() {
+        const total = this.questionData.length;
+        const atFirst = this.currentQuestion === 0;
+        const atLast = this.currentQuestion === total - 1;
+        const answered = Number.isInteger(this.answers[this.currentQuestion]);
+
+        this.prevBtn.disabled = atFirst;
+        this.nextBtn.disabled = atLast || !answered;
+        this.analyzeBtn.disabled = !(atLast && answered);
+
+        // 最終問に回答済み → スタイルコントロールを表示
+        this.styleControls.style.display = (atLast && answered) ? 'block' : 'none';
+      }
+
+      selectOption(optionIndex) {
+        const q = this.questionData[this.currentQuestion];
+        const amounts = Array.isArray(q?.amounts) ? q.amounts : [];
+        const amount = Number.isFinite(amounts[optionIndex]) ? Number(amounts[optionIndex]) : 0;
+
+        // 以前の選択を差し戻す（再選択時の合計調整）
+        const prev = this.answers[this.currentQuestion];
+        if (Number.isFinite(prev)) {
+          const prevAmt = Number.isFinite(amounts[prev]) ? Number(amounts[prev]) : 0;
+          this.totalScore -= prevAmt;
+        }
+
+        this.answers[this.currentQuestion] = optionIndex;
+        this.totalScore += amount;
+
+        // 見た目更新
+        this.optionsEl.querySelectorAll('.opt').forEach(el => el.style.borderColor = '#e5e7eb');
+        const picked = this.optionsEl.querySelector(`.opt[data-idx="${optionIndex}"]`);
+        if (picked) picked.style.borderColor = '#111';
+
+        // フィードバック
+        this.updateFeedback();
+
+        // すぐに次へ（UX: 任意。固定にしたい場合はコメントアウト）
+        if (this.currentQuestion < this.questionData.length - 1) {
+          this.goto(this.currentQuestion + 1);
+        } else {
+          this.updateNavigation();
+        }
+      }
+
+      determineFortuneType() {
+        return determineType(this.totalScore, this.types);
+      }
+
+      async onAnalyze() {
+        this.analyzeBtn.disabled = true;
+        this.analyzeBtn.textContent = '分析中…';
+        try {
+          const analysis = await this.callAIAnalysis();
+          this.showResult(analysis);
+        } catch (err) {
+          console.error(err);
+          const fallback = this.displayOfflineAnalysis();
+          this.showResult(fallback, true);
+        } finally {
+          this.analyzeBtn.textContent = 'AIに分析してもらう';
+          this.updateNavigation();
+        }
+      }
+
+      async callAIAnalysis() {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 30000);
+
+        const verbosity = this.verbosityEl ? this.verbosityEl.value : 'standard';
+        const emoji = this.emojiEl ? !!this.emojiEl.checked : true;
+        const fType = this.determineFortuneType();
+
+        const payload = {
+          answers: this.answers,
+          totalScore: this.totalScore,
+          fortuneType: fType?.name || '',
+          timestamp: new Date().toISOString(),
+          options: { verbosity, emoji }
+        };
+
+        const res = await fetch('/api/fortune-analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-Session-Id': this.sessionId },
+          body: JSON.stringify(payload),
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        if (!data || data.success === false) throw new Error(data?.error || 'AI分析失敗');
+        return data.analysis;
+      }
+
+      displayOfflineAnalysis() {
+        const type = this.determineFortuneType();
+        const emoji = this.emojiEl ? !!this.emojiEl.checked : true;
+        const face = emoji ? '🔮' : '';
+        const lines = [];
+        lines.push(`${face} オフライン簡易分析`);
+        lines.push(`タイプ: ${type?.name ?? 'N/A'}`);
+        lines.push(`スコア: ${this.totalScore}`);
+        if (type?.description) lines.push(`特徴: ${type.description}`);
+        lines.push('');
+        lines.push('※ ネットワークエラーのため、簡易版の結果です。通信環境をご確認のうえ再実行してください。');
+        return lines.join('
+');
+      }
+
+      showResult(analysis, isFallback = false) {
+        const type = this.determineFortuneType();
+        this.resultType.textContent = `タイプ: ${type?.name ?? 'N/A'}`;
+        this.resultScore.textContent = `スコア: ${this.totalScore}`;
+
+        // analysis は string / object の両対応
+        let text = '';
+        if (typeof analysis === 'string') {
+          text = analysis;
+        } else if (analysis && typeof analysis === 'object') {
+          const parts = [];
+          if (analysis.title) parts.push(`【${analysis.title}】`);
+          if (analysis.summary) parts.push(String(analysis.summary));
+          if (Array.isArray(analysis.points)) {
+            parts.push('', ...analysis.points.map((p, i) => `${i + 1}. ${p}`));
+          }
+          if (analysis.advice) {
+            parts.push('', `アドバイス: ${analysis.advice}`);
+          }
+          text = parts.join('\n');
+        } else {
+          text = String(analysis ?? '');
+        }
+
+        this.aiOutput.textContent = text;
+        this.resultSec.classList.remove('hidden');
+        if (isFallback) this.resultSec.classList.add('fallback');
+        this.resultSec.scrollIntoView({ behavior: 'smooth' });
+      }
+
+      copyResult() {
+        const text = this.aiOutput.textContent || '';
+        if (!text) return;
+        navigator.clipboard?.writeText(text).then(() => {
+          this.copyBtn.textContent = 'コピーしました';
+          setTimeout(() => (this.copyBtn.textContent = '結果をコピー'), 1200);
+        }).catch(() => {
+          // 非対応ブラウザ
+          const textarea = create('textarea', { style: 'position:fixed;left:-9999px;top:-9999px;' }, text);
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand('copy');
+          textarea.remove();
+        });
+      }
+    }
+
+    // 起動
+    (function bootstrap() {
+      try {
+        const config = ensureConfigLoaded();
+        window.__app = new DiagnosisSystem(config);
+      } catch (e) {
+        console.error(e);
+        const app = $('#app');
+        app.replaceChildren(
+          create('div', { class: 'card', style: 'background:#fff3f3;color:#b00020;' },
+            create('div', { style: 'font-weight:700;margin-bottom:6px;' }, '起動エラー'),
+            create('div', {}, String(e.message || e))
+          )
+        );
+      }
+    })();
+  </script>
+</body>
+</html>

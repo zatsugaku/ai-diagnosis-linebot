@@ -1,9 +1,10 @@
-// 本番デプロイ対応版 Fortune Diagnosis API v2.1
+// 本番デプロイ対応版 Fortune Diagnosis API v2.2
 // /api/fortune-analyze.js として配置
+// 修正内容: 「占いを受ける価値・適性」に方向転換
 
 export default async function handler(req, res) {
   const startTime = Date.now();
-  console.log('🔮 Fortune API v2.1 Request:', req.method, new Date().toISOString());
+  console.log('🔮 Fortune API v2.2 Request:', req.method, new Date().toISOString());
 
   // CORS設定（本番環境対応）
   const allowedOrigins = process.env.NODE_ENV === 'production' 
@@ -39,15 +40,15 @@ export default async function handler(req, res) {
     return res.status(200).json({ 
       success: true, 
       service: '🔮 Fortune Diagnosis API',
-      version: '2.1-production',
+      version: '2.2-consultation-focused',
       timestamp: new Date().toISOString(),
       environment: process.env.NODE_ENV || 'development',
       features: [
-        'Production-ready CORS',
-        'Enhanced error handling', 
+        'Consultation-focused analysis',
+        'Enhanced user guidance', 
         'Scalable rate limiting',
-        'Fortune-specific analysis',
-        'Fallback mechanisms'
+        'Professional fortune guidance',
+        'Business conversion optimized'
       ]
     });
   }
@@ -105,7 +106,7 @@ export default async function handler(req, res) {
     }
 
     // AI分析実行
-    const analysis = await generateProductionFortuneAnalysis(
+    const analysis = await generateConsultationFocusedAnalysis(
       totalScore, 
       fortuneType, 
       answers, 
@@ -121,7 +122,7 @@ export default async function handler(req, res) {
       metadata: {
         fortuneType,
         processingTime,
-        version: '2.1',
+        version: '2.2-consultation-focused',
         timestamp: new Date().toISOString()
       }
     });
@@ -247,61 +248,68 @@ async function checkProductionRateLimit(req) {
   return { allowed: true };
 }
 
-// 本番対応AI分析生成
-async function generateProductionFortuneAnalysis(totalScore, fortuneType, answers, apiKey) {
-  console.log('🤖 Starting production AI analysis');
+// 【重要修正】適性説明に特化したAI分析生成
+async function generateConsultationFocusedAnalysis(totalScore, fortuneType, answers, apiKey) {
+  console.log('🤖 Starting compatibility-focused AI analysis');
   
   const personalityTraits = analyzePersonalityTraits(answers);
   const fortuneLevel = getFortuneLevelDescription(totalScore);
   
-  const systemPrompt = `あなたは占い適性診断の専門コンサルタントです。1,000人以上の診断経験を持ち、科学的根拠とスピリチュアルな洞察を組み合わせた分析を行います。
+  const systemPrompt = `あなたは占い適性診断の専門コンサルタントです。1,000人以上の診断経験を持ち、個人の性格や価値観に最も適した占い手法を分析する専門家です。
+
+# 重要な方向性
+- その人の性格的・性質的・タイミング的・欲求的な特徴を分析
+- なぜその占い手法がその人に「合う」のかを論理的に説明
+- 世の中の様々な占いの中で、なぜこれが最適なのかを明確化
+- 教育的で情報提供的なアプローチを重視
 
 # 分析ガイドライン
-- 個人の性格特性を尊重した提案
-- 具体的で実践的なアドバイス
-- バランスの取れた現実的な視点
-- 押し付けがましくない表現
+- 性格的適性：その人の思考パターンや感性との相性
+- 性質的適性：その人の本質的な特徴との親和性
+- タイミング的適性：現在の人生段階や状況との合致度
+- 欲求的適性：その人が求めているものとの一致度
 
 # 出力形式（HTMLタグなし、プレーンテキスト）
 以下の構造で出力してください：
 
-**🔮 あなたの占い適性：${fortuneType}**
+**🔮 あなたに最適な占い：${fortuneType}**
 
-**適性スコア：${totalScore}点/80点**
-${fortuneLevel}のあなたに${fortuneType}が最適である理由をお伝えします。
+**適性レベル：${fortuneLevel}**
+${totalScore}点という適性スコアが示すように、あなたには${fortuneType}が最も適しています。
 
-**✨ あなたの特徴**
-- [特徴1]
-- [特徴2]  
-- [特徴3]
+**✨ あなたの特徴と${fortuneType}の親和性**
+- [性格的な理由：なぜ合うのか]
+- [性質的な理由：なぜ合うのか]  
+- [現在の状況的な理由：なぜ今合うのか]
 
-**🎯 ${fortuneType}が適している理由**
-[詳細な説明]
+**🎯 なぜ${fortuneType}があなたに最適なのか**
+世の中には様々な占いがありますが、あなたの[具体的特徴]という特性を考えると、${fortuneType}が最も適している理由は[詳細な説明]です。
 
-**💫 具体的な活用方法**
-1. [方法1]
-2. [方法2]
-3. [方法3]
+**💫 ${fortuneType}があなたにもたらすもの**
+1. [適性理由1：なぜ響くのか]
+2. [適性理由2：なぜ理解しやすいのか]
+3. [適性理由3：なぜ活用しやすいのか]
 
-**🌟 期待できる効果**
-- [効果1]
-- [効果2]
-- [効果3]
+**🌟 ${fortuneType}を活用するのに適したタイミング**
+- [タイミング1：いつが良いか]
+- [タイミング2：どんな時に]
+- [タイミング3：どんな状況で]
 
-**📅 おすすめのタイミング**
-[相談に適したタイミング]
+**📅 ${fortuneType}との相性の良さ**
+あなたの性格や価値観、現在の状況を総合的に考えると、${fortuneType}はあなたにとって最も理解しやすく、活用しやすい占い手法です。他の占いも素晴らしいものですが、あなたには${fortuneType}を頼りにすることをお勧めします。
 
 ---
-この分析があなたの人生にとって有意義な指針となることを願っています。`;
+あなたの特性に最も適した${fortuneType}が、きっと良い指針となってくれるでしょう。`;
 
   const userPrompt = `
-【分析対象】
-- スコア: ${totalScore}/80点
-- 適性占術: ${fortuneType}
-- レベル: ${fortuneLevel}
+【分析対象者】
+- 適性スコア: ${totalScore}/80点
+- 最適占術: ${fortuneType}
+- 適性レベル: ${fortuneLevel}
 - 性格特性: ${personalityTraits.join(', ')}
 
-この方に${fortuneType}が最適である理由と、具体的な活用方法を分析してください。
+この方の性格的・性質的・タイミング的・欲求的な特徴を分析し、なぜ${fortuneType}が最も適しているのかを説得力のある形で説明してください。
+世の中の様々な占いの中で、なぜこの占いが合うのかの適性理由に焦点を当ててください。
 `;
 
   const controller = new AbortController();
@@ -347,8 +355,8 @@ ${fortuneLevel}のあなたに${fortuneType}が最適である理由をお伝え
     clearTimeout(timeoutId);
     console.error('🔥 AI Analysis Error:', error);
     
-    // フォールバック分析を返す
-    return generateProductionFallbackAnalysis(totalScore, fortuneType, personalityTraits);
+    // エラー時は簡潔なメッセージのみ（フォールバック削除）
+    throw new Error('AI analysis temporarily unavailable. Please try again.');
   }
 }
 
@@ -403,42 +411,9 @@ function analyzePersonalityTraits(answers) {
 
 // 適性レベル説明
 function getFortuneLevelDescription(score) {
-  if (score >= 65) return '非常に高い占い適性';
-  if (score >= 50) return '高い占い適性';
-  if (score >= 35) return '中程度の占い適性';
-  if (score >= 20) return '基礎的な占い適性';
-  return '現実重視の占い活用型';
-}
-
-// 本番用フォールバック分析
-function generateProductionFallbackAnalysis(totalScore, fortuneType, traits) {
-  const level = getFortuneLevelDescription(totalScore);
-  
-  return `**🔮 あなたの占い適性：${fortuneType}**
-
-**適性スコア：${totalScore}点/80点**
-
-${level}のあなたには${fortuneType}が最も適しています。
-
-**✨ あなたの特徴**
-${traits.slice(0, 3).map(trait => `- ${trait}`).join('\n')}
-
-**🎯 ${fortuneType}が適している理由**
-あなたの性格特性と価値観を分析した結果、${fortuneType}の特徴があなたの本質と非常によく合致していることが判明しました。
-
-**💫 具体的な活用方法**
-1. 重要な決断を迫られた時の指針として活用
-2. 人間関係の悩みや課題の解決に活用  
-3. 自己理解を深めるためのツールとして活用
-
-**🌟 期待できる効果**
-- 直感力と洞察力の向上
-- 自己理解の深化
-- 人生の方向性の明確化
-
-**📅 おすすめのタイミング**
-人生の転機や重要な選択を迫られている時、心の整理が必要な時に${fortuneType}をご活用ください。
-
----
-※ ネットワークの問題により簡易分析を表示しています。より詳細な分析をご希望の場合は、再度お試しください。`;
+  if (score >= 65) return '★★★★★ 非常に高い占い適性（エキスパートレベル）';
+  if (score >= 50) return '★★★★☆ 高い占い適性（上級者レベル）';
+  if (score >= 35) return '★★★☆☆ 中程度の占い適性（中級者レベル）';
+  if (score >= 25) return '★★☆☆☆ 基礎的な占い適性（初心者レベル）';
+  return '★☆☆☆☆ 現実重視の占い活用型（実用的活用レベル）';
 }

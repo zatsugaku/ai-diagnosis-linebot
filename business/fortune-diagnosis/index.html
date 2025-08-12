@@ -943,6 +943,23 @@ console.log('✅ 占い適性診断システム v2.0 - データ初期化完了'
                 }
             }
 
+}
+
+        // 適性表示を生成する関数
+        getCompatibilityDisplay() {
+            if (this.totalScore >= 60) {
+                return '★★★★★ 非常に高い適性（エキスパートレベル）';
+            } else if (this.totalScore >= 45) {
+                return '★★★★☆ 高い適性（上級者レベル）';
+            } else if (this.totalScore >= 35) {
+                return '★★★☆☆ 中程度の適性（中級者レベル）';
+            } else if (this.totalScore >= 25) {
+                return '★★☆☆☆ 基礎的な適性（初心者レベル）';
+            } else {
+                return '★☆☆☆☆ 現実重視型（実用的活用レベル）';
+            }
+        }
+
             async startAIAnalysis() {
                 // ボタンを非表示
                 document.getElementById('ai-analysis-button').style.display = 'none';
@@ -1073,7 +1090,7 @@ displayAIAnalysis(analysis) {
                     
                     <div class="highlight-box">
                         <h4>📊 診断結果</h4>
-                        <p><strong>適性スコア：${this.totalScore}点/80点</strong></p>
+                        <p><strong>${this.getCompatibilityDisplay()}</strong></p>
                         <p>${fortuneType.description}</p>
                     </div>
                     

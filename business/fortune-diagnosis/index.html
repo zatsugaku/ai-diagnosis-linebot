@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔮 占い適性診断 v2.0 - 3分で判明するあなたにピッタリの占い手法</title>
+    <title>🔮 占い適性診断 v2.1 - 3分で判明するあなたにピッタリの占い手法</title>
     <meta name="description" content="タロット、占星術、手相など、あなたの性格や価値観から最適な占い手法を診断。1,000人の診断データに基づく精密な適性分析。">
     <meta name="keywords" content="占い診断,占い適性,タロット,占星術,手相,数秘術,易経,オラクルカード">
     
@@ -558,11 +558,11 @@
     <div class="container">
         <header class="header">
             <div class="header-content">
-                <h1>🔮 占い適性診断 v2.0</h1>
+                <h1>🔮 占い適性診断 v2.1</h1>
                 <div class="subtitle">3分で判明するあなたにピッタリの占い手法</div>
                 <div class="description">
                     タロット、占星術、手相など、あなたの性格や価値観から最適な占い手法を診断。
-                    1,000人の診断データに基づく精密な適性分析システムです。
+                    10種類の占い手法から最も適したものを特定する精密な適性分析システムです。
                 </div>
             </div>
         </header>
@@ -646,31 +646,94 @@
         </main>
     </div>
 
-    <script src="/business/fortune-diagnosis/fortune_questions_config.js"></script>
-<script>
-        // 外部データ（fortune_questions_config.js）を読み込み済み前提
-        console.log('🔮 占い適性診断システム v2.0 - 質問データ初期化開始');
+    <script>
+        // データ埋め込み版 - 外部ファイル不要
+        console.log('🔮 占い適性診断システム v2.1 - 10種類対応版 初期化開始');
 
-        // 占い手法データベース
+        // 質問データ（埋め込み版）
+        window.QUESTION_DATA = [
+          {
+            text: "Q1. 日常生活で直感や「なんとなく」の感覚を信じて行動することはありますか？",
+            category: "直感・感性",
+            options: [
+              "直感をとても信じて、よく直感で判断する",
+              "直感は参考程度に、最終的には論理で判断",
+              "直感と論理のバランスを取って判断する",
+              "ほとんど論理的思考で判断し、直感は重視しない"
+            ],
+            scores: [10, 7, 5, 2],
+            amounts: [80, 65, 50, 30],
+            feedbacks: [
+              {
+                title: "🌟 直感力の持ち主",
+                content: "あなたは豊かな直感力を持ち、感性を大切にする方ですね。内なる声に耳を傾ける能力に長けており、創造的な判断ができる特質があります。"
+              },
+              {
+                title: "⚖️ バランス感覚に優れたタイプ",
+                content: "直感と論理のバランスを上手に取る方ですね。状況に応じて柔軟にアプローチを変える適応力をお持ちです。"
+              },
+              {
+                title: "🔄 調和を重視する性格",
+                content: "物事を多角的に捉え、バランスの取れた判断を心がける方ですね。安定感があり、周囲からの信頼も厚いタイプです。"
+              },
+              {
+                title: "🧠 論理的思考の達人",
+                content: "客観的で冷静な判断力をお持ちですね。データや事実を重視し、確実性を求める慎重で信頼性の高い性格です。"
+              }
+            ]
+          },
+          {
+            text: "Q2. 芸術作品（絵画、音楽、小説など）から感情的なメッセージや意味を感じ取ることは得意ですか？",
+            category: "象徴・解釈力",
+            options: [
+              "とても得意で、作品の深い意味まで感じ取れる",
+              "ある程度は感じ取れるが、時間がかかる",
+              "表面的な印象は分かるが、深い意味は難しい",
+              "あまり得意ではなく、論理的な説明があった方が理解しやすい"
+            ],
+            scores: [10, 7, 4, 1],
+            amounts: [85, 65, 45, 25],
+            feedbacks: [
+              {
+                title: "🎨 感性豊かな芸術的タイプ",
+                content: "象徴的なメッセージを読み解く天性の才能をお持ちですね。芸術や美しいものから深い意味を感じ取る、感受性豊かな方です。"
+              },
+              {
+                title: "🌙 じっくり味わう深思型",
+                content: "時間をかけて物事の本質を理解する、思慮深い方ですね。表面的でなく、深く考察する能力をお持ちです。"
+              },
+              {
+                title: "📚 現実的で実用志向",
+                content: "具体的で分かりやすい情報を好む、実用的な思考をお持ちですね。現実的なアプローチを重視される方です。"
+              },
+              {
+                title: "🔍 体系的理解を重視するタイプ",
+                content: "論理的で体系的な説明を好む、分析的思考をお持ちですね。確実な理解を求める慎重で誠実な性格です。"
+              }
+            ]
+          },
+          {
+            text: "Q3. 数字や
+
         // システム設定
         window.SYSTEM_CONFIG = {
-          title: "🔮 占い適性診断 v2.0",
+          title: "🔮 占い適性診断 v2.1",
           subtitle: "3分で判明するあなたにピッタリの占い手法",
           maxScore: 80,
-          completionMessage: "診断完了！あなたに最適な占い手法と詳細な適性分析をご確認ください。",
+          completionMessage: "診断完了！10種類の占い手法からあなたに最適なものと詳細な適性分析をご確認ください。",
           apiEndpoint: "/api/fortune-analyze",
           hideAmountDisplay: true,
           fortuneMode: true
         };
 
         if (!window.QUESTION_DATA || !window.FORTUNE_TYPES) {
-    const container = document.getElementById('question-container');
-    container.innerHTML = '<div class="error-message"><h3>⚠️ データ読み込みエラー</h3><p>質問データの読み込みに失敗しました。ページを再読み込みするか、管理者に連絡してください。</p></div>';
-    throw new Error('QUESTION_DATA / FORTUNE_TYPES not loaded');
-}
-console.log('✅ 占い適性診断システム v2.0 - データ初期化完了');
+            const container = document.getElementById('question-container');
+            container.innerHTML = '<div class="error-message"><h3>⚠️ データ読み込みエラー</h3><p>質問データの読み込みに失敗しました。ページを再読み込みするか、管理者に連絡してください。</p></div>';
+            throw new Error('QUESTION_DATA / FORTUNE_TYPES not loaded');
+        }
+        console.log('✅ 占い適性診断システム v2.1 - データ初期化完了');
         console.log(`📊 質問数: ${window.QUESTION_DATA.length}問`);
-        console.log(`🔮 占い手法: ${Object.keys(window.FORTUNE_TYPES).length}種類`);
+        console.log(`🔮 占い手法: 10種類対応版`);
 
         // 診断システムクラス
         class DiagnosisSystem {
@@ -894,7 +957,7 @@ console.log('✅ 占い適性診断システム v2.0 - データ初期化完了'
                 const positionMessage = document.getElementById('position-message');
                 const actionMessage = document.getElementById('action-message');
 
-                // 最適な占い手法を判定
+                // 最適な占い手法を判定（10種類対応版）
                 const fortuneType = this.determineFortuneType();
                 
                 finalScore.textContent = `${this.totalScore}点`;
@@ -906,41 +969,195 @@ console.log('✅ 占い適性診断システム v2.0 - データ初期化完了'
                 
                 resultsCard.style.display = 'block';
 
-                console.log('🔮 最終結果:', {
+                console.log('🔮 最終結果 (10種類対応):', {
                     score: this.totalScore,
                     fortuneType: fortuneType.name,
                     duration: new Date() - this.startTime
                 });
             }
 
-            // 占い手法の判定
+            // 10種類占い手法の判定（新バージョン）
             determineFortuneType() {
-                if (this.totalScore >= 60) {
+                // 質問回答から特性分析
+                const traits = this.analyzePersonalityTraits();
+                
+                console.log('🔮 占い適性分析:', {
+                    totalScore: this.totalScore,
+                    traits: traits
+                });
+
+                // スコア帯による基本分類
+                if (this.totalScore >= 65) {
+                    // 超高適性グループ (65-80点)
+                    if (traits.mystical && traits.intuitive) {
+                        return {
+                            name: 'イーチンタロット',
+                            description: '極めて高い霊感とスピリチュアルな感性を持つあなたには、古代中国の智慧と現代のタロットが融合したイーチンタロットが最適です。'
+                        };
+                    } else if (traits.intuitive) {
+                        return {
+                            name: 'タロットカード占い',
+                            description: '直感的で想像力豊かなあなたには、タロットカードの象徴的なメッセージが最も響きます。'
+                        };
+                    } else {
+                        return {
+                            name: '宿曜占星術',
+                            description: '深い洞察力を持つあなたには、古代インドから伝わる精密な宿曜占星術が適しています。'
+                        };
+                    }
+                }
+                
+                else if (this.totalScore >= 50) {
+                    // 高適性グループ (50-64点)
+                    if (traits.spiritual && traits.healing) {
+                        return {
+                            name: 'オラクルカード',
+                            description: 'スピリチュアルで癒しを求めるあなたには、天使からの愛のメッセージを受け取るオラクルカードが最適です。'
+                        };
+                    } else if (traits.mystical && traits.ancient) {
+                        return {
+                            name: 'ルーン占い',
+                            description: '古代の智慧に興味深いあなたには、北欧の神秘的なルーン文字による占いが適しています。'
+                        };
+                    } else if (traits.logical && traits.analytical) {
+                        return {
+                            name: '数秘術',
+                            description: 'パターン認識が得意なあなたには、数字の神秘を解き明かす数秘術がぴったりです。'
+                        };
+                    } else {
+                        return {
+                            name: '西洋占星術',
+                            description: '論理的思考が得意なあなたには、体系的な占星術の分析が適しています。'
+                        };
+                    }
+                }
+                
+                else if (this.totalScore >= 35) {
+                    // 中適性グループ (35-49点)
+                    if (traits.practical && traits.visual) {
+                        return {
+                            name: '手相占い',
+                            description: '現実的で実用的なあなたには、手のひらから具体的なアドバイスが得られる手相占いが最適です。'
+                        };
+                    } else if (traits.traditional && traits.cyclical) {
+                        return {
+                            name: '九星気学',
+                            description: 'バランス感覚に優れたあなたには、東洋の伝統的な九星気学による運気分析が適しています。'
+                        };
+                    } else {
+                        return {
+                            name: '動物占い',
+                            description: '親しみやすく分かりやすい方法を好むあなたには、楽しみながら学べる動物占いが最適です。'
+                        };
+                    }
+                }
+                
+                else {
+                    // 基礎適性グループ (0-34点)
                     return {
-                        name: 'タロットカード占い',
-                        description: '直感的で想像力豊かなあなたには、タロットカードの象徴的なメッセージが最も響きます。'
-                    };
-                } else if (this.totalScore >= 45) {
-                    return {
-                        name: 'オラクルカード',
-                        description: 'スピリチュアルで創造的なあなたには、愛と癒しのオラクルカードが最適です。'
-                    };
-                } else if (this.totalScore >= 35) {
-                    return {
-                        name: '西洋占星術',
-                        description: '論理的思考が得意なあなたには、体系的な占星術の分析が適しています。'
-                    };
-                } else if (this.totalScore >= 25) {
-                    return {
-                        name: '数秘術',
-                        description: 'パターン認識が得意なあなたには、数字の神秘を解き明かす数秘術がぴったりです。'
-                    };
-                } else {
-                    return {
-                        name: '手相占い',
-                        description: '現実的で実用的なあなたには、具体的なアドバイスが得られる手相占いが最適です。'
+                        name: '姓名判断',
+                        description: '現実的で確実性を重視するあなたには、名前から運勢を読み解く実用的な姓名判断が適しています。'
                     };
                 }
+            }
+
+            // 性格特性分析関数（新規追加）
+            analyzePersonalityTraits() {
+                const traits = {
+                    intuitive: false,    // 直感的
+                    logical: false,      // 論理的
+                    spiritual: false,    // スピリチュアル
+                    practical: false,    // 実用的
+                    mystical: false,     // 神秘的
+                    analytical: false,   // 分析的
+                    healing: false,      // 癒し志向
+                    visual: false,       // 視覚的
+                    traditional: false,  // 伝統重視
+                    ancient: false,      // 古代智慧
+                    cyclical: false      // 周期的思考
+                };
+                
+                // 質問カテゴリ別の回答分析
+                this.answers.forEach((answer, index) => {
+                    if (!answer) return;
+                    
+                    const question = this.questionData[index];
+                    const score = answer.score;
+                    
+                    switch (question.category) {
+                        case '直感・感性':
+                            if (score >= 8) {
+                                traits.intuitive = true;
+                                traits.mystical = true;
+                            }
+                            break;
+                            
+                        case '象徴・解釈力':
+                            if (score >= 8) {
+                                traits.mystical = true;
+                                traits.ancient = true;
+                            }
+                            break;
+                            
+                        case '論理・分析':
+                            if (score >= 6) {
+                                traits.logical = true;
+                                traits.analytical = true;
+                            }
+                            break;
+                            
+                        case '人間関係':
+                            if (score >= 7) {
+                                traits.healing = true;
+                            }
+                            break;
+                            
+                        case 'スピリチュアル':
+                            if (score >= 8) {
+                                traits.spiritual = true;
+                                traits.mystical = true;
+                            }
+                            break;
+                            
+                        case '意思決定':
+                            if (score >= 7) {
+                                traits.intuitive = true;
+                            } else if (score <= 4) {
+                                traits.analytical = true;
+                            }
+                            break;
+                            
+                        case '個性・創造性':
+                            if (score >= 8) {
+                                traits.mystical = true;
+                            } else if (score <= 3) {
+                                traits.practical = true;
+                                traits.traditional = true;
+                            }
+                            break;
+                            
+                        case '環境・雰囲気':
+                            if (score >= 8) {
+                                traits.mystical = true;
+                            } else if (score <= 5) {
+                                traits.practical = true;
+                                traits.visual = true;
+                            }
+                            break;
+                    }
+                });
+                
+                // 特性の組み合わせ調整
+                if (traits.logical && traits.mystical) {
+                    traits.cyclical = true; // 論理と神秘の両方 = 周期的思考
+                }
+                
+                if (traits.practical && !traits.spiritual) {
+                    traits.visual = true; // 実用的で非スピリチュアル = 視覚重視
+                }
+                
+                console.log('📊 分析された特性:', traits);
+                return traits;
             }
 
             async startAIAnalysis() {
@@ -1024,38 +1241,35 @@ console.log('✅ 占い適性診断システム v2.0 - データ初期化完了'
                 }
             }
 
-            // 稼働中のindex_external_fixed.htmlのdisplayAIAnalysis関数を
-// 以下のコードに置き換えてください
+            displayAIAnalysis(analysis) {
+                const analysisSection = document.getElementById('ai-analysis-section');
+                const analysisContent = document.getElementById('analysis-content');
+                
+                // シンプルなHTML変換で見やすく表示
+                let html = analysis
+                    .replace(/\*\*(.*?)\*\*/g, '<h3 style="color: #9c27b0; font-size: 1.4em; margin: 20px 0 10px 0; font-weight: bold;">$1</h3>')
+                    .replace(/^- (.+)$/gm, '<li style="margin: 8px 0; font-size: 1.1em; list-style-type: none; padding-left: 20px; position: relative;"><span style="position: absolute; left: 0; color: #9c27b0;">✨</span>$1</li>')
+                    .replace(/(\d+)\. (.+)/g, '<div style="margin: 15px 0; padding: 18px; background: linear-gradient(135deg, #f0f7ff 0%, #e8f4fd 100%); border-left: 4px solid #9c27b0; border-radius: 8px; font-size: 1.1em;"><strong style="color: #9c27b0; font-size: 1.1em;">$1.</strong> $2</div>')
+                    .replace(/\n\n/g, '</p><p style="font-size: 1.1em; line-height: 1.7; margin: 15px 0; color: #2d3436;">')
+                    .replace(/^(?!<)(.+)$/gm, '<p style="font-size: 1.1em; line-height: 1.7; margin: 15px 0; color: #2d3436;">$1</p>');
+                
+                analysisContent.innerHTML = `
+                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 25px; background: white; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                        <div style="text-align: center; margin-bottom: 25px; padding: 20px; background: linear-gradient(135deg, #9c27b0 0%, #673ab7 100%); color: white; border-radius: 12px;">
+                            <h2 style="font-size: 1.8em; margin: 0 0 10px 0; font-weight: bold;">🔮 あなたの詳細占い分析</h2>
+                            <p style="margin: 0; font-size: 1em; opacity: 0.95;">10種類の占い手法からAIが導き出した、あなた専用の分析結果</p>
+                        </div>
+                        ${html}
+                        <div style="margin-top: 25px; padding: 15px; background: #f8f9fa; border-radius: 8px; text-align: center; font-size: 0.9em; color: #6c757d;">
+                            <span style="margin-right: 15px;">🤖 AI分析による診断 (10種類対応版)</span>
+                            <span>分析日時: ${new Date().toLocaleString('ja-JP')}</span>
+                        </div>
+                    </div>
+                `;
+                analysisSection.style.display = 'block';
 
-displayAIAnalysis(analysis) {
-    const analysisSection = document.getElementById('ai-analysis-section');
-    const analysisContent = document.getElementById('analysis-content');
-    
-    // シンプルなHTML変換で見やすく表示
-    let html = analysis
-        .replace(/\*\*(.*?)\*\*/g, '<h3 style="color: #9c27b0; font-size: 1.4em; margin: 20px 0 10px 0; font-weight: bold;">$1</h3>')
-        .replace(/^- (.+)$/gm, '<li style="margin: 8px 0; font-size: 1.1em; list-style-type: none; padding-left: 20px; position: relative;"><span style="position: absolute; left: 0; color: #9c27b0;">✨</span>$1</li>')
-        .replace(/(\d+)\. (.+)/g, '<div style="margin: 15px 0; padding: 18px; background: linear-gradient(135deg, #f0f7ff 0%, #e8f4fd 100%); border-left: 4px solid #9c27b0; border-radius: 8px; font-size: 1.1em;"><strong style="color: #9c27b0; font-size: 1.1em;">$1.</strong> $2</div>')
-        .replace(/\n\n/g, '</p><p style="font-size: 1.1em; line-height: 1.7; margin: 15px 0; color: #2d3436;">')
-        .replace(/^(?!<)(.+)$/gm, '<p style="font-size: 1.1em; line-height: 1.7; margin: 15px 0; color: #2d3436;">$1</p>');
-    
-    analysisContent.innerHTML = `
-        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 25px; background: white; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-            <div style="text-align: center; margin-bottom: 25px; padding: 20px; background: linear-gradient(135deg, #9c27b0 0%, #673ab7 100%); color: white; border-radius: 12px;">
-                <h2 style="font-size: 1.8em; margin: 0 0 10px 0; font-weight: bold;">🔮 あなたの詳細占い分析</h2>
-                <p style="margin: 0; font-size: 1em; opacity: 0.95;">AIが導き出した、あなた専用の分析結果</p>
-            </div>
-            ${html}
-            <div style="margin-top: 25px; padding: 15px; background: #f8f9fa; border-radius: 8px; text-align: center; font-size: 0.9em; color: #6c757d;">
-                <span style="margin-right: 15px;">🤖 AI分析による診断</span>
-                <span>分析日時: ${new Date().toLocaleString('ja-JP')}</span>
-            </div>
-        </div>
-    `;
-    analysisSection.style.display = 'block';
-
-    console.log('✅ AI分析結果表示完了');
-}
+                console.log('✅ AI分析結果表示完了 (10種類対応)');
+            }
 
             displayOfflineAnalysis() {
                 const analysisSection = document.getElementById('ai-analysis-section');
@@ -1072,7 +1286,7 @@ displayAIAnalysis(analysis) {
                     <h3>🔮 あなたに最適な占い：${fortuneType.name}</h3>
                     
                     <div class="highlight-box">
-                        <h4>📊 診断結果</h4>
+                        <h4>📊 診断結果（10種類対応版）</h4>
                         <p><strong>適性スコア：${this.totalScore}点/80点</strong></p>
                         <p>${fortuneType.description}</p>
                     </div>
@@ -1103,6 +1317,9 @@ displayAIAnalysis(analysis) {
         // システム初期化
         let diagnosisSystem;
         
+        // システム初期化（元の動作する版と同じ）
+        let diagnosisSystem;
+        
         // DOM読み込み完了を待って初期化
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => {
@@ -1112,7 +1329,7 @@ displayAIAnalysis(analysis) {
             diagnosisSystem = new DiagnosisSystem();
         }
         
-        console.log('🔮 占い適性診断システム v2.0 読み込み完了');
+        console.log('🔮 占い適性診断システム v2.1 - 10種類対応版 読み込み完了');
     </script>
 </body>
 </html>

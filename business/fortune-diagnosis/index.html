@@ -450,7 +450,7 @@
         }
 
         .score-display {
-            font-size: 4.5em;
+            font-size: 2.8em;
             font-weight: bold;
             margin: 25px 0;
             text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
@@ -665,7 +665,7 @@
 
             <div class="results-card" id="results-card">
                 <h2>🔮 占い適性診断結果</h2>
-                <div class="score-display" id="final-score">0点</div>
+                <div class="type-display" id="final-type">診断タイプ</div>
                 <div class="fortune-type-display" id="fortune-type">占い手法判定中...</div>
                 <div class="score-analysis" id="score-message">
                     <h3>🎯 あなたの占い適性</h3>
@@ -956,7 +956,7 @@
 
             displayFinalResults() {
                 const resultsCard = document.getElementById('results-card');
-                const finalScore = document.getElementById('final-score');
+                const finalType = document.getElementById('final-type');
                 const fortuneTypeDisplay = document.getElementById('fortune-type');
                 const positionMessage = document.getElementById('position-message');
                 const actionMessage = document.getElementById('action-message');

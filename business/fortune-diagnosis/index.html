@@ -978,8 +978,20 @@
                 // ✅ 特性による占い手法判定（点数制廃止）
                 const fortuneResult = this.determineFortuneType();
                 
-                // ✅ 特性タイプを表示（点数表示を廃止）
+                console.log('🔮 判定結果詳細:', fortuneResult);
+                
+                // ✅ 特性タイプを表示（点数表示を完全廃止）
                 finalScore.textContent = fortuneResult.type;
+                
+                // ✅ 追加: スタイルも調整して確実に表示
+                finalScore.style.fontSize = '2.5em';
+                finalScore.style.background = 'rgba(255,255,255,0.25)';
+                
+                console.log('🔮 表示更新完了:', {
+                    element: finalScore,
+                    displayedText: finalScore.textContent,
+                    expectedType: fortuneResult.type
+                });
                 
                 fortuneTypeDisplay.textContent = fortuneResult.name;
 
@@ -989,9 +1001,9 @@
                 
                 resultsCard.style.display = 'block';
 
-                console.log('🔮 最終結果:', {
-                    fortuneType: fortuneResult.name,
-                    personalityType: fortuneResult.type,
+                console.log('🔮 最終結果表示完了:', {
+                    displayedType: fortuneResult.type,
+                    displayedName: fortuneResult.name,
                     duration: new Date() - this.startTime
                 });
             }
@@ -1123,7 +1135,7 @@
                     
                     <div class="highlight-box">
                         <h4>📊 診断結果</h4>
-                        <p><strong>適性スコア：${this.totalScore}点/80点</strong></p>
+                        <p><strong>適性タイプ：${fortuneType.type}</strong></p>
                         <p>${fortuneType.description}</p>
                     </div>
                     

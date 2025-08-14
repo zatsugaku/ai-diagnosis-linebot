@@ -1,10 +1,11 @@
-// 占い適性診断システム v2.1 - 特性フィードバック型質問データ
-// 占い手法名を出さず、性格特性のみにフォーカス
+// 完全版：8特性システム対応 質問データ + 判定ロジック
+// 8問 → 8特性 → 10種類占い の完璧な対応
 
 window.QUESTION_DATA = [
   {
     text: "Q1. 日常生活で直感や「なんとなく」の感覚を信じて行動することはありますか？",
     category: "直感・感性",
+    traitTarget: "intuitive", // 対応する特性
     options: [
       "直感をとても信じて、よく直感で判断する",
       "直感は参考程度に、最終的には論理で判断",
@@ -35,6 +36,7 @@ window.QUESTION_DATA = [
   {
     text: "Q2. 芸術作品（絵画、音楽、小説など）から感情的なメッセージや意味を感じ取ることは得意ですか？",
     category: "象徴・解釈力",
+    traitTarget: "symbolic",
     options: [
       "とても得意で、作品の深い意味まで感じ取れる",
       "ある程度は感じ取れるが、時間がかかる",
@@ -65,6 +67,7 @@ window.QUESTION_DATA = [
   {
     text: "Q3. 数字やパターン、規則性を見つけることに興味がありますか？",
     category: "論理・分析",
+    traitTarget: "analytical",
     options: [
       "とても興味があり、パターンを見つけるのが好き",
       "興味はあるが、複雑すぎると疲れる",
@@ -95,6 +98,7 @@ window.QUESTION_DATA = [
   {
     text: "Q4. 人の悩みや相談を聞いて、アドバイスをすることはありますか？",
     category: "人間関係",
+    traitTarget: "social",
     options: [
       "よく相談される方で、アドバイスも得意",
       "時々相談されるが、アドバイスは慎重に考える",
@@ -125,6 +129,7 @@ window.QUESTION_DATA = [
   {
     text: "Q5. スピリチュアルなことや目に見えない世界について、どのような考えを持っていますか？",
     category: "スピリチュアル",
+    traitTarget: "spiritual",
     options: [
       "とても信じていて、日常的にスピリチュアルを取り入れている",
       "興味があり、ある程度は信じている",
@@ -155,6 +160,7 @@ window.QUESTION_DATA = [
   {
     text: "Q6. 人生の重要な決断をする時、どのような方法で決めることが多いですか？",
     category: "意思決定",
+    traitTarget: "decisive",
     options: [
       "直感やインスピレーションを重視して決める",
       "情報収集はするが、最後は直感で決める",
@@ -185,6 +191,7 @@ window.QUESTION_DATA = [
   {
     text: "Q7. 他の人とは違う、独特な視点や感性を持っていると言われたことはありますか？",
     category: "個性・創造性",
+    traitTarget: "creative",
     options: [
       "よく言われるし、自分でもそう思う",
       "時々言われることがある",
@@ -213,188 +220,104 @@ window.QUESTION_DATA = [
     ]
   },
   {
-    text: "Q8. 占いを受ける時、どのような雰囲気や環境を好みますか？",
-    category: "環境・雰囲気",
+    text: "Q8. 初めて会う人や初めて行く場所で、「なんとなく良い感じ」「なんとなく居心地が悪い」と感じることはありますか？",
+    category: "環境感受性",
+    traitTarget: "environmental",
     options: [
-      "神秘的でスピリチュアルな雰囲気が好き",
-      "落ち着いた癒しの空間が好き",
-      "親しみやすくてリラックスできる雰囲気が好き",
-      "清潔で整理整頓された、きちんとした空間が好き"
+      "よくあり、その第一印象はだいたい当たっている",
+      "時々あり、後から「やっぱり」と思うことが多い",
+      "たまにはあるが、理由がはっきりしないので気にしない",
+      "そういった感覚はあまりない"
     ],
-    scores: [9, 8, 6, 4],
-    amounts: [85, 75, 55, 40],
+    scores: [10, 7, 4, 1],
+    amounts: [90, 70, 50, 30],
     feedbacks: [
       {
-        title: "🔮 神秘的な世界を愛する探求者",
-        content: "神秘的で特別な体験を求める、精神性の高い方ですね。非日常的な美しさや深い意味のある体験を大切にされます。"
+        title: "🔮 直感レーダー搭載型",
+        content: "人や場所のエネルギーを瞬時に読み取る、高い感受性をお持ちですね。この能力は人間関係や環境選択で大きな強みとなります。"
       },
       {
-        title: "🕊️ 癒しと安らぎを求める優しい心",
-        content: "平和で癒しのある環境を好む、心優しい方ですね。ストレスから解放され、心の平安を大切にされる性格です。"
+        title: "📡 感知アンテナ型",
+        content: "潜在的な感受性があり、時として鋭い洞察を示す方ですね。この感覚をもっと信頼すると、さらに精度が高まるでしょう。"
       },
       {
-        title: "🤗 温かい人間関係を大切にするタイプ",
-        content: "親しみやすく温かい雰囲気を好む、人とのつながりを大切にする方ですね。和やかで居心地の良い関係性を重視されます。"
+        title: "🌿 穏やかな観察者型",
+        content: "控えめながらも環境を観察する力をお持ちですね。論理と感覚のバランスを取りながら判断する、冷静なタイプです。"
       },
       {
-        title: "📚 秩序と清潔感を重視する几帳面な性格",
-        content: "整理整頓された環境を好む、几帳面で秩序を重視する方ですね。きちんとした環境で集中して取り組むことを好まれます。"
+        title: "🧠 論理重視型",
+        content: "感情や雰囲気よりも具体的な事実を重視する、客観的な判断力をお持ちですね。確実性を求める慎重で信頼性の高いタイプです。"
       }
     ]
   }
 ];
 
-// 占い手法データベース（完全版 - 変更なし）
+// 10種類占い手法データベース（簡略版）
 window.FORTUNE_TYPES = {
-  tarot: {
-    name: "タロットカード占い",
-    emoji: "🔮",
-    subtitle: "古代の智慧で未来を照らす",
-    description: "直感的で象徴的な解釈を得意とするあなたに最適な占い手法です。",
-    characteristics: [
-      "豊かな想像力と直感力を持っている",
-      "象徴的なメッセージを理解する能力がある",
-      "創造的で芸術的な感性を持っている",
-      "深層心理や無意識の声を聞くことができる",
-      "変化を恐れず、新しい可能性を探求する"
-    ],
-    whenToConsult: [
-      "人生の転機や重要な決断を迫られている時",
-      "恋愛や人間関係で悩んでいる時",
-      "創造性やインスピレーションが必要な時",
-      "自分の深層心理を理解したい時",
-      "未来の可能性を探りたい時"
-    ],
-    benefits: [
-      "直感力と洞察力の向上",
-      "創造性とインスピレーションの獲得",
-      "自己理解の深化",
-      "決断力の向上",
-      "スピリチュアルな成長"
-    ]
-  },
-  oracle: {
-    name: "オラクルカード占い",
-    emoji: "👼",
-    subtitle: "天使からの愛のメッセージ",
-    description: "スピリチュアルで優しい導きを求めるあなたに最適な占い手法です。",
-    characteristics: [
-      "スピリチュアルな世界に興味と理解がある",
-      "癒しと愛のエネルギーに敏感",
-      "優しく思いやりのある性格",
-      "美しいものや芸術的なものを愛する",
-      "平和と調和を大切にする"
-    ],
-    whenToConsult: [
-      "心の癒しや安らぎが必要な時",
-      "天使やスピリットガイドからの導きが欲しい時",
-      "愛と光のエネルギーが必要な時",
-      "人生の方向性について優しいアドバイスが欲しい時",
-      "感情的な浄化やヒーリングが必要な時"
-    ],
-    benefits: [
-      "心の平安と癒し",
-      "愛のエネルギーの向上",
-      "スピリチュアルな成長",
-      "直感力の開発",
-      "人生の導きとサポート"
-    ]
-  },
-  astrology: {
-    name: "西洋占星術",
-    emoji: "⭐",
-    subtitle: "星々が織りなす運命の設計図",
-    description: "論理的思考と体系的な分析を好むあなたに最適な占い手法です。",
-    characteristics: [
-      "論理的で分析的な思考を持っている",
-      "体系的で科学的なアプローチを好む",
-      "長期的な視点で物事を考える",
-      "パターンや法則性を見つけるのが得意",
-      "知識欲が旺盛で学習意欲が高い"
-    ],
-    whenToConsult: [
-      "人生の長期的な計画を立てたい時",
-      "自分の性格や才能を客観的に知りたい時",
-      "相性や人間関係について詳しく分析したい時",
-      "適職や天職について知りたい時",
-      "人生のサイクルやタイミングを理解したい時"
-    ],
-    benefits: [
-      "自己理解の深化",
-      "人生の計画性向上",
-      "対人関係の改善",
-      "タイミングの最適化",
-      "潜在能力の発見"
-    ]
-  },
-  numerology: {
-    name: "数秘術",
-    emoji: "🔢",
-    subtitle: "数字に隠された人生の秘密",
-    description: "数字やパターンに興味があり、分析的思考を持つあなたに最適な占い手法です。",
-    characteristics: [
-      "数字やパターンに対する敏感な感覚を持っている",
-      "論理的で分析的な思考が得意",
-      "規則性や法則性を見つけることが好き",
-      "客観的で冷静な判断ができる",
-      "詳細な分析と計算に集中できる"
-    ],
-    whenToConsult: [
-      "人生の目的や使命について知りたい時",
-      "自分の才能や能力を数値で理解したい時",
-      "人間関係の相性を客観的に分析したい時",
-      "重要な日程や時期を決めたい時",
-      "名前の持つエネルギーや意味を知りたい時"
-    ],
-    benefits: [
-      "客観的な自己分析",
-      "人生の方向性の明確化",
-      "適性と才能の発見",
-      "重要な決断のタイミング把握",
-      "人間関係の理解向上"
-    ]
-  },
-  palmistry: {
-    name: "手相占い",
-    emoji: "✋",
-    subtitle: "手のひらに刻まれた人生の地図",
-    description: "現実的で具体的なアドバイスを求めるあなたに最適な占い手法です。",
-    characteristics: [
-      "現実的で実用的な思考を持っている",
-      "具体的で分かりやすい情報を好む",
-      "視覚的な情報処理が得意",
-      "親しみやすく、人とのコミュニケーションが得意",
-      "地に足がついた安定した性格"
-    ],
-    whenToConsult: [
-      "健康や寿命について知りたい時",
-      "金運や仕事運について具体的に知りたい時",
-      "恋愛や結婚のタイミングについて知りたい時",
-      "性格や才能を具体的に理解したい時",
-      "人生の転機や変化について知りたい時"
-    ],
-    benefits: [
-      "具体的で実用的なアドバイス",
-      "健康状態の把握",
-      "性格特性の理解",
-      "人生の転機の予測",
-      "現実的な人生設計"
-    ]
-  }
+  tarot: { name: "タロットカード占い", emoji: "🔮" },
+  oracle: { name: "オラクルカード占い", emoji: "👼" },
+  rune: { name: "ルーン占い", emoji: "🗿" },
+  astrology: { name: "西洋占星術", emoji: "⭐" },
+  numerology: { name: "数秘術", emoji: "🔢" },
+  iching: { name: "易経（イーチン）", emoji: "☯️" },
+  palmistry: { name: "手相占い", emoji: "✋" },
+  nameanalysis: { name: "姓名判断", emoji: "📜" },
+  crystal: { name: "クリスタル占い", emoji: "💎" },
+  animal: { name: "動物占い", emoji: "🦁" }
 };
 
-// システム設定（占い診断特化版）
+// 8特性システム判定ロジック
+window.TRAIT_SYSTEM = {
+  // 8特性の定義
+  traits: {
+    intuitive: "直感性",
+    symbolic: "象徴理解力", 
+    analytical: "分析性",
+    social: "社交性",
+    spiritual: "スピリチュアル性",
+    decisive: "決断力",
+    creative: "創造性",
+    environmental: "環境感受性"
+  },
+  
+  // 判定ルール（優先順位順）
+  rules: [
+    // 複合特性パターン
+    { traits: ["spiritual", "symbolic", "environmental"], result: "oracle" },
+    { traits: ["intuitive", "symbolic", "creative"], result: "tarot" },
+    { traits: ["analytical", "decisive", "environmental"], result: "astrology" },
+    { traits: ["analytical", "decisive"], result: "numerology" },
+    { traits: ["spiritual", "environmental"], result: "crystal" },
+    { traits: ["social", "environmental"], result: "palmistry" },
+    { traits: ["creative", "symbolic"], result: "rune" },
+    { traits: ["analytical", "social"], result: "iching" },
+    
+    // 単一特性パターン
+    { traits: ["spiritual"], result: "oracle" },
+    { traits: ["intuitive"], result: "tarot" },
+    { traits: ["analytical"], result: "numerology" },
+    { traits: ["social"], result: "palmistry" },
+    { traits: ["creative"], result: "rune" },
+    { traits: ["environmental"], result: "crystal" },
+    
+    // デフォルト
+    { traits: [], result: "animal" }
+  ]
+};
+
+// システム設定
 window.SYSTEM_CONFIG = {
-  title: "🔮 占い適性診断 v2.1",
-  subtitle: "3分で判明するあなたにピッタリの占い手法",
+  title: "🔮 占い適性診断 v3.0",
+  subtitle: "8特性システムで判明するあなたにピッタリの占い手法",
   maxScore: 80,
   completionMessage: "診断完了！あなたに最適な占い手法と詳細な適性分析をご確認ください。",
   apiEndpoint: "/api/fortune-analyze",
   hideAmountDisplay: true,
   fortuneMode: true,
-  feedbackType: "personality-focused" // 特性フィードバック型を示すフラグ
+  traitSystem: true // 8特性システム使用フラグ
 };
 
-console.log('✅ 特性フィードバック型診断データ v2.1 読み込み完了');
-console.log('🎯 占い手法名を隠し、性格特性のみをフィードバック');
-console.log('🔮 最終結果でのサプライズ効果を最大化');
+console.log('✅ 8特性システム v3.0 読み込み完了');
+console.log(`📊 質問数: ${window.QUESTION_DATA.length}問`);
+console.log(`🔮 占い手法: ${Object.keys(window.FORTUNE_TYPES).length}種類`);
+console.log(`🎯 特性システム: ${Object.keys(window.TRAIT_SYSTEM.traits).length}特性`);

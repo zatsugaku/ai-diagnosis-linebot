@@ -650,7 +650,7 @@
                     <span class="spinner">⏳</span>
                 </div>
                 <div class="loading-step" id="step3">
-                    <span>🎴 最適な占い手法を特定中...</span>
+                    <span>🎯 最適な占い手法を特定中...</span>
                     <span class="spinner">⏳</span>
                 </div>
                 <div class="loading-step" id="step4">
@@ -873,7 +873,7 @@
                 this.totalImprovement = 0;
 
                 // デバッグ用：詳細ログ
-                console.log('🔢 スコア集計開始:', {
+                console.log('📢 スコア集計開始:', {
                     answersLength: this.answers.length,
                     answers: this.answers
                 });
@@ -975,29 +975,23 @@
                 // スコア再計算（念のため）
                 this.updateTotals();
                 
-                // 最適な占い手法を判定
-                const fortuneType = this.determineFortuneType();
+                // ✅ 特性による占い手法判定（点数制廃止）
+                const fortuneResult = this.determineFortuneType();
                 
-                // スコア表示（0点の場合は警告）
-                if (this.totalScore === 0) {
-                    console.warn('⚠️ 警告: スコアが0点です。回答データを確認してください。');
-                    finalScore.textContent = `エラー: スコア計算失敗`;
-                    finalScore.style.backgroundColor = 'rgba(255,0,0,0.2)';
-                } else {
-                    finalScore.textContent = `${this.totalScore}点`;
-                }
+                // ✅ 特性タイプを表示（点数表示を廃止）
+                finalScore.textContent = fortuneResult.type;
                 
-                fortuneTypeDisplay.textContent = fortuneType.name;
+                fortuneTypeDisplay.textContent = fortuneResult.name;
 
                 // 占い適性に基づくメッセージ
-                positionMessage.textContent = fortuneType.description;
-                actionMessage.textContent = `${fortuneType.name}を活用することで、あなたの直感と洞察力を最大限に活かせます。`;
+                positionMessage.textContent = fortuneResult.description;
+                actionMessage.textContent = `${fortuneResult.name}を活用することで、あなたの直感と洞察力を最大限に活かせます。`;
                 
                 resultsCard.style.display = 'block';
 
                 console.log('🔮 最終結果:', {
-                    score: this.totalScore,
-                    fortuneType: fortuneType.name,
+                    fortuneType: fortuneResult.name,
+                    personalityType: fortuneResult.type,
                     duration: new Date() - this.startTime
                 });
             }

@@ -1,9 +1,9 @@
-// 本番デプロイ対応版 Fortune Diagnosis API v2.1
+// クリーン版 Fortune Diagnosis API v2.3 - フォールバック削除・点数表示完全除去
 // /api/fortune-analyze.js として配置
 
 export default async function handler(req, res) {
   const startTime = Date.now();
-  console.log('🔮 Fortune API v2.1 Request:', req.method, new Date().toISOString());
+  console.log('🔮 Fortune API v2.3 Request:', req.method, new Date().toISOString());
 
   // CORS設定（本番環境対応）
   const allowedOrigins = process.env.NODE_ENV === 'production' 
@@ -39,7 +39,7 @@ export default async function handler(req, res) {
     return res.status(200).json({ 
       success: true, 
       service: '🔮 Fortune Diagnosis API',
-      version: '2.1-production',
+      version: '2.3-clean',
       timestamp: new Date().toISOString(),
       environment: process.env.NODE_ENV || 'development',
       features: [
@@ -47,7 +47,8 @@ export default async function handler(req, res) {
         'Enhanced error handling', 
         'Scalable rate limiting',
         'Fortune-specific analysis',
-        'Fallback mechanisms'
+        'No score display mode',
+        'Clean error reporting' // フォールバック削除
       ]
     });
   }
@@ -88,7 +89,6 @@ export default async function handler(req, res) {
     const { answers, totalScore, fortuneType, timestamp } = req.body;
     
     console.log('📊 Processing fortune analysis:', {
-      score: totalScore,
       fortuneType,
       answersCount: answers?.length || 0
     });
@@ -99,13 +99,13 @@ export default async function handler(req, res) {
       console.error('❌ Missing OPENAI_API_KEY');
       return res.status(500).json({
         success: false,
-        error: 'Service temporarily unavailable',
+        error: 'AI analysis service configuration error',
         timestamp: new Date().toISOString()
       });
     }
 
-    // AI分析実行
-    const analysis = await generateProductionFortuneAnalysis(
+    // AI分析実行（フォールバックなし）
+    const analysis = await generateFortuneAnalysis(
       totalScore, 
       fortuneType, 
       answers, 
@@ -121,7 +121,7 @@ export default async function handler(req, res) {
       metadata: {
         fortuneType,
         processingTime,
-        version: '2.1',
+        version: '2.3',
         timestamp: new Date().toISOString()
       }
     });
@@ -131,21 +131,18 @@ export default async function handler(req, res) {
     
     const processingTime = Date.now() - startTime;
     
-    // 本番環境ではエラー詳細を隠す
-    const errorResponse = process.env.NODE_ENV === 'production' 
-      ? {
-          success: false,
-          error: 'An error occurred while processing your request',
-          timestamp: new Date().toISOString(),
-          processingTime
-        }
-      : {
-          success: false,
-          error: error.message || 'Internal server error',
-          stack: error.stack,
-          timestamp: new Date().toISOString(),
-          processingTime
-        };
+    // ✅ エラーを隠さず、明確に報告
+    const errorResponse = {
+      success: false,
+      error: 'AI analysis service is temporarily unavailable. Please try again in a few minutes.',
+      timestamp: new Date().toISOString(),
+      processingTime,
+      // 開発環境では詳細表示
+      ...(process.env.NODE_ENV !== 'production' && {
+        details: error.message,
+        stack: error.stack
+      })
+    };
     
     return res.status(500).json(errorResponse);
   }
@@ -247,13 +244,14 @@ async function checkProductionRateLimit(req) {
   return { allowed: true };
 }
 
-// 本番対応AI分析生成
-async function generateProductionFortuneAnalysis(totalScore, fortuneType, answers, apiKey) {
-  console.log('🤖 Starting production AI analysis');
+// ✅ クリーン版AI分析生成（フォールバック削除・点数表示完全除去）
+async function generateFortuneAnalysis(totalScore, fortuneType, answers, apiKey) {
+  console.log('🤖 Starting AI analysis (clean mode)');
   
   const personalityTraits = analyzePersonalityTraits(answers);
   const fortuneLevel = getFortuneLevelDescription(totalScore);
   
+  // ✅ systemPromptから点数表示を完全除去
   const systemPrompt = `あなたは占い適性診断の専門コンサルタントです。1,000人以上の診断経験を持ち、科学的根拠とスピリチュアルな洞察を組み合わせた分析を行います。
 
 # 分析ガイドライン
@@ -267,8 +265,8 @@ async function generateProductionFortuneAnalysis(totalScore, fortuneType, answer
 
 **🔮 あなたの占い適性：${fortuneType}**
 
-**適性スコア：${totalScore}点/80点**
-${fortuneLevel}のあなたに${fortuneType}が最適である理由をお伝えします。
+**診断タイプ：${fortuneLevel}**
+${fortuneType}があなたに最適である理由をお伝えします。
 
 **✨ あなたの特徴**
 - [特徴1]
@@ -296,7 +294,6 @@ ${fortuneLevel}のあなたに${fortuneType}が最適である理由をお伝え
 
   const userPrompt = `
 【分析対象】
-- スコア: ${totalScore}/80点
 - 適性占術: ${fortuneType}
 - レベル: ${fortuneLevel}
 - 性格特性: ${personalityTraits.join(', ')}
@@ -338,7 +335,7 @@ ${fortuneLevel}のあなたに${fortuneType}が最適である理由をお伝え
     const data = await response.json();
     
     if (!data.choices?.[0]?.message?.content) {
-      throw new Error('Invalid response format from OpenAI');
+      throw new Error('Invalid response format from OpenAI API');
     }
 
     return data.choices[0].message.content;
@@ -347,8 +344,8 @@ ${fortuneLevel}のあなたに${fortuneType}が最適である理由をお伝え
     clearTimeout(timeoutId);
     console.error('🔥 AI Analysis Error:', error);
     
-    // フォールバック分析を返す
-    return generateProductionFallbackAnalysis(totalScore, fortuneType, personalityTraits);
+    // ✅ フォールバック削除 - エラーをそのまま投げる
+    throw new Error(`AI analysis failed: ${error.message}`);
   }
 }
 
@@ -401,44 +398,11 @@ function analyzePersonalityTraits(answers) {
   return traits.slice(0, 5); // 最大5つ
 }
 
-// 適性レベル説明
+// ✅ 適性レベル説明（点数言及なし）
 function getFortuneLevelDescription(score) {
-  if (score >= 65) return '非常に高い占い適性';
-  if (score >= 50) return '高い占い適性';
-  if (score >= 35) return '中程度の占い適性';
-  if (score >= 20) return '基礎的な占い適性';
-  return '現実重視の占い活用型';
-}
-
-// 本番用フォールバック分析
-function generateProductionFallbackAnalysis(totalScore, fortuneType, traits) {
-  const level = getFortuneLevelDescription(totalScore);
-  
-  return `**🔮 あなたの占い適性：${fortuneType}**
-
-**適性スコア：${totalScore}点/80点**
-
-${level}のあなたには${fortuneType}が最も適しています。
-
-**✨ あなたの特徴**
-${traits.slice(0, 3).map(trait => `- ${trait}`).join('\n')}
-
-**🎯 ${fortuneType}が適している理由**
-あなたの性格特性と価値観を分析した結果、${fortuneType}の特徴があなたの本質と非常によく合致していることが判明しました。
-
-**💫 具体的な活用方法**
-1. 重要な決断を迫られた時の指針として活用
-2. 人間関係の悩みや課題の解決に活用  
-3. 自己理解を深めるためのツールとして活用
-
-**🌟 期待できる効果**
-- 直感力と洞察力の向上
-- 自己理解の深化
-- 人生の方向性の明確化
-
-**📅 おすすめのタイミング**
-人生の転機や重要な選択を迫られている時、心の整理が必要な時に${fortuneType}をご活用ください。
-
----
-※ ネットワークの問題により簡易分析を表示しています。より詳細な分析をご希望の場合は、再度お試しください。`;
+  if (score >= 65) return '非常に高い占い適性を持つ';
+  if (score >= 50) return '高い占い適性を持つ';
+  if (score >= 35) return 'バランスの取れた占い適性を持つ';
+  if (score >= 20) return '実用重視の占い活用を好む';
+  return '現実的な占い活用スタイルを持つ';
 }

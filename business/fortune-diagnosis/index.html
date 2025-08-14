@@ -1169,190 +1169,209 @@
     <!-- ✅ Option B修正完了: 特性制による判定ロジック -->
     <!-- ========================================= -->
     <script>
-        // ✅ 特性による適性マッチング（点数制廃止）
-        
-        DiagnosisSystem.prototype.determineFortuneType = function() {
-            // 特性分析を実行
-            const traits = this.analyzePersonalityTraits();
-            
-            console.log('🔮 特性による占い適性分析:', {
-                traits: traits,
-                dominantTraits: Object.keys(traits).filter(key => traits[key])
-            });
+        // ✅ 8特性システム対応：占い手法判定ロジック
+DiagnosisSystem.prototype.determineFortuneType = function() {
+    // 8特性分析を実行
+    const traits = this.analyzeEightTraits();
+    
+    console.log('🔮 8特性システムによる占い適性分析:', {
+        traits: traits,
+        activeTraits: Object.keys(traits).filter(key => traits[key])
+    });
 
-            // ✅ 特性マッチングによる判定（点数制廃止）
-            
-            // 直感+神秘型 → タロット系
-            if (traits.intuitive && traits.mystical) {
-                return {
-                    name: 'タロットカード占い',
-                    type: '直感重視型',
-                    description: '象徴とメッセージを読み解く直感力に長けた、創造的思考を持つタイプ'
-                };
-            }
-            
-            // 論理+分析型 → 数秘術
-            else if (traits.logical && traits.analytical) {
-                return {
-                    name: '数秘術',
-                    type: '論理分析型',
-                    description: 'パターンと法則性を重視する、客観的で分析的思考を持つタイプ'
-                };
-            }
-            
-            // スピリチュアル+癒し型 → オラクル
-            else if (traits.spiritual && traits.healing) {
-                return {
-                    name: 'オラクルカード占い',
-                    type: '癒し志向型',
-                    description: '愛と光のエネルギーを大切にする、優しく思いやり深いタイプ'
-                };
-            }
-            
-            // 実用+視覚型 → 手相
-            else if (traits.practical && traits.visual) {
-                return {
-                    name: '手相占い',
-                    type: '現実重視型',
-                    description: '具体的で分かりやすい情報を好む、地に足がついた実用的なタイプ'
-                };
-            }
-            
-            // 論理重視型 → 占星術
-            else if (traits.logical || traits.analytical) {
-                return {
-                    name: '西洋占星術',
-                    type: '体系思考型',
-                    description: '体系的で科学的なアプローチを好む、論理的思考を持つタイプ'
-                };
-            }
-            
-            // 直感重視型 → シンプル占い
-            else if (traits.intuitive) {
-                return {
-                    name: 'ワンオラクル',
-                    type: '直感特化型',
-                    description: '瞬間的なひらめきを大切にする、シンプルで鋭い直感を持つタイプ'
-                };
-            }
-            
-            // スピリチュアル型
-            else if (traits.spiritual) {
-                return {
-                    name: 'エンジェルナンバー',
-                    type: 'スピリチュアル型',
-                    description: '数字のメッセージを受け取る、精神性を重視するタイプ'
-                };
-            }
-            
-            // 実用志向型
-            else if (traits.practical) {
-                return {
-                    name: '姓名判断',
-                    type: '実用志向型',
-                    description: '現実的で確実な方法を好む、堅実で信頼性を重視するタイプ'
-                };
-            }
-            
-            // デフォルト: バランス型
-            else {
-                return {
-                    name: '動物占い',
-                    type: 'バランス調和型',
-                    description: '親しみやすく理解しやすい方法を好む、調和のとれたタイプ'
-                };
-            }
+    // ✅ 8特性による判定ルール（優先順位順）
+    
+    // 複合特性パターン（3特性）
+    if (traits.spiritual && traits.symbolic && traits.environmental) {
+        return {
+            name: 'オラクルカード占い',
+            type: 'スピリチュアル・癒し型',
+            description: '精神性と環境感受性を持つあなたには、天使からの愛のメッセージを受け取るオラクルカード占いが最適です'
         };
-
-        // ✅ 性格特性分析（11特性による分析）
-        DiagnosisSystem.prototype.analyzePersonalityTraits = function() {
-            const traits = {
-                intuitive: false,    // 直感的
-                logical: false,      // 論理的
-                spiritual: false,    // スピリチュアル
-                practical: false,    // 実用的
-                mystical: false,     // 神秘的
-                analytical: false,   // 分析的
-                healing: false,      // 癒し志向
-                visual: false,       // 視覚的
-                traditional: false,  // 伝統重視
-                ancient: false,      // 古代智慧
-                cyclical: false      // 周期的思考
+    }
+    
+    if (traits.intuitive && traits.symbolic && traits.creative) {
+        return {
+            name: 'タロットカード占い',
+            type: '直感・創造型',
+            description: '直感力と創造性、象徴理解力を持つあなたには、古代の智慧を読み解くタロットカード占いが最適です'
+        };
+    }
+    
+    // 複合特性パターン（2特性）
+    if (traits.analytical && traits.decisive) {
+        if (traits.environmental) {
+            return {
+                name: '西洋占星術',
+                type: '論理・環境分析型',
+                description: '分析力と決断力、環境感受性を持つあなたには、体系的で科学的な西洋占星術が最適です'
             };
-            
-            // 質問カテゴリ別の回答分析
-            this.answers.forEach((answer, index) => {
-                if (!answer || !this.questionData[index]) return;
-                
-                const question = this.questionData[index];
-                const score = answer.score || 0;
-                
-                // カテゴリごとの特性判定
-                switch (question.category) {
-                    case '直感・感性':
-                        if (score >= 8) {
-                            traits.intuitive = true;
-                            traits.mystical = true;
-                        }
-                        break;
-                    case '象徴・解釈力':
-                        if (score >= 8) {
-                            traits.mystical = true;
-                            traits.ancient = true;
-                        }
-                        break;
-                    case '論理・分析':
-                        if (score >= 6) {
-                            traits.logical = true;
-                            traits.analytical = true;
-                        }
-                        break;
-                    case '人間関係':
-                        if (score >= 7) {
-                            traits.healing = true;
-                        }
-                        break;
-                    case 'スピリチュアル':
-                        if (score >= 8) {
-                            traits.spiritual = true;
-                            traits.mystical = true;
-                        }
-                        break;
-                    case '意思決定':
-                        if (score >= 7) {
-                            traits.intuitive = true;
-                        } else if (score <= 4) {
-                            traits.logical = true;
-                        }
-                        break;
-                    case '個性・創造性':
-                        if (score >= 8) {
-                            traits.mystical = true;
-                        }
-                        break;
-                    case '環境・雰囲気':
-                        if (score >= 8) {
-                            traits.spiritual = true;
-                        } else if (score <= 5) {
-                            traits.practical = true;
-                            traits.visual = true;
-                        }
-                        break;
-                }
-            });
-            
-            // 特性の組み合わせ調整
-            if (traits.logical && traits.analytical) {
-                traits.practical = true;
-            }
-            
-            if (traits.mystical && traits.spiritual) {
-                traits.ancient = true;
-            }
-            
-            console.log('📊 分析された特性:', traits);
-            return traits;
+        } else {
+            return {
+                name: '数秘術',
+                type: '論理・分析型',
+                description: 'パターン認識と分析的思考を得意とするあなたには、数字の神秘を解き明かす数秘術が最適です'
+            };
+        }
+    }
+    
+    if (traits.spiritual && traits.environmental) {
+        return {
+            name: 'クリスタル占い',
+            type: 'エネルギー・ヒーリング型',
+            description: 'スピリチュアル性と環境感受性を持つあなたには、水晶のエネルギーを感じるクリスタル占いが最適です'
         };
+    }
+    
+    if (traits.social && traits.environmental) {
+        return {
+            name: '手相占い',
+            type: '実用・コミュニケーション型',
+            description: '社交性と環境感受性を持つあなたには、現実的で分かりやすい手相占いが最適です'
+        };
+    }
+    
+    if (traits.creative && traits.symbolic) {
+        return {
+            name: 'ルーン占い',
+            type: '創造・古代智慧型',
+            description: '創造性と象徴理解力を持つあなたには、古代北欧の神秘文字ルーン占いが最適です'
+        };
+    }
+    
+    if (traits.analytical && traits.social) {
+        return {
+            name: '易経（イーチン）',
+            type: '哲学・バランス型',
+            description: '分析力と社交性を持つあなたには、東洋古代の哲学的な易経が最適です'
+        };
+    }
+    
+    // 単一特性パターン
+    if (traits.spiritual) {
+        return {
+            name: 'オラクルカード占い',
+            type: 'スピリチュアル志向型',
+            description: '精神性を重視するあなたには、愛と光のメッセージを届けるオラクルカード占いが適しています'
+        };
+    }
+    
+    if (traits.intuitive) {
+        return {
+            name: 'タロットカード占い',
+            type: '直感重視型',
+            description: '直感力に優れたあなたには、象徴的メッセージを読み解くタロットカード占いが適しています'
+        };
+    }
+    
+    if (traits.analytical) {
+        return {
+            name: '数秘術',
+            type: '分析思考型',
+            description: '分析的思考を得意とするあなたには、数字のパターンを解き明かす数秘術が適しています'
+        };
+    }
+    
+    if (traits.social) {
+        return {
+            name: '手相占い',
+            type: '社交・実用型',
+            description: '人とのコミュニケーションを大切にするあなたには、親しみやすい手相占いが適しています'
+        };
+    }
+    
+    if (traits.creative) {
+        return {
+            name: 'ルーン占い',
+            type: '創造・個性型',
+            description: '創造性に富むあなたには、古代の神秘的なルーン占いが適しています'
+        };
+    }
+    
+    if (traits.environmental) {
+        return {
+            name: 'クリスタル占い',
+            type: '環境感受型',
+            description: '環境の変化を敏感に感じ取るあなたには、エネルギーワークのクリスタル占いが適しています'
+        };
+    }
+    
+    if (traits.symbolic) {
+        return {
+            name: 'ルーン占い',
+            type: '象徴理解型',
+            description: '象徴的なメッセージを理解する力のあるあなたには、古代文字のルーン占いが適しています'
+        };
+    }
+    
+    if (traits.decisive) {
+        return {
+            name: '姓名判断',
+            type: '決断・伝統型',
+            description: '決断力があり実用性を重視するあなたには、確実で伝統的な姓名判断が適しています'
+        };
+    }
+    
+    // デフォルト（すべての特性が低い場合）
+    return {
+        name: '動物占い',
+        type: 'バランス・親しみやすさ型',
+        description: 'バランスの取れた性格のあなたには、親しみやすく楽しい動物占いが最適です'
+    };
+};
+
+// ✅ 8特性システム対応：特性分析ロジック
+DiagnosisSystem.prototype.analyzeEightTraits = function() {
+    const traits = {
+        intuitive: false,      // Q1: 直感・感性
+        symbolic: false,       // Q2: 象徴・解釈力
+        analytical: false,     // Q3: 論理・分析
+        social: false,         // Q4: 人間関係
+        spiritual: false,      // Q5: スピリチュアル
+        decisive: false,       // Q6: 意思決定
+        creative: false,       // Q7: 個性・創造性
+        environmental: false   // Q8: 環境感受性
+    };
+    
+    // 質問データから8特性を判定
+    this.answers.forEach((answer, index) => {
+        if (!answer || !this.questionData[index]) return;
+        
+        const score = answer.score || 0;
+        const threshold = 7; // 特性判定の閾値
+        
+        // 各質問に対応する特性を設定
+        switch (index) {
+            case 0: // Q1: 直感・感性
+                if (score >= threshold) traits.intuitive = true;
+                break;
+            case 1: // Q2: 象徴・解釈力
+                if (score >= threshold) traits.symbolic = true;
+                break;
+            case 2: // Q3: 論理・分析
+                if (score >= threshold) traits.analytical = true;
+                break;
+            case 3: // Q4: 人間関係
+                if (score >= threshold) traits.social = true;
+                break;
+            case 4: // Q5: スピリチュアル
+                if (score >= threshold) traits.spiritual = true;
+                break;
+            case 5: // Q6: 意思決定
+                if (score >= threshold) traits.decisive = true;
+                break;
+            case 6: // Q7: 個性・創造性
+                if (score >= threshold) traits.creative = true;
+                break;
+            case 7: // Q8: 環境感受性
+                if (score >= threshold) traits.environmental = true;
+                break;
+        }
+    });
+    
+    console.log('📊 8特性分析結果:', traits);
+    return traits;
+};
     </script>
 
     <!-- ========================================= -->

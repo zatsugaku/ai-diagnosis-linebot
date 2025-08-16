@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>パワースポット縁診断システム | 統計学的根拠に基づく3層統合診断</title>
+    <meta name="description" content="生年月日と名前から、あなたに最適なパワースポットを統計学的に診断。四柱推命・五行理論・バイオリズムに基づく本格的な縁診断システム。">
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- ヘッダー -->
+        <header class="header">
+            <h1 class="main-title">🌟 パワースポット縁診断システム</h1>
+            <p class="subtitle">統計学的根拠に基づく3層統合縁診断</p>
+            <div class="feature-badges">
+                <span class="badge">3600パターン完全網羅</span>
+                <span class="badge">2600箇所対応</span>
+                <span class="badge">統計学的根拠</span>
+            </div>
+        </header>
+
+        <!-- 診断フォーム -->
+        <section class="diagnosis-form" id="diagnosisForm">
+            <h2>📋 診断情報入力</h2>
+            
+            <div class="form-group">
+                <label for="fullName">お名前</label>
+                <input type="text" id="fullName" placeholder="山田太郎" required>
+                <small>※名前音韻の自動解析に使用します</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="birthDate">生年月日</label>
+                <input type="date" id="birthDate" required>
+                <small>※四柱推命による60分類自然タイプの算出に使用</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="birthRegion">出生地域タイプ</label>
+                <select id="birthRegion" required>
+                    <option value="">選択してください</option>
+                    <option value="山縁">山間部・高地（山縁）</option>
+                    <option value="水縁">沿岸部・水辺（水縁）</option>
+                    <option value="平縁">平野部・都市部（平縁）</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="currentRegion">現住地域タイプ</label>
+                <select id="currentRegion" required>
+                    <option value="">選択してください</option>
+                    <option value="山縁">山間部・高地（山縁）</option>
+                    <option value="水縁">沿岸部・水辺（水縁）</option>
+                    <option value="平縁">平野部・都市部（平縁）</option>
+                </select>
+            </div>
+
+            <!-- 五行縁型診断質問 -->
+            <div class="section-divider">
+                <h3>🔍 五行縁型診断（4つの質問）</h3>
+                <p>これまでの人生で引き寄せてきた縁のタイプを診断します</p>
+            </div>
+            
+            <div class="form-group">
+                <label for="workPattern">質問1: これまでの仕事・活動パターンで最も当てはまるものは？</label>
+                <select id="workPattern" required>
+                    <option value="">選択してください</option>
+                    <option value="木">新しいことを学んだり、人とのつながりを広げることが多い</option>
+                    <option value="火">人前で話したり、活発に動き回ることが多い</option>
+                    <option value="土">継続的で安定した作業や、人をサポートすることが多い</option>
+                    <option value="金">効率化や改善、質の向上に取り組むことが多い</option>
+                    <option value="水">状況に応じて柔軟に対応したり、情報を扱うことが多い</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="livingPattern">質問2: 住環境・生活環境の選択で重視することは？</label>
+                <select id="livingPattern" required>
+                    <option value="">選択してください</option>
+                    <option value="木">新しい環境や刺激的な場所を好む</option>
+                    <option value="火">活気があり、人が集まる場所を好む</option>
+                    <option value="土">安定していて、落ち着ける場所を好む</option>
+                    <option value="金">整理整頓されていて、質の高い場所を好む</option>
+                    <option value="水">変化に富んでいて、自由度の高い場所を好む</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="relationPattern">質問3: 人間関係・コミュニケーションパターンは？</label>
+                <select id="relationPattern" required>
+                    <option value="">選択してください</option>
+                    <option value="木">新しい人とのつながりを積極的に作る</option>
+                    <option value="火">エネルギッシュで表現豊かなコミュニケーション</option>
+                    <option value="土">じっくりと信頼関係を築くコミュニケーション</option>
+                    <option value="金">効率的で的確なコミュニケーション</option>
+                    <option value="水">状況に応じて柔軟にコミュニケーションを変える</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="decisionPattern">質問4: 問題解決・決断のパターンは？</label>
+                <select id="decisionPattern" required>
+                    <option value="">選択してください</option>
+                    <option value="木">新しいアイデアや可能性を探って解決</option>
+                    <option value="火">直感やエネルギーで積極的に解決</option>
+                    <option value="土">安定した方法で着実に解決</option>
+                    <option value="金">論理的・効率的に最適解を見つけて解決</option>
+                    <option value="水">状況に応じて柔軟に方法を変えて解決</option>
+                </select>
+            </div>
+
+            <button type="button" class="diagnose-btn" id="diagnoseBtn">
+                🔮 縁診断を開始する
+            </button>
+        </section>
+
+        <!-- ローディング画面 -->
+        <section class="loading-section hidden" id="loadingSection">
+            <div class="loading-content">
+                <div class="loading-spinner"></div>
+                <h3>診断中...</h3>
+                <p id="loadingText">データベースを読み込んでいます...</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 診断結果表示エリア -->
+        <section class="results-section hidden" id="resultsSection">
+            <!-- プロファイル表示 -->
+            <div class="profile-card" id="profileCard">
+                <!-- JavaScriptで動的生成 -->
+            </div>
+
+            <!-- 運命の開運スポット -->
+            <div class="destiny-spots" id="destinySpots">
+                <!-- JavaScriptで動的生成 -->
+            </div>
+
+            <!-- 目的別開運スポット -->
+            <div class="purpose-spots" id="purposeSpots">
+                <!-- JavaScriptで動的生成 -->
+            </div>
+
+            <!-- 季節別開運スポット -->
+            <div class="seasonal-spots" id="seasonalSpots">
+                <!-- JavaScriptで動的生成 -->
+            </div>
+
+            <!-- バイオリズムカレンダー -->
+            <div class="biorhythm-calendar" id="biorhythmCalendar">
+                <!-- JavaScriptで動的生成 -->
+            </div>
+
+            <!-- 総合アドバイス -->
+            <div class="comprehensive-advice" id="comprehensiveAdvice">
+                <!-- JavaScriptで動的生成 -->
+            </div>
+
+            <!-- アクション -->
+            <div class="result-actions">
+                <button type="button" class="secondary-btn" id="newDiagnosisBtn">新しい診断を行う</button>
+                <button type="button" class="primary-btn" id="shareBtn">結果をシェア</button>
+            </div>
+        </section>
+
+        <!-- フッター -->
+        <footer class="footer">
+            <p>&copy; 2025 パワースポット縁診断システム. All rights reserved.</p>
+            <p><small>本システムは統計学的根拠に基づく診断結果を提供しますが、人生の判断は最終的にはご自身で行ってください。</small></p>
+        </footer>
+    </div>
+
+    <!-- JavaScriptファイル読み込み -->
+    <script src="./js/powerspot_engine.js"></script>
+    <script>
+        // メイン処理の初期化
+        document.addEventListener('DOMContentLoaded', function() {
+            PowerspotDiagnosis.init();
+        });
+    </script>
+</body>
+</html>

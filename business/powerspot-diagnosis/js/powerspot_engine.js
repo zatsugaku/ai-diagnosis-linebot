@@ -233,21 +233,24 @@ const PowerspotDiagnosis = {
         return `${gogyou[gogyouIndex]}の${phenomena[eto]}`;
     },
     
-    // 名前音韻自動解析
+    // 名前音韻自動解析（ローマ字完全対応版）
     analyzeNameAcoustic(fullName) {
-        const vowels = fullName.match(/[あいうえおアイウエオaiueo]/g) || [];
+        // ローマ字・ひらがな・カタカナ・英語に対応
+        const normalizedName = fullName.toLowerCase().replace(/\s+/g, '');
+        const vowels = normalizedName.match(/[aiueoあいうえおアイウエオ]/g) || [];
+        
         let ketuenScore = 0, shinenScore = 0, kouenScore = 0;
         
         vowels.forEach(vowel => {
-            switch(vowel.toLowerCase()) {
+            switch(vowel) {
                 case 'i': case 'い': case 'イ':
-                    ketuenScore += 2; // 軽やか
+                    ketuenScore += 2; // 軽やか・流れるような響き
                     break;
                 case 'u': case 'う': case 'ウ':
-                    shinenScore += 2; // 深み
+                    shinenScore += 2; // 深み・重厚な響き
                     break;
                 case 'a': case 'あ': case 'ア':
-                    kouenScore += 2; // 明るさ
+                    kouenScore += 2; // 明るさ・広がりのある響き
                     break;
                 case 'e': case 'え': case 'エ':
                     ketuenScore += 1; // 軽やか
@@ -260,11 +263,46 @@ const PowerspotDiagnosis = {
             }
         });
         
+        // 子音による補正（ローマ字特有）
+        const consonants = normalizedName.match(/[bcdfghjklmnpqrstvwxyz]/g) || [];
+        consonants.forEach(consonant => {
+            switch(consonant) {
+                case 'k': case 'g': case 't': case 'd': case 'p': case 'b':
+                    ketuenScore += 0.5; // 軽快な子音
+                    break;
+                case 'm': case 'n': case 'r': case 'l':
+                    shinenScore += 0.5; // 深みのある子音
+                    break;
+                case 'h': case 'w': case 'y':
+                    kouenScore += 0.5; // 広がりのある子音
+                    break;
+            }
+        });
+        
         // 文字数による補正
-        const nameLength = fullName.length;
-        if (nameLength <= 3) ketuenScore += 3;
-        else if (nameLength >= 6) shinenScore += 3;
-        else kouenScore += 2;
+        const nameLength = normalizedName.length;
+        if (nameLength <= 4) {
+            ketuenScore += 3; // 短い名前は軽やか
+        } else if (nameLength >= 8) {
+            shinenScore += 3; // 長い名前は深み
+        } else {
+            kouenScore += 2; // 中程度は広がり
+        }
+        
+        // 姓名バランス補正（スペースで分割可能な場合）
+        const nameParts = fullName.trim().split(/\s+/);
+        if (nameParts.length >= 2) {
+            const firstPart = nameParts[0].toLowerCase();
+            const lastPart = nameParts[nameParts.length - 1].toLowerCase();
+            
+            // 姓名の音韻バランスを評価
+            if (firstPart.length !== lastPart.length) {
+                kouenScore += 1; // 非対称は広がり
+            }
+            if (firstPart.charAt(0) === lastPart.charAt(0)) {
+                shinenScore += 1; // 頭文字同じは深み
+            }
+        }
         
         const scores = { 結縁: ketuenScore, 深縁: shinenScore, 広縁: kouenScore };
         return Object.entries(scores).reduce((a, b) => scores[a[0]] > scores[b[0]] ? a : b)[0];
@@ -442,74 +480,188 @@ const PowerspotDiagnosis = {
         };
     },
     
-    // 目的別スポット選定
+    // 目的別スポット選定（改善版）
     selectPurposeSpots(results, usedSpots) {
         const categories = ['金運', '恋愛', '健康', '全体運'];
         const selected = {};
         
         categories.forEach(category => {
+            // カテゴリに適したスポットをフィルタリング
             const categorySpots = results.filter(result => {
                 if (usedSpots.has(result.powerspot.パワースポット名)) return false;
                 return this.isSpotSuitableForCategory(result.powerspot, category);
-            }).slice(0, 2);
-            
-            categorySpots.forEach(spot => {
-                usedSpots.add(spot.powerspot.パワースポット名);
             });
             
-            selected[category] = categorySpots;
+            // 相性順でソート
+            categorySpots.sort((a, b) => b.finalScore - a.finalScore);
+            
+            // 2箇所選定（不足の場合はフォールバック）
+            const selectedSpots = [];
+            
+            // 第1希望：カテゴリ適性のあるTOP2
+            selectedSpots.push(...categorySpots.slice(0, 2));
+            
+            // 不足の場合：未使用スポットから高相性を補充
+            if (selectedSpots.length < 2) {
+                const fallbackSpots = results.filter(result => 
+                    !usedSpots.has(result.powerspot.パワースポット名) &&
+                    !selectedSpots.some(s => s.powerspot.パワースポット名 === result.powerspot.パワースポット名)
+                ).slice(0, 2 - selectedSpots.length);
+                
+                selectedSpots.push(...fallbackSpots);
+            }
+            
+            // 使用済みスポットに追加
+            selectedSpots.forEach(spot => {
+                if (spot && spot.powerspot) {
+                    usedSpots.add(spot.powerspot.パワースポット名);
+                }
+            });
+            
+            selected[category] = selectedSpots;
         });
         
         return selected;
     },
     
-    // カテゴリ適性判定
+    // カテゴリ適性判定（改善版）
     isSpotSuitableForCategory(powerspot, category) {
         const suitability = {
-            '金運': ['土', '金'],
-            '恋愛': ['水', '木'],
-            '健康': powerspot.ベースエネルギー >= 0.85,
-            '全体運': powerspot.ベースエネルギー >= 0.88
+            '金運': {
+                elements: ['土', '金'],
+                energyThreshold: 0.80,
+                preferredTypes: ['安定継続型', '完成効率型']
+            },
+            '恋愛': {
+                elements: ['水', '木'],
+                energyThreshold: 0.75,
+                preferredTypes: ['流動浄化型', '成長発展型']
+            },
+            '健康': {
+                elements: ['木', '土', '水'],
+                energyThreshold: 0.85,
+                preferredTypes: ['成長発展型', '安定継続型', '流動浄化型']
+            },
+            '全体運': {
+                elements: ['火', '土', '金'],
+                energyThreshold: 0.88,
+                preferredTypes: ['活動表現型', '安定継続型', '完成効率型']
+            }
         };
         
-        if (category === '健康' || category === '全体運') {
-            return suitability[category];
-        }
+        const criteria = suitability[category];
+        if (!criteria) return false;
         
-        return suitability[category].includes(powerspot.五行属性);
+        // 五行属性チェック
+        const elementMatch = criteria.elements.includes(powerspot.五行属性);
+        
+        // エネルギー閾値チェック
+        const energyMatch = powerspot.ベースエネルギー >= criteria.energyThreshold;
+        
+        // 相性タイプチェック（あれば）
+        const typeMatch = !powerspot.縁特性?.相性タイプ || 
+                         criteria.preferredTypes.includes(powerspot.縁特性.相性タイプ);
+        
+        // いずれかの条件を満たせば適性あり
+        return elementMatch || energyMatch || typeMatch;
     },
     
-    // 季節別スポット選定
+    // 季節別スポット選定（改善版）
     selectSeasonalSpots(results, usedSpots) {
         const seasons = ['春', '夏', '秋', '冬'];
         const selected = {};
         
         seasons.forEach(season => {
+            // 季節に適したスポットをフィルタリング
             const seasonSpots = results.filter(result => {
                 if (usedSpots.has(result.powerspot.パワースポット名)) return false;
                 return this.isSpotSuitableForSeason(result.powerspot, season);
-            }).slice(0, 2);
-            
-            seasonSpots.forEach(spot => {
-                usedSpots.add(spot.powerspot.パワースポット名);
             });
             
-            selected[season] = seasonSpots;
+            // 相性順でソート
+            seasonSpots.sort((a, b) => b.finalScore - a.finalScore);
+            
+            // 2箇所選定（不足の場合はフォールバック）
+            const selectedSpots = [];
+            
+            // 第1希望：季節適性のあるTOP2
+            selectedSpots.push(...seasonSpots.slice(0, 2));
+            
+            // 不足の場合：未使用スポットから高相性を補充
+            if (selectedSpots.length < 2) {
+                const fallbackSpots = results.filter(result => 
+                    !usedSpots.has(result.powerspot.パワースポット名) &&
+                    !selectedSpots.some(s => s.powerspot.パワースポット名 === result.powerspot.パワースポット名)
+                ).slice(0, 2 - selectedSpots.length);
+                
+                selectedSpots.push(...fallbackSpots);
+            }
+            
+            // 使用済みスポットに追加
+            selectedSpots.forEach(spot => {
+                if (spot && spot.powerspot) {
+                    usedSpots.add(spot.powerspot.パワースポット名);
+                }
+            });
+            
+            selected[season] = selectedSpots;
         });
         
         return selected;
     },
     
-    // 季節適性判定
+    // 季節適性判定（改善版）
     isSpotSuitableForSeason(powerspot, season) {
-        const seasonElements = {
-            '春': ['木'],
-            '夏': ['火'],
-            '秋': ['金'],
-            '冬': ['水']
+        const seasonalCriteria = {
+            '春': {
+                elements: ['木'],
+                energyRange: [0.80, 0.95],
+                preferredTypes: ['成長発展型'],
+                timeKeywords: ['春', '新緑', '芽生え']
+            },
+            '夏': {
+                elements: ['火'],
+                energyRange: [0.85, 1.0],
+                preferredTypes: ['活動表現型'],
+                timeKeywords: ['夏', '太陽', '活動']
+            },
+            '秋': {
+                elements: ['金'],
+                energyRange: [0.75, 0.90],
+                preferredTypes: ['完成効率型'],
+                timeKeywords: ['秋', '収穫', '完成']
+            },
+            '冬': {
+                elements: ['水'],
+                energyRange: [0.70, 0.85],
+                preferredTypes: ['流動浄化型'],
+                timeKeywords: ['冬', '静寂', '蓄積']
+            }
         };
         
-        return seasonElements[season].includes(powerspot.五行属性);
+        const criteria = seasonalCriteria[season];
+        if (!criteria) return false;
+        
+        // 五行属性チェック
+        const elementMatch = criteria.elements.includes(powerspot.五行属性);
+        
+        // エネルギー範囲チェック
+        const energyMatch = powerspot.ベースエネルギー >= criteria.energyRange[0] && 
+                           powerspot.ベースエネルギー <= criteria.energyRange[1];
+        
+        // 相性タイプチェック
+        const typeMatch = !powerspot.縁特性?.相性タイプ || 
+                         criteria.preferredTypes.includes(powerspot.縁特性.相性タイプ);
+        
+        // 推奨時期チェック（データにあれば）
+        const timeMatch = !powerspot.縁特性?.推奨時期 || 
+                         criteria.timeKeywords.some(keyword => 
+                             powerspot.縁特性.推奨時期.includes(keyword) ||
+                             powerspot.縁特性.推奨時期 === season
+                         );
+        
+        // いずれかの条件を満たせば適性あり
+        return elementMatch || (energyMatch && typeMatch) || timeMatch;
     },
     
     // 詳細レポート生成

@@ -673,28 +673,145 @@
             updateProgress();
         }
 
-        // 名前音韻タイプ判定
-        function determineNameAcousticType(firstName, lastName) {
+        // 強化された音韻分析システム
+        const PHONETIC_CHARACTERISTICS = {
+            explosives: ['p', 'b', 't', 'd', 'k', 'g'],
+            fricatives: ['f', 'v', 's', 'z', 'sh', 'h'],
+            liquids: ['l', 'r'],
+            nasals: ['m', 'n'],
+            vowels: {
+                'a': { openness: 'open', brightness: 'bright', energy: 'active' },
+                'i': { openness: 'close', brightness: 'bright', energy: 'sharp' },
+                'u': { openness: 'close', brightness: 'dark', energy: 'deep' },
+                'e': { openness: 'mid', brightness: 'bright', energy: 'balanced' },
+                'o': { openness: 'mid', brightness: 'dark', energy: 'stable' }
+            }
+        };
+
+        // 強化された音韻分析
+        function enhancedNameAcousticAnalysis(firstName, lastName) {
             const fullName = (firstName + lastName).toLowerCase();
             
-            // 母音カウント
-            const vowels = (fullName.match(/[aiueo]/g) || []).length;
-            const consonants = fullName.length - vowels;
-            const vowelRatio = vowels / fullName.length;
+            // 基本統計
+            const vowels = (fullName.match(/[aiueo]/g) || []);
+            const consonants = (fullName.match(/[bcdfghjklmnpqrstvwxyz]/g) || []);
+            const vowelRatio = vowels.length / fullName.length;
             
-            // 音韻パターン分析
-            const hasRepeatingVowels = /([aiueo])\1/.test(fullName);
-            const hasFlowingPattern = /[aiueo][aiueo]/.test(fullName);
-            const hasSharpSounds = /[kst]/.test(fullName);
+            // 音韻特性分析
+            const explosiveCount = consonants.filter(c => 
+                PHONETIC_CHARACTERISTICS.explosives.includes(c)).length;
+            const fricativeCount = consonants.filter(c => 
+                PHONETIC_CHARACTERISTICS.fricatives.includes(c)).length;
+            const liquidCount = consonants.filter(c => 
+                PHONETIC_CHARACTERISTICS.liquids.includes(c)).length;
+            const nasalCount = consonants.filter(c => 
+                PHONETIC_CHARACTERISTICS.nasals.includes(c)).length;
+                
+            // 母音の特性分析
+            const vowelCharacteristics = vowels.map(v => PHONETIC_CHARACTERISTICS.vowels[v]);
+            const brightVowels = vowelCharacteristics.filter(v => v.brightness === 'bright').length;
+            const darkVowels = vowelCharacteristics.filter(v => v.brightness === 'dark').length;
+            const activeEnergy = vowelCharacteristics.filter(v => v.energy === 'active').length;
             
-            // 判定ロジック
-            if (vowelRatio > 0.5 && hasFlowingPattern) {
-                return '深縁'; // 深いつながりを育む音
-            } else if (hasRepeatingVowels || vowelRatio > 0.6) {
-                return '広縁'; // 幅広い縁を築く音
+            // 音節パターン分析
+            const cvPattern = (fullName.match(/[bcdfghjklmnpqrstvwxyz][aiueo]/g) || []).length;
+            const vPattern = (fullName.match(/^[aiueo]|(?<=[aiueo])[aiueo]/g) || []).length;
+            
+            // 音韻の流れ分析
+            const hasVowelFlow = /[aiueo]{2,}/.test(fullName);
+            const hasConsonantCluster = /[bcdfghjklmnpqrstvwxyz]{2,}/.test(fullName);
+            const rhythmicPattern = (fullName.match(/([aiueo][bcdfghjklmnpqrstvwxyz])+/g) || []).length;
+            
+            return {
+                basicStats: { vowelRatio, vowelCount: vowels.length, consonantCount: consonants.length },
+                phoneticProfile: { explosiveCount, fricativeCount, liquidCount, nasalCount },
+                vowelProfile: { brightVowels, darkVowels, activeEnergy },
+                syllableProfile: { cvPattern, vPattern },
+                flowProfile: { hasVowelFlow, hasConsonantCluster, rhythmicPattern }
+            };
+        }
+
+        // 強化された縁タイプ判定
+        function determineEnhancedNameType(analysisData) {
+            const { basicStats, phoneticProfile, vowelProfile, syllableProfile, flowProfile } = analysisData;
+            
+            let connectionScore = 0;  // 結縁スコア
+            let depthScore = 0;       // 深縁スコア  
+            let breadthScore = 0;     // 広縁スコア
+            
+            // 1. 基本音韻バランス
+            if (basicStats.vowelRatio > 0.5) {
+                depthScore += 20;
+            } else if (basicStats.vowelRatio < 0.4) {
+                connectionScore += 15;
             } else {
-                return '結縁'; // 新しい出会いを引き寄せる音
+                breadthScore += 10;
             }
+            
+            // 2. 音韻特性による判定
+            if (phoneticProfile.explosiveCount >= 2) {
+                connectionScore += 15;
+            }
+            if (phoneticProfile.liquidCount >= 1) {
+                depthScore += 15;
+            }
+            if (phoneticProfile.nasalCount >= 2) {
+                breadthScore += 15;
+            }
+            
+            // 3. 母音特性
+            if (vowelProfile.brightVowels > vowelProfile.darkVowels) {
+                if (vowelProfile.activeEnergy >= 1) {
+                    connectionScore += 10;
+                } else {
+                    breadthScore += 10;
+                }
+            } else {
+                depthScore += 10;
+            }
+            
+            // 4. 音節パターン
+            if (syllableProfile.cvPattern >= 4) {
+                connectionScore += 10;
+            }
+            
+            // 5. 音韻の流れ
+            if (flowProfile.hasVowelFlow) {
+                depthScore += 15;
+            }
+            if (flowProfile.hasConsonantCluster) {
+                if (phoneticProfile.explosiveCount >= 1) {
+                    connectionScore += 10;
+                } else {
+                    breadthScore += 10;
+                }
+            }
+            if (flowProfile.rhythmicPattern >= 3) {
+                breadthScore += 10;
+            }
+            
+            // 最終判定
+            const maxScore = Math.max(connectionScore, depthScore, breadthScore);
+            
+            if (maxScore === connectionScore) {
+                return { type: '結縁', score: connectionScore, reasoning: '新しい出会いを引き寄せる音韻特性' };
+            } else if (maxScore === depthScore) {
+                return { type: '深縁', score: depthScore, reasoning: '深いつながりを育む音韻特性' };
+            } else {
+                return { type: '広縁', score: breadthScore, reasoning: '幅広い縁を築く音韻特性' };
+            }
+        }
+
+        // 統合された名前音韻タイプ判定
+        function determineNameAcousticType(firstName, lastName) {
+            const analysis = enhancedNameAcousticAnalysis(firstName, lastName);
+            const result = determineEnhancedNameType(analysis);
+            
+            // デバッグ情報（開発時のみ）
+            console.log('音韻分析詳細:', analysis);
+            console.log('判定結果:', result);
+            
+            return result.type;
         }
 
         // 名前タイプ情報取得

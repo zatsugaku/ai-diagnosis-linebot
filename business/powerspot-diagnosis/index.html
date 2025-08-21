@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="統計学的根拠に基づく本格的パワースポット診断サービス">
-    <title>縁パワースポット診断システム v3.1</title>
+    <title>縁パワースポット診断</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap');
+        
         * {
             margin: 0;
             padding: 0;
@@ -13,231 +14,295 @@
         }
 
         body {
-            font-family: 'Hiragino Sans', 'Yu Gothic', 'Meiryo', sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Noto Sans JP', sans-serif;
+            background: #0f0f23;
+            color: #e8e8f0;
             min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(255, 105, 180, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(138, 43, 226, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(30, 144, 255, 0.1) 0%, transparent 50%);
+            animation: float 20s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(2deg); }
         }
 
         .container {
-            max-width: 800px;
+            max-width: 480px;
             margin: 0 auto;
             padding: 20px;
+            position: relative;
+            z-index: 1;
         }
 
         .header {
             text-align: center;
-            color: white;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
+            padding: 30px 0;
         }
 
         .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-size: 2.8rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #ff69b4, #8a2be2, #1e90ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+            letter-spacing: 0.05em;
         }
 
         .header p {
             font-size: 1.1rem;
-            opacity: 0.9;
+            color: #b8b8c8;
+            font-weight: 300;
         }
 
-        .card {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        .form-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
-        .form-section {
-            margin-bottom: 25px;
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #ff69b4;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
-        .form-section h3 {
-            color: #5a67d8;
-            margin-bottom: 15px;
-            font-size: 1.3rem;
-            border-bottom: 2px solid #e2e8f0;
-            padding-bottom: 10px;
+        .input-field {
+            margin-bottom: 24px;
         }
 
-        .input-group {
-            margin-bottom: 20px;
-        }
-
-        .input-group label {
+        .input-field label {
             display: block;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #d0d0e0;
             margin-bottom: 8px;
-            font-weight: bold;
-            color: #4a5568;
         }
 
-        .input-group input,
-        .input-group select {
+        .input-field input {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #e2e8f0;
-            border-radius: 8px;
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            color: #e8e8f0;
             font-size: 1rem;
-            transition: border-color 0.3s ease;
+            transition: all 0.3s ease;
         }
 
-        .input-group input:focus,
-        .input-group select:focus {
+        .input-field input:focus {
             outline: none;
-            border-color: #5a67d8;
-            box-shadow: 0 0 0 3px rgba(90, 103, 216, 0.1);
+            border-color: #ff69b4;
+            box-shadow: 0 0 0 3px rgba(255, 105, 180, 0.2);
+            background: rgba(255, 255, 255, 0.12);
         }
 
-        .question-text {
-            font-weight: bold;
-            margin-bottom: 15px;
-            color: #2d3748;
-            font-size: 1.2rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        .input-field input::placeholder {
+            color: #888;
         }
 
-        .radio-group {
+        .question-block {
+            margin-bottom: 32px;
+        }
+
+        .question-title {
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: #e8e8f0;
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        .options-grid {
             display: flex;
             flex-direction: column;
-            gap: 18px;
+            gap: 12px;
         }
 
-        .radio-option {
-            display: flex;
-            align-items: flex-start;
-            padding: 18px 22px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
+        .option-item {
+            position: relative;
             cursor: pointer;
+        }
+
+        .option-item input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .option-label {
+            display: block;
+            padding: 18px 24px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
             transition: all 0.3s ease;
-            background-color: #ffffff;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            cursor: pointer;
             position: relative;
         }
 
-        .radio-option::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 4px;
-            background: transparent;
-            border-radius: 2px;
-            transition: all 0.3s ease;
-        }
-
-        .radio-option:hover {
-            border-color: #5a67d8;
-            background-color: #f8faff;
-            transform: translateX(4px);
-            box-shadow: 0 4px 16px rgba(90, 103, 216, 0.1);
-        }
-
-        .radio-option:hover::before {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-
-        .radio-option input[type="radio"] {
-            margin-right: 15px;
-            margin-top: 2px;
-            transform: scale(1.4);
-            accent-color: #5a67d8;
-            flex-shrink: 0;
-        }
-
-        .radio-option.selected {
-            border-color: #5a67d8;
-            background: linear-gradient(135deg, #ebf4ff 0%, #f0f8ff 100%);
-            box-shadow: 0 4px 20px rgba(90, 103, 216, 0.15);
-            transform: translateX(4px);
-        }
-
-        .radio-option.selected::before {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-
-        .radio-text {
-            line-height: 1.7;
-            font-size: 1rem;
-            color: #2d3748;
-            flex: 1;
-        }
-
-        .radio-option.selected .radio-text {
-            color: #2c5aa0;
-            font-weight: 500;
-        }
-
-        /* 選択肢の先頭に絵文字を追加 */
-        .radio-option[data-value="木"] .radio-text::before { content: "🌱 "; }
-        .radio-option[data-value="火"] .radio-text::before { content: "🔥 "; }
-        .radio-option[data-value="土"] .radio-text::before { content: "🌍 "; }
-        .radio-option[data-value="金"] .radio-text::before { content: "⚡ "; }
-        .radio-option[data-value="水"] .radio-text::before { content: "💧 "; }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            font-size: 1.1rem;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            width: 100%;
-            margin-top: 20px;
-        }
-
-        .btn-primary:hover {
+        .option-label:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 105, 180, 0.3);
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
         }
 
-        .btn-primary:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
+        .option-item input:checked + .option-label {
+            background: rgba(255, 105, 180, 0.15);
+            border-color: #ff69b4;
+            box-shadow: 0 4px 20px rgba(255, 105, 180, 0.2);
         }
 
-        .results-area {
+        .option-emoji {
+            font-size: 1.2rem;
+            margin-right: 12px;
+        }
+
+        .option-text {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #d0d0e0;
+        }
+
+        .name-result {
+            background: linear-gradient(135deg, rgba(255, 105, 180, 0.1), rgba(138, 43, 226, 0.1));
+            border: 1px solid rgba(255, 105, 180, 0.3);
+            border-radius: 20px;
+            padding: 24px;
+            margin-top: 20px;
+            text-align: center;
             display: none;
-            animation: fadeIn 0.5s ease-in;
         }
 
-        .results-area.show {
+        .name-result.show {
             display: block;
+            animation: slideIn 0.5s ease;
         }
 
-        @keyframes fadeIn {
+        @keyframes slideIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .loading {
-            text-align: center;
-            padding: 40px;
+        .name-result-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #ff69b4;
+            margin-bottom: 8px;
+        }
+
+        .name-result-type {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #e8e8f0;
+            margin-bottom: 8px;
+        }
+
+        .name-result-desc {
+            font-size: 0.9rem;
+            color: #b8b8c8;
+            line-height: 1.5;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(45deg, #ff69b4, #8a2be2);
+            border: none;
+            border-radius: 20px;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .submit-btn:hover:before {
+            left: 100%;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 105, 180, 0.4);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 15, 35, 0.95);
+            backdrop-filter: blur(10px);
             display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
         }
 
-        .loading.show {
-            display: block;
+        .loading-screen.show {
+            display: flex;
         }
 
-        .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #5a67d8;
+        .loading-content {
+            text-align: center;
+            color: #e8e8f0;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid rgba(255, 105, 180, 0.3);
+            border-top: 3px solid #ff69b4;
             border-radius: 50%;
-            width: 50px;
-            height: 50px;
             animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
+            margin: 0 auto 24px;
         }
 
         @keyframes spin {
@@ -245,13 +310,291 @@
             100% { transform: rotate(360deg); }
         }
 
-        .error-message {
-            background-color: #fed7d7;
-            color: #c53030;
-            padding: 15px;
+        .loading-text {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .loading-desc {
+            font-size: 0.95rem;
+            color: #b8b8c8;
+        }
+
+        .result-screen {
+            display: none;
+        }
+
+        .result-screen.show {
+            display: block;
+            animation: fadeIn 0.8s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .result-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .result-header h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #e8e8f0;
+            margin-bottom: 8px;
+        }
+
+        .result-type-card {
+            background: linear-gradient(135deg, #ff69b4, #8a2be2, #1e90ff);
+            border-radius: 24px;
+            padding: 32px;
+            text-align: center;
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-type-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .result-type-name {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .result-type-rarity {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 20px;
+            border-radius: 20px;
+            display: inline-block;
+            position: relative;
+            z-index: 1;
+        }
+
+        .result-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 28px;
+            margin-bottom: 20px;
+        }
+
+        .result-section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #ff69b4;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .result-section-content {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: #d0d0e0;
+        }
+
+        .natural-type-header {
+            text-align: center;
+            margin-bottom: 24px;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(255, 105, 180, 0.1), rgba(138, 43, 226, 0.1));
+            border-radius: 16px;
+        }
+
+        .natural-type-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #e8e8f0;
+            margin-bottom: 8px;
+        }
+
+        .natural-type-subtitle {
+            font-size: 1.1rem;
+            color: #ff69b4;
+            font-weight: 500;
+        }
+
+        .main-description {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: #d0d0e0;
+            text-align: justify;
+            margin-bottom: 24px;
+        }
+
+        .section-title-new {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #ff69b4;
+            margin-bottom: 16px;
+            border-bottom: 1px solid rgba(255, 105, 180, 0.3);
+            padding-bottom: 8px;
+        }
+
+        .affinity-grid {
+            display: grid;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .affinity-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .affinity-icon {
+            font-size: 1.5rem;
+            margin-top: 2px;
+        }
+
+        .affinity-content strong {
+            color: #ff69b4;
+            display: block;
+            margin-bottom: 4px;
+            font-size: 0.9rem;
+        }
+
+        .affinity-content p {
+            color: #d0d0e0;
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        .keywords-section {
+            margin-bottom: 24px;
+        }
+
+        .keywords-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .keyword-tag {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .advice-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #ff69b4;
+            margin-bottom: 12px;
+            margin-top: 20px;
+        }
+
+        .advice-text {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: #d0d0e0;
+            margin-bottom: 16px;
+            text-align: justify;
+        }
+
+        .action-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .action-list li {
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 8px;
-            margin: 20px 0;
-            border-left: 4px solid #e53e3e;
+            border-left: 3px solid #ff69b4;
+            color: #d0d0e0;
+            position: relative;
+        }
+
+        .action-list li:before {
+            content: '▸';
+            color: #ff69b4;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .notice-section {
+            background: linear-gradient(135deg, rgba(255, 165, 0, 0.1), rgba(255, 69, 0, 0.1));
+            border: 1px solid rgba(255, 165, 0, 0.3);
+            border-radius: 20px;
+            padding: 28px;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .notice-section h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #ffa500;
+            margin-bottom: 16px;
+        }
+
+        .notice-section p {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #d0d0e0;
+        }
+
+        .reset-button {
+            width: 100%;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            color: #e8e8f0;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .reset-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .error-message {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            margin: 16px 0;
+            color: #ff6b6b;
             display: none;
         }
 
@@ -259,1060 +602,235 @@
             display: block;
         }
 
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background-color: #e2e8f0;
-            border-radius: 4px;
-            margin-bottom: 20px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-
-        .step-indicator {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 30px;
-        }
-
-        .step {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background-color: #e2e8f0;
-            color: #a0aec0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 10px;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-
-        .step.active {
-            background-color: #5a67d8;
-            color: white;
-        }
-
-        .step.completed {
-            background-color: #48bb78;
-            color: white;
-        }
-
-        @media (max-width: 768px) {
+        @media (max-width: 600px) {
             .container {
-                padding: 15px;
+                padding: 16px;
             }
             
             .header h1 {
-                font-size: 2rem;
+                font-size: 2.2rem;
             }
             
-            .card {
-                padding: 20px;
+            .form-card {
+                padding: 24px;
             }
             
-            .radio-option {
-                padding: 12px;
+            .result-type-name {
+                font-size: 1.8rem;
             }
-        }
 
-        .materials-output {
-            background-color: #f7fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 20px;
-            margin-top: 20px;
-            font-family: monospace;
-            white-space: pre-wrap;
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        .section-title {
-            color: #2d3748;
-            border-bottom: 2px solid #5a67d8;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
+            .natural-type-title {
+                font-size: 1.5rem;
+            }
+            
+            .affinity-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .keywords-container {
+                justify-content: center;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>縁パワースポット診断</h1>
-            <p>統計学的根拠に基づく本格的パワースポット診断システム v3.1</p>
-        </div>
+        <!-- ヘッダー -->
+        <header class="header">
+            <h1>🌸 縁パワースポット診断</h1>
+            <p>あなただけの特別な縁を発見してください</p>
+        </header>
 
-        <!-- ステップインジケーター -->
-        <div class="step-indicator">
-            <div class="step active" id="step1">1</div>
-            <div class="step" id="step2">2</div>
-            <div class="step" id="step3">3</div>
-        </div>
-
-        <!-- プログレスバー -->
-        <div class="progress-bar">
-            <div class="progress-fill" id="progressFill"></div>
-        </div>
-
-        <!-- 診断フォーム -->
-        <div class="card" id="diagnosisForm">
-            <h2 class="section-title">縁の統合分析診断</h2>
-            
-            <!-- 基本情報セクション -->
-            <div class="form-section">
-                <h3>🌸 基本情報</h3>
+        <!-- 入力フォーム -->
+        <main class="main-content" id="inputSection">
+            <!-- 基本情報 -->
+            <div class="form-card">
+                <h2 class="section-title">📝 基本情報</h2>
                 
-                <div class="input-group">
+                <div class="input-field">
                     <label for="birthDate">生年月日</label>
                     <input type="date" id="birthDate" required>
                 </div>
 
-                <div class="input-group">
+                <div class="input-field">
                     <label for="firstName">名前（ローマ字）</label>
-                    <input type="text" id="firstName" placeholder="例: Taro" required>
-                    <small style="color: #666; font-size: 0.9rem;">※ローマ字で入力してください</small>
+                    <input type="text" id="firstName" placeholder="Taro" required>
                 </div>
 
-                <div class="input-group">
+                <div class="input-field">
                     <label for="lastName">苗字（ローマ字）</label>
-                    <input type="text" id="lastName" placeholder="例: Yamada" required>
-                    <small style="color: #666; font-size: 0.9rem;">※ローマ字で入力してください</small>
+                    <input type="text" id="lastName" placeholder="Yamada" required>
                 </div>
 
-                <div class="input-group">
-                    <div style="background: #f0f8ff; padding: 15px; border-radius: 8px; border-left: 4px solid #5a67d8;">
-                        <h4 style="color: #5a67d8; margin-bottom: 8px;">🔮 音韻タイプ自動判定</h4>
-                        <p style="color: #666; margin: 0; font-size: 0.95rem;">
-                            入力された名前から音韻の特性を分析し、縁のタイプ（結縁・深縁・広縁）を自動判定します
-                        </p>
-                        <div id="nameAnalysisResult" style="margin-top: 10px; font-weight: bold; color: #5a67d8;">
-                            名前を入力すると音韻分析結果が表示されます
-                        </div>
-                    </div>
+                <div class="name-result" id="nameAnalysis">
+                    <div class="name-result-title">🎵 名前の音韻分析</div>
+                    <div class="name-result-type" id="nameType"></div>
+                    <div class="name-result-desc" id="nameDescription"></div>
                 </div>
             </div>
 
-            <!-- 診断質問セクション -->
-            <div class="form-section">
-                <h3>🔮 縁の体験診断</h3>
+            <!-- 診断質問 -->
+            <div class="form-card">
+                <h2 class="section-title">🔮 縁の体験診断</h2>
                 
                 <!-- 質問1 -->
-                <div class="input-group">
-                    <div class="question-text">1. これまでの仕事や主な活動について、最も当てはまるものは？</div>
-                    <div class="radio-group">
-                        <label class="radio-option" data-value="木" data-question="work">
-                            <input type="radio" name="work_pattern" value="木">
-                            <span class="radio-text">新しいことを学んだり、人とのつながりを広げることが多い</span>
-                        </label>
-                        <label class="radio-option" data-value="火" data-question="work">
-                            <input type="radio" name="work_pattern" value="火">
-                            <span class="radio-text">人前で話したり、活発に動き回ることが多い</span>
-                        </label>
-                        <label class="radio-option" data-value="土" data-question="work">
-                            <input type="radio" name="work_pattern" value="土">
-                            <span class="radio-text">継続的で安定した作業や、人をサポートすることが多い</span>
-                        </label>
-                        <label class="radio-option" data-value="金" data-question="work">
-                            <input type="radio" name="work_pattern" value="金">
-                            <span class="radio-text">効率化や改善、質の向上に取り組むことが多い</span>
-                        </label>
-                        <label class="radio-option" data-value="水" data-question="work">
-                            <input type="radio" name="work_pattern" value="水">
-                            <span class="radio-text">状況に応じて柔軟に対応したり、情報を扱うことが多い</span>
-                        </label>
+                <div class="question-block">
+                    <div class="question-title">1. これまでの仕事や活動で、最も自然に取り組めたことは？</div>
+                    <div class="options-grid">
+                        <div class="option-item">
+                            <input type="radio" name="work" value="木" id="work_木">
+                            <label for="work_木" class="option-label">
+                                <span class="option-emoji">🌱</span>
+                                <span class="option-text">学習や成長、人とのつながりを大切にする活動</span>
+                            </label>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="work" value="火" id="work_火">
+                            <label for="work_火" class="option-label">
+                                <span class="option-emoji">🔥</span>
+                                <span class="option-text">表現や発信、エネルギッシュな活動</span>
+                            </label>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="work" value="土" id="work_土">
+                            <label for="work_土" class="option-label">
+                                <span class="option-emoji">🌍</span>
+                                <span class="option-text">安定性や継続性、サポートを重視する活動</span>
+                            </label>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="work" value="金" id="work_金">
+                            <label for="work_金" class="option-label">
+                                <span class="option-emoji">⚡</span>
+                                <span class="option-text">効率化や改善、質の向上を目指す活動</span>
+                            </label>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="work" value="水" id="work_水">
+                            <label for="work_水" class="option-label">
+                                <span class="option-emoji">💧</span>
+                                <span class="option-text">柔軟性や適応性、情報を活用する活動</span>
+                            </label>
+                        </div>
                     </div>
                 </div>
 
                 <!-- 質問2 -->
-                <div class="input-group">
-                    <div class="question-text">2. 人間関係において、あなたが自然に取る行動は？</div>
-                    <div class="radio-group">
-                        <label class="radio-option" data-value="木" data-question="relationship">
-                            <input type="radio" name="relationship_style" value="木">
-                            <span class="radio-text">相手の成長を支援したり、新しい可能性を一緒に探る</span>
-                        </label>
-                        <label class="radio-option" data-value="火" data-question="relationship">
-                            <input type="radio" name="relationship_style" value="火">
-                            <span class="radio-text">場を盛り上げたり、皆のモチベーションを高める</span>
-                        </label>
-                        <label class="radio-option" data-value="土" data-question="relationship">
-                            <input type="radio" name="relationship_style" value="土">
-                            <span class="radio-text">安心できる環境を作ったり、調和を重視する</span>
-                        </label>
-                        <label class="radio-option" data-value="金" data-question="relationship">
-                            <input type="radio" name="relationship_style" value="金">
-                            <span class="radio-text">的確なアドバイスをしたり、品質の高い関係を築く</span>
-                        </label>
-                        <label class="radio-option" data-value="水" data-question="relationship">
-                            <input type="radio" name="relationship_style" value="水">
-                            <span class="radio-text">相手に合わせて柔軟に対応したり、深く理解しようとする</span>
-                        </label>
+                <div class="question-block">
+                    <div class="question-title">2. 人間関係で、あなたが自然に発揮する特徴は？</div>
+                    <div class="options-grid">
+                        <div class="option-item">
+                            <input type="radio" name="relationship" value="木" id="relationship_木">
+                            <label for="relationship_木" class="option-label">
+                                <span class="option-emoji">🌱</span>
+                                <span class="option-text">相手の成長を支援し、共に発展していく</span>
+                            </label>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="relationship" value="火" id="relationship_火">
+                            <label for="relationship_火" class="option-label">
+                                <span class="option-emoji">🔥</span>
+                                <span class="option-text">場を盛り上げ、みんなを元気にする</span>
+                            </label>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="relationship" value="土" id="relationship_土">
+                            <label for="relationship_土" class="option-label">
+                                <span class="option-emoji">🌍</span>
+                                <span class="option-text">安心できる環境を作り、調和を重視する</span>
+                            </label>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="relationship" value="金" id="relationship_金">
+                            <label for="relationship_金" class="option-label">
+                                <span class="option-emoji">⚡</span>
+                                <span class="option-text">的確なアドバイスで、質の高い関係を築く</span>
+                            </label>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="relationship" value="水" id="relationship_水">
+                            <label for="relationship_水" class="option-label">
+                                <span class="option-emoji">💧</span>
+                                <span class="option-text">相手に合わせて柔軟に対応し、深く理解する</span>
+                            </label>
+                        </div>
                     </div>
                 </div>
 
                 <!-- 質問3 -->
-                <div class="input-group">
-                    <div class="question-text">3. ストレスを感じる時や困った時の対処法は？</div>
-                    <div class="radio-group">
-                        <label class="radio-option" data-value="木" data-question="stress">
-                            <input type="radio" name="stress_handling" value="木">
-                            <span class="radio-text">新しい環境に身を置いたり、学びや成長の機会を求める</span>
-                        </label>
-                        <label class="radio-option" data-value="火" data-question="stress">
-                            <input type="radio" name="stress_handling" value="火">
-                            <span class="radio-text">人と話したり、活動的になって発散する</span>
-                        </label>
-                        <label class="radio-option" data-value="土" data-question="stress">
-                            <input type="radio" name="stress_handling" value="土">
-                            <span class="radio-text">安定した環境で休息を取ったり、信頼できる人に相談する</span>
-                        </label>
-                        <label class="radio-option" data-value="金" data-question="stress">
-                            <input type="radio" name="stress_handling" value="金">
-                            <span class="radio-text">計画を立て直したり、効率的な解決策を考える</span>
-                        </label>
-                        <label class="radio-option" data-value="水" data-question="stress">
-                            <input type="radio" name="stress_handling" value="水">
-                            <span class="radio-text">状況を客観視したり、流れに任せて様子を見る</span>
-                        </label>
+                <div class="question-block">
+                    <div class="question-title">3. 困難な状況に直面した時の、あなたらしい対処法は？</div>
+                    <div class="options-grid">
+                        <div class="option-item">
+                            <input type="radio" name="stress" value="木" id="stress_木">
+                            <label for="stress_木" class="option-label">
+                                <span class="option-emoji">🌱</span>
+                                <span class="option-text">成長の機会として前向きに捉える</span>
+                            </label>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="stress" value="火" id="stress_火">
+                            <label for="stress_火" class="option-label">
+                                <span class="option-emoji">🔥</span>
+                                <span class="option-text">積極的に行動し、エネルギッシュに解決する</span>
+                            </label>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="stress" value="土" id="stress_土">
+                            <label for="stress_土" class="option-label">
+                                <span class="option-emoji">🌍</span>
+                                <span class="option-text">安定を求め、着実で確実な方法で対処する</span>
+                            </label>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="stress" value="金" id="stress_金">
+                            <label for="stress_金" class="option-label">
+                                <span class="option-emoji">⚡</span>
+                                <span class="option-text">整理整頓し、効率的で質の高い解決策を見つける</span>
+                            </label>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="stress" value="水" id="stress_水">
+                            <label for="stress_水" class="option-label">
+                                <span class="option-emoji">💧</span>
+                                <span class="option-text">流れに任せて、柔軟で適応的に対応する</span>
+                            </label>
+                        </div>
                     </div>
                 </div>
 
                 <!-- 質問4 -->
-                <div class="input-group">
-                    <div class="question-text">4. 理想的な生活環境や過ごし方は？</div>
-                    <div class="radio-group">
-                        <label class="radio-option" data-value="木" data-question="lifestyle">
-                            <input type="radio" name="lifestyle_preference" value="木">
-                            <span class="radio-text">変化に富み、常に新しい刺激や学びがある環境</span>
-                        </label>
-                        <label class="radio-option" data-value="火" data-question="lifestyle">
-                            <input type="radio" name="lifestyle_preference" value="火">
-                            <span class="radio-text">人とのつながりが豊富で、エネルギッシュに活動できる環境</span>
-                        </label>
-                        <label class="radio-option" data-value="土" data-question="lifestyle">
-                            <input type="radio" name="lifestyle_preference" value="土">
-                            <span class="radio-text">安定していて、信頼できる人に囲まれた穏やかな環境</span>
-                        </label>
-                        <label class="radio-option" data-value="金" data-question="lifestyle">
-                            <input type="radio" name="lifestyle_preference" value="金">
-                            <span class="radio-text">質の高い環境で、効率的に目標を達成できる環境</span>
-                        </label>
-                        <label class="radio-option" data-value="水" data-question="lifestyle">
-                            <input type="radio" name="lifestyle_preference" value="水">
-                            <span class="radio-text">自由度が高く、状況に応じて柔軟に選択できる環境</span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <button class="btn-primary" id="startDiagnosis">縁の統合分析を開始</button>
-        </div>
-
-        <!-- ローディング表示 -->
-        <div class="loading" id="loadingArea">
-            <div class="spinner"></div>
-            <p>縁の統合分析中...</p>
-            <p>60分類×12位置システムで計算しています</p>
-        </div>
-
-        <!-- エラーメッセージ -->
-        <div class="error-message" id="errorMessage">
-            <strong>エラーが発生しました</strong>
-            <div id="errorText"></div>
-        </div>
-
-        <!-- 結果表示エリア -->
-        <div class="results-area" id="resultsArea">
-            <div class="card">
-                <h2 class="section-title">🎯 診断結果</h2>
-                <div id="diagnosisResults"></div>
-            </div>
-
-            <div class="card">
-                <h2 class="section-title">⭐ おすすめパワースポット</h2>
-                <div id="powerspotRecommendations"></div>
-            </div>
-
-            <div class="card">
-                <h2 class="section-title">📋 Claude用レポート生成材料</h2>
-                <p style="margin-bottom: 15px; color: #666;">
-                    以下の材料をClaude（AI）にコピー＆ペーストして、詳細なレポートを生成してください。
-                </p>
-                <div class="materials-output" id="reportMaterials"></div>
-                <button class="btn-primary" id="copyMaterials" style="margin-top: 15px;">
-                    材料をクリップボードにコピー
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- JavaScriptファイル読み込み -->
-    <script src="powerspot_engine_complete_v93.js"></script>
-    <script>
-        // グローバル変数
-        let diagnosisData = {};
-        let currentStep = 1;
-
-        // DOMロード時の初期化
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeApp();
-        });
-
-        // アプリケーション初期化
-        function initializeApp() {
-            console.log('縁パワースポット診断システム v3.1 初期化中...');
-            
-            // イベントリスナー設定
-            setupEventListeners();
-            
-            // フォーム初期化
-            initializeForm();
-            
-            console.log('初期化完了');
-        }
-
-        // イベントリスナー設定
-        function setupEventListeners() {
-            // 診断開始ボタン
-            document.getElementById('startDiagnosis').addEventListener('click', handleDiagnosisStart);
-            
-            // ラジオボタンの選択処理
-            document.querySelectorAll('.radio-option').forEach(option => {
-                option.addEventListener('click', handleRadioSelection);
-            });
-
-            // 名前入力の音韻分析
-            document.getElementById('firstName').addEventListener('input', analyzeNameAcoustics);
-            document.getElementById('lastName').addEventListener('input', analyzeNameAcoustics);
-
-            // 材料コピーボタン
-            document.getElementById('copyMaterials').addEventListener('click', copyMaterialsToClipboard);
-
-            // フォーム入力の進捗更新
-            document.getElementById('birthDate').addEventListener('change', updateProgress);
-            document.getElementById('firstName').addEventListener('input', updateProgress);
-            document.getElementById('lastName').addEventListener('input', updateProgress);
-        }
-
-        // フォーム初期化
-        function initializeForm() {
-            // 今日の日付を設定（生年月日の最大値として）
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('birthDate').setAttribute('max', today);
-            
-            // 1900年を最小値として設定
-            document.getElementById('birthDate').setAttribute('min', '1900-01-01');
-        }
-
-        // ラジオボタン選択処理
-        function handleRadioSelection(event) {
-            const clickedOption = event.currentTarget;
-            const questionName = clickedOption.querySelector('input[type="radio"]').name;
-            
-            // 同じグループの他の選択を解除
-            document.querySelectorAll(`input[name="${questionName}"]`).forEach(radio => {
-                radio.closest('.radio-option').classList.remove('selected');
-            });
-            
-            // クリックされた選択肢を選択状態に
-            clickedOption.classList.add('selected');
-            clickedOption.querySelector('input[type="radio"]').checked = true;
-            
-            updateProgress();
-        }
-
-        // 名前音韻分析
-        function analyzeNameAcoustics() {
-            const firstName = document.getElementById('firstName').value.trim();
-            const lastName = document.getElementById('lastName').value.trim();
-            const resultDiv = document.getElementById('nameAnalysisResult');
-            
-            console.log('名前分析実行:', firstName, lastName);
-            
-            if (!firstName && !lastName) {
-                resultDiv.innerHTML = '名前を入力すると音韻分析結果が表示されます';
-                resultDiv.style.color = '#666';
-                diagnosisData.nameType = null;
-                updateProgress();
-                return;
-            }
-            
-            if (!firstName || !lastName) {
-                resultDiv.innerHTML = '<span style="color: #e53e3e;">名前と苗字の両方を入力してください</span>';
-                diagnosisData.nameType = null;
-                updateProgress();
-                return;
-            }
-            
-            // 音韻分析ロジック（簡易版）
-            const nameType = determineNameAcousticType(firstName, lastName);
-            const typeInfo = getNameTypeInfo(nameType);
-            
-            resultDiv.innerHTML = `
-                <div style="color: #5a67d8; font-size: 1.1rem; margin-bottom: 5px;">
-                    ✨ 判定結果: <strong>${nameType}</strong>
-                </div>
-                <div style="color: #666; font-size: 0.95rem;">
-                    ${typeInfo.description}
-                </div>
-            `;
-            
-            // グローバル変数に保存
-            diagnosisData.nameType = nameType;
-            diagnosisData.firstName = firstName;
-            diagnosisData.lastName = lastName;
-            
-            console.log('音韻分析結果:', nameType);
-            updateProgress();
-        }
-
-        // 強化された音韻分析システム
-        const PHONETIC_CHARACTERISTICS = {
-            explosives: ['p', 'b', 't', 'd', 'k', 'g'],
-            fricatives: ['f', 'v', 's', 'z', 'sh', 'h'],
-            liquids: ['l', 'r'],
-            nasals: ['m', 'n'],
-            vowels: {
-                'a': { openness: 'open', brightness: 'bright', energy: 'active' },
-                'i': { openness: 'close', brightness: 'bright', energy: 'sharp' },
-                'u': { openness: 'close', brightness: 'dark', energy: 'deep' },
-                'e': { openness: 'mid', brightness: 'bright', energy: 'balanced' },
-                'o': { openness: 'mid', brightness: 'dark', energy: 'stable' }
-            }
-        };
-
-        // 強化された音韻分析
-        function enhancedNameAcousticAnalysis(firstName, lastName) {
-            const fullName = (firstName + lastName).toLowerCase();
-            
-            // 基本統計
-            const vowels = (fullName.match(/[aiueo]/g) || []);
-            const consonants = (fullName.match(/[bcdfghjklmnpqrstvwxyz]/g) || []);
-            const vowelRatio = vowels.length / fullName.length;
-            
-            // 音韻特性分析
-            const explosiveCount = consonants.filter(c => 
-                PHONETIC_CHARACTERISTICS.explosives.includes(c)).length;
-            const fricativeCount = consonants.filter(c => 
-                PHONETIC_CHARACTERISTICS.fricatives.includes(c)).length;
-            const liquidCount = consonants.filter(c => 
-                PHONETIC_CHARACTERISTICS.liquids.includes(c)).length;
-            const nasalCount = consonants.filter(c => 
-                PHONETIC_CHARACTERISTICS.nasals.includes(c)).length;
-                
-            // 母音の特性分析
-            const vowelCharacteristics = vowels.map(v => PHONETIC_CHARACTERISTICS.vowels[v]);
-            const brightVowels = vowelCharacteristics.filter(v => v.brightness === 'bright').length;
-            const darkVowels = vowelCharacteristics.filter(v => v.brightness === 'dark').length;
-            const activeEnergy = vowelCharacteristics.filter(v => v.energy === 'active').length;
-            
-            // 音節パターン分析
-            const cvPattern = (fullName.match(/[bcdfghjklmnpqrstvwxyz][aiueo]/g) || []).length;
-            const vPattern = (fullName.match(/^[aiueo]|(?<=[aiueo])[aiueo]/g) || []).length;
-            
-            // 音韻の流れ分析
-            const hasVowelFlow = /[aiueo]{2,}/.test(fullName);
-            const hasConsonantCluster = /[bcdfghjklmnpqrstvwxyz]{2,}/.test(fullName);
-            const rhythmicPattern = (fullName.match(/([aiueo][bcdfghjklmnpqrstvwxyz])+/g) || []).length;
-            
-            return {
-                basicStats: { vowelRatio, vowelCount: vowels.length, consonantCount: consonants.length },
-                phoneticProfile: { explosiveCount, fricativeCount, liquidCount, nasalCount },
-                vowelProfile: { brightVowels, darkVowels, activeEnergy },
-                syllableProfile: { cvPattern, vPattern },
-                flowProfile: { hasVowelFlow, hasConsonantCluster, rhythmicPattern }
-            };
-        }
-
-        // 強化された縁タイプ判定
-        function determineEnhancedNameType(analysisData) {
-            const { basicStats, phoneticProfile, vowelProfile, syllableProfile, flowProfile } = analysisData;
-            
-            let connectionScore = 0;  // 結縁スコア
-            let depthScore = 0;       // 深縁スコア  
-            let breadthScore = 0;     // 広縁スコア
-            
-            // 1. 基本音韻バランス
-            if (basicStats.vowelRatio > 0.5) {
-                depthScore += 20;
-            } else if (basicStats.vowelRatio < 0.4) {
-                connectionScore += 15;
-            } else {
-                breadthScore += 10;
-            }
-            
-            // 2. 音韻特性による判定
-            if (phoneticProfile.explosiveCount >= 2) {
-                connectionScore += 15;
-            }
-            if (phoneticProfile.liquidCount >= 1) {
-                depthScore += 15;
-            }
-            if (phoneticProfile.nasalCount >= 2) {
-                breadthScore += 15;
-            }
-            
-            // 3. 母音特性
-            if (vowelProfile.brightVowels > vowelProfile.darkVowels) {
-                if (vowelProfile.activeEnergy >= 1) {
-                    connectionScore += 10;
-                } else {
-                    breadthScore += 10;
-                }
-            } else {
-                depthScore += 10;
-            }
-            
-            // 4. 音節パターン
-            if (syllableProfile.cvPattern >= 4) {
-                connectionScore += 10;
-            }
-            
-            // 5. 音韻の流れ
-            if (flowProfile.hasVowelFlow) {
-                depthScore += 15;
-            }
-            if (flowProfile.hasConsonantCluster) {
-                if (phoneticProfile.explosiveCount >= 1) {
-                    connectionScore += 10;
-                } else {
-                    breadthScore += 10;
-                }
-            }
-            if (flowProfile.rhythmicPattern >= 3) {
-                breadthScore += 10;
-            }
-            
-            // 最終判定
-            const maxScore = Math.max(connectionScore, depthScore, breadthScore);
-            
-            if (maxScore === connectionScore) {
-                return { type: '結縁', score: connectionScore, reasoning: '新しい出会いを引き寄せる音韻特性' };
-            } else if (maxScore === depthScore) {
-                return { type: '深縁', score: depthScore, reasoning: '深いつながりを育む音韻特性' };
-            } else {
-                return { type: '広縁', score: breadthScore, reasoning: '幅広い縁を築く音韻特性' };
-            }
-        }
-
-        // 統合された名前音韻タイプ判定
-        function determineNameAcousticType(firstName, lastName) {
-            const analysis = enhancedNameAcousticAnalysis(firstName, lastName);
-            const result = determineEnhancedNameType(analysis);
-            
-            // デバッグ情報（開発時のみ）
-            console.log('音韻分析詳細:', analysis);
-            console.log('判定結果:', result);
-            
-            return result.type;
-        }
-
-        // 名前タイプ情報取得
-        function getNameTypeInfo(nameType) {
-            const typeInfoMap = {
-                '結縁': {
-                    description: '新しい出会いや機会を引き寄せる音韻特性'
-                },
-                '深縁': {
-                    description: '深く継続的なつながりを育む音韻特性'
-                },
-                '広縁': {
-                    description: '幅広い人脈や多様な縁を築く音韻特性'
-                }
-            };
-            
-            return typeInfoMap[nameType] || typeInfoMap['結縁'];
-        }
-        function updateProgress() {
-            const requiredFields = [
-                'birthDate',
-                'nameType'
-            ];
-            
-            const requiredRadios = [
-                'work_pattern',
-                'relationship_style', 
-                'stress_handling',
-                'lifestyle_preference'
-            ];
-            
-            let completed = 0;
-            const total = requiredFields.length + requiredRadios.length;
-            
-            // 通常フィールドのチェック
-            requiredFields.forEach(fieldId => {
-                if (document.getElementById(fieldId).value) {
-                    completed++;
-                }
-            });
-            
-            // ラジオボタンのチェック
-            requiredRadios.forEach(radioName => {
-                if (document.querySelector(`input[name="${radioName}"]:checked`)) {
-                    completed++;
-                }
-            });
-            
-            const progress = (completed / total) * 100;
-            document.getElementById('progressFill').style.width = progress + '%';
-            
-            // ステップ更新
-            updateStepIndicator(progress);
-        }
-
-        // ステップインジケーター更新
-        function updateStepIndicator(progress) {
-            const steps = document.querySelectorAll('.step');
-            
-            if (progress >= 33) {
-                steps[0].classList.add('completed');
-                steps[0].classList.remove('active');
-                steps[1].classList.add('active');
-                currentStep = 2;
-            }
-            
-            if (progress >= 66) {
-                steps[1].classList.add('completed');
-                steps[1].classList.remove('active');
-                steps[2].classList.add('active');
-                currentStep = 3;
-            }
-            
-            if (progress === 100) {
-                steps[2].classList.add('completed');
-            }
-        }
-
-        // 診断開始処理
-        async function handleDiagnosisStart() {
-            console.log('診断開始ボタンがクリックされました');
-            
-            try {
-                // フォーム検証
-                if (!validateForm()) {
-                    console.log('フォーム検証失敗');
-                    return;
-                }
-                
-                console.log('フォーム検証成功');
-                
-                // データ収集
-                collectFormData();
-                console.log('データ収集完了:', diagnosisData);
-                
-                // UI更新（ローディング表示）
-                showLoading();
-                console.log('ローディング表示開始');
-                
-                // 診断実行
-                await executeDiagnosis();
-                console.log('診断実行完了');
-                
-                // 結果表示
-                displayResults();
-                console.log('結果表示完了');
-                
-            } catch (error) {
-                console.error('診断エラー:', error);
-                showError('診断中にエラーが発生しました: ' + error.message);
-            }
-        }
-
-        // フォーム検証
-        function validateForm() {
-            console.log('フォーム検証開始');
-            console.log('現在のdiagnosisData:', diagnosisData);
-            
-            const requiredFields = [
-                { id: 'birthDate', name: '生年月日' },
-                { id: 'firstName', name: '名前' },
-                { id: 'lastName', name: '苗字' }
-            ];
-            
-            const requiredRadios = [
-                { name: 'work_pattern', label: '仕事・活動パターン' },
-                { name: 'relationship_style', label: '人間関係スタイル' },
-                { name: 'stress_handling', label: 'ストレス対処法' },
-                { name: 'lifestyle_preference', label: '理想的な生活環境' }
-            ];
-            
-            // 通常フィールド検証
-            for (const field of requiredFields) {
-                const element = document.getElementById(field.id);
-                if (!element.value) {
-                    showError(`${field.name}を入力してください。`);
-                    element.focus();
-                    return false;
-                }
-            }
-            
-            // ラジオボタン検証
-            for (const radio of requiredRadios) {
-                const checkedRadio = document.querySelector(`input[name="${radio.name}"]:checked`);
-                if (!checkedRadio) {
-                    showError(`${radio.label}を選択してください。`);
-                    return false;
-                }
-                console.log(`${radio.name}:`, checkedRadio.value);
-            }
-            
-            // 名前音韻チェック
-            if (!diagnosisData.nameType) {
-                showError('名前の音韻分析が完了していません。名前と苗字を正しく入力してください。');
-                return false;
-            }
-            
-            console.log('フォーム検証成功');
-            return true;
-        }
-
-        // ローディング表示
-        function showLoading() {
-            console.log('showLoading実行');
-            document.getElementById('diagnosisForm').style.display = 'none';
-            document.getElementById('loadingArea').classList.add('show');
-            document.getElementById('errorMessage').classList.remove('show');
-        }
-
-        // ローディング非表示
-        function hideLoading() {
-            console.log('hideLoading実行');
-            document.getElementById('loadingArea').classList.remove('show');
-        }
-
-        // エラー表示
-        function showError(message) {
-            console.log('showError実行:', message);
-            document.getElementById('errorText').textContent = message;
-            document.getElementById('errorMessage').classList.add('show');
-            document.getElementById('loadingArea').classList.remove('show');
-        }
-
-        // フォームデータ収集
-        function collectFormData() {
-            diagnosisData = {
-                ...diagnosisData, // 既存の名前データを保持
-                birthDate: document.getElementById('birthDate').value,
-                workPattern: document.querySelector('input[name="work_pattern"]:checked').value,
-                relationshipStyle: document.querySelector('input[name="relationship_style"]:checked').value,
-                stressHandling: document.querySelector('input[name="stress_handling"]:checked').value,
-                lifestylePreference: document.querySelector('input[name="lifestyle_preference"]:checked').value
-            };
-            
-            console.log('収集されたデータ:', diagnosisData);
-        }
-
-        // 診断実行（powerspot_engine_complete_v93.js使用）
-        async function executeDiagnosis() {
-            console.log('powerspot_engine_complete_v93.js実行開始');
-            
-            try {
-                // データ準備
-                const inputData = {
-                    birthDate: new Date(diagnosisData.birthDate),
-                    firstName: diagnosisData.firstName,
-                    lastName: diagnosisData.lastName,
-                    nameChoice: diagnosisData.nameType,
-                    answers: [
-                        diagnosisData.workPattern,
-                        diagnosisData.relationshipStyle,
-                        diagnosisData.stressHandling,
-                        diagnosisData.lifestylePreference
-                    ]
-                };
-                
-                console.log('入力データ:', inputData);
-                
-                // powerspot_engine実行チェック
-                if (typeof window.PowerspotDiagnosis === 'undefined') {
-                    throw new Error('PowerspotDiagnosis エンジンが読み込まれていません');
-                }
-                
-                await new Promise(resolve => setTimeout(resolve, 1500)); // ローディング演出
-                
-                // メイン診断実行（既存エンジンの関数を呼び出し）
-                console.log('PowerspotDiagnosis利用可能:', Object.keys(window.PowerspotDiagnosis));
-                
-                // エンジンの関数を順次実行
-                const element1 = generateElement1Profile(inputData.birthDate, inputData.nameChoice);
-                const element2 = generateElement2Profile(inputData.answers);
-                const element3 = generateElement3Profile(inputData.birthDate);
-                
-                // 統合プロファイル作成
-                const userProfile = {
-                    ...element1,
-                    ...element2,
-                    biorhythm: element3,
-                    attractionElement: element2.element
-                };
-                
-                console.log('統合プロファイル:', userProfile);
-                
-                // スポット選定実行
-                let selectedSpots;
-                if (typeof selectAllSpotsWithSmartDuplication === 'function') {
-                    selectedSpots = selectAllSpotsWithSmartDuplication(userProfile);
-                } else {
-                    // フォールバック：基本的なスポット生成
-                    selectedSpots = generateBasicSpots(userProfile);
-                }
-                
-                console.log('選定されたスポット:', selectedSpots);
-                
-                // 結果をグローバル変数に保存
-                diagnosisData.results = {
-                    // 基本情報
-                    naturalType: userProfile.naturalType,
-                    element: userProfile.element,
-                    phenomena: userProfile.phenomena,
-                    position: userProfile.position,
-                    rarityPercentage: userProfile.positionCharacteristics?.rarityPercentage || 8.0,
-                    
-                    // 縁型情報
-                    attractionType: userProfile.attractionType,
-                    nameType: userProfile.nameAcousticType,
-                    
-                    // 相性・スコア
-                    compatibility: 85 + Math.floor(Math.random() * 15), // 85-100%
-                    
-                    // スポット情報
-                    spots: selectedSpots.destiny || [
-                        { name: "明治神宮", prefecture: "東京都", compatibility: 95 },
-                        { name: "伊勢神宮", prefecture: "三重県", compatibility: 92 }
-                    ],
-                    categorizedSpots: selectedSpots,
-                    
-                    // システム情報
-                    systemVersion: "v9.3-engine",
-                    generatedAt: new Date().toISOString(),
-                    userProfile: userProfile
-                };
-                
-                console.log('powerspot_engine実行完了');
-                
-            } catch (error) {
-                console.error('powerspot_engine実行エラー:', error);
-                
-                // フォールバック: 改良されたモックデータ使用
-                console.log('フォールバック: 改良モックデータ使用');
-                diagnosisData.results = generateImprovedMockData();
-            }
-        }
-        
-        // 基本的なスポット生成（フォールバック用）
-        function generateBasicSpots(userProfile) {
-            const mockSpots = [
-                { name: "明治神宮", prefecture: "東京都", compatibility: 95, パワースポット名: "明治神宮", 地域: "東京都" },
-                { name: "伊勢神宮", prefecture: "三重県", compatibility: 92, パワースポット名: "伊勢神宮", 地域: "三重県" },
-                { name: "出雲大社", prefecture: "島根県", compatibility: 89, パワースポット名: "出雲大社", 地域: "島根県" },
-                { name: "厳島神社", prefecture: "広島県", compatibility: 87, パワースポット名: "厳島神社", 地域: "広島県" },
-                { name: "清水寺", prefecture: "京都府", compatibility: 85, パワースポット名: "清水寺", 地域: "京都府" }
-            ];
-            
-            return {
-                destiny: mockSpots.slice(0, 2),
-                purpose: {
-                    money: mockSpots.slice(0, 2),
-                    love: mockSpots.slice(1, 3),
-                    health: mockSpots.slice(2, 4),
-                    general: mockSpots.slice(0, 2)
-                },
-                seasonal: {
-                    spring: mockSpots.slice(0, 2),
-                    summer: mockSpots.slice(1, 3),
-                    autumn: mockSpots.slice(2, 4),
-                    winter: mockSpots.slice(3, 5)
-                }
-            };
-        }
-        
-        // 改良されたモックデータ生成
-        function generateImprovedMockData() {
-            const naturalTypes = [
-                "木の春霞", "木の夏雨", "火の朝日", "火の夕陽", "土の豊穣",
-                "金の秋風", "金の氷刃", "水の朧月", "水の冬陽"
-            ];
-            
-            const attractionTypes = ["木縁型", "火縁型", "土縁型", "金縁型", "水縁型"];
-            
-            const randomNaturalType = naturalTypes[Math.floor(Math.random() * naturalTypes.length)];
-            const element = randomNaturalType.split('の')[0];
-            const phenomena = randomNaturalType.split('の')[1];
-            const randomAttractionType = attractionTypes[Math.floor(Math.random() * attractionTypes.length)];
-            
-            return {
-                naturalType: randomNaturalType,
-                element: element,
-                phenomena: phenomena,
-                position: Math.floor(Math.random() * 12) + 1,
-                rarityPercentage: 5 + Math.random() * 10,
-                attractionType: randomAttractionType,
-                nameType: diagnosisData.nameType,
-                compatibility: 85 + Math.floor(Math.random() * 15),
-                spots: [
-                    { name: "明治神宮", prefecture: "東京都", compatibility: 95 },
-                    { name: "伊勢神宮", prefecture: "三重県", compatibility: 92 },
-                    { name: "出雲大社", prefecture: "島根県", compatibility: 89 }
-                ],
-                systemVersion: "v9.3-fallback",
-                generatedAt: new Date().toISOString()
-            };
-        }
-
-        // 結果表示
-        function displayResults() {
-            hideLoading();
-            
-            // 診断結果を表示
-            displayDiagnosisResults();
-            
-            // パワースポット推薦を表示
-            displayPowerspotRecommendations();
-            
-            // レポート生成材料を表示
-            displayReportMaterials();
-            
-            // 結果エリアを表示
-            document.getElementById('resultsArea').classList.add('show');
-            
-            // 結果エリアまでスクロール
-            document.getElementById('resultsArea').scrollIntoView({ 
-                behavior: 'smooth', 
-                block: 'start' 
-            });
-        }
-
-        // 診断結果表示
-        function displayDiagnosisResults() {
-            const resultsDiv = document.getElementById('diagnosisResults');
-            const results = diagnosisData.results;
-            
-            resultsDiv.innerHTML = `
-                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
-                    <h3 style="margin-bottom: 10px;">✨ あなたの縁タイプ</h3>
-                    <h2 style="font-size: 2rem; margin-bottom: 10px;">${results.naturalType}</h2>
-                    <p>五行属性: ${results.element} | 自然現象: ${results.phenomena} | 位置: ${results.position}番</p>
-                </div>
-                
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-                    <div style="background: #f0fff4; padding: 15px; border-radius: 8px; border-left: 4px solid #38a169;">
-                        <h4 style="color: #38a169; margin-bottom: 8px;">縁の強さ</h4>
-                        <div style="font-size: 1.5rem; font-weight: bold; color: #2f855a;">${results.compatibility}%</div>
-                    </div>
-                    
-                    <div style="background: #fffaf0; padding: 15px; border-radius: 8px; border-left: 4px solid #ed8936;">
-                        <h4 style="color: #ed8936; margin-bottom: 8px;">希少性</h4>
-                        <div style="font-size: 1.5rem; font-weight: bold; color: #c05621;">上位8%</div>
-                    </div>
-                </div>
-                
-                <div style="margin-top: 20px; padding: 15px; background: #f7fafc; border-radius: 8px;">
-                    <h4 style="color: #4a5568; margin-bottom: 10px;">基本特性</h4>
-                    <p style="line-height: 1.8; color: #2d3748;">
-                        ${results.naturalType}タイプは、新しい始まりと成長のエネルギーを持つ稀少な縁質です。
-                        自然の春霞のように、柔らかで上品な魅力を持ち、人との出会いに恵まれやすい特性があります。
-                    </p>
-                </div>
-            `;
-        }
-
-        // パワースポット推薦表示
-        function displayPowerspotRecommendations() {
-            const recommendationsDiv = document.getElementById('powerspotRecommendations');
-            const results = diagnosisData.results;
-            
-            let html = '';
-            results.spots.forEach((spot, index) => {
-                html += `
-                    <div style="background: white; border-radius: 12px; padding: 20px; margin-bottom: 15px; border-left: 4px solid #5a67d8; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                        <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 10px;">
-                            <h4 style="color: #2d3748; margin: 0; font-size: 1.2rem;">${index + 1}. ${spot.name}</h4>
-                            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 5px 12px; border-radius: 20px; font-weight: bold;">
-                                ${spot.compatibility}%
-                            </div>
+                <div class="question-block">
+                    <div class="question-title">4. あなたが心地よく感じる生活環境は？</div>
+                    <div class="options-grid">
+                        <div class="option-item">
+                            <input type="radio" name="lifestyle" value="木" id="lifestyle_木">
+                            <label for="lifestyle_木" class="option-label">
+                                <span class="option-emoji">🌱</span>
+                                <span class="option-text">常に学び続け、成長できる環境</span>
+                            </label>
                         </div>
-                        <p style="color: #666; margin: 5px 0;">📍 ${spot.prefecture}</p>
-                        <p style="color: #4a5568; margin: 10px 0; line-height: 1.6;">
-                            あなたの「${results.naturalType}」との相性が非常に高いパワースポットです。
-                        </p>
-                    </div>
-                `;
-            });
-            
-            recommendationsDiv.innerHTML = html;
-        }
-
-        // レポート生成材料表示
-        function displayReportMaterials() {
-            const materialsDiv = document.getElementById('reportMaterials');
-            const data = diagnosisData;
-            
-            const materials = `
-【縁パワースポット診断 - Claude用レポート生成材料】
-
-■ 基本情報
-- 生年月日: ${data.birthDate}
-- 名前: ${data.firstName} ${data.lastName}
-- 音韻タイプ: ${data.nameType}
-
-■ 診断結果
-- 自然タイプ: ${data.results.naturalType}
-- 五行属性: ${data.results.element}
-- 自然現象: ${data.results.phenomena}
-- 位置番号: ${data.results.position}
-- 縁の強さ: ${data.results.compatibility}%
-
-■ 五行縁型分析
-- 仕事パターン: ${data.workPattern}系統
-- 人間関係: ${data.relationshipStyle}系統
-- ストレス対処: ${data.stressHandling}系統
-- 生活環境: ${data.lifestylePreference}系統
-
-■ おすすめパワースポット
-${data.results.spots.map((spot, i) => `${i + 1}. ${spot.name}（${spot.prefecture}）- 相性${spot.compatibility}%`).join('\n')}
-
-■ レポート生成指示
-この材料を基に、以下の仕様でレポートを生成してください：
-- 文字数: 15,000-18,000字
-- 構成: プロファイル分析 + スポット詳細 + 年間ガイダンス
-- 個人化度: 80%以上
-- 根拠: 統計学的根拠を明示
-- 表現: 美しい日本語表現を使用
-            `;
-            
-            materialsDiv.textContent = materials;
-        }
-
-        // 材料をクリップボードにコピー
-        async function copyMaterialsToClipboard() {
-            try {
-                const materials = document.getElementById('reportMaterials').textContent;
-                await navigator.clipboard.writeText(materials);
-                
-                // 成功メッセージ
-                const button = document.getElementById('copyMaterials');
-                const originalText = button.textContent;
-                button.textContent = '✅ コピー完了！';
-                button.style.background = '#48bb78';
-                
-                setTimeout(() => {
-                    button.textContent = originalText;
-                    button.style.background = '';
-                }, 2000);
-                
-            } catch (error) {
-                console.error('コピー失敗:', error);
-                alert('クリップボードへのコピーに失敗しました。手動でコピーしてください。');
-            }
-        }
-    </script>
-</body>
-</html>
+                        <div class="option-item">
+                            <input type="radio" name="lifestyle" value="火" id="lifestyle_火">
+                            <label for="lifestyle_火" class="option-label">
+                                <span class="option-emoji">🔥</span>
+                                <span class="option-text">活動的で、エネルギッシュに過ごせる環境</span>
+                            </label>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="lifestyle" value="土" id="lifestyle_土">
+                            <label for="lifestyle_土" class="option-label">
+                                <span class="option-emoji">🌍</span>
+                                <span class="option-text">安定していて、安心して過ごせる環境</span>
+                            </label>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="lifestyle" value="金" id="lifestyle_金">
+                            <label for="lifestyle_金" class="option-label">
+                                <span class="option-emoji">⚡</span>
+                                <span class="option-text">洗練されていて、質の高い生活ができる環境</span>
+                            </label>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="lifestyle" value="水" id="lifestyle_水">
+                            <label for="lifestyle
